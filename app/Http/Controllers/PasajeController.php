@@ -6,7 +6,9 @@ use App\User;
 use App\Pasaje;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
+use Session;
 
 class PasajeController extends Controller
 {
@@ -129,12 +131,12 @@ class PasajeController extends Controller
         //$pasaje->comision_kiu = $pasaje->monto_neto*0.02;
         }
 
-        $pasaje->pago_soles = $request->pago_soles;
-        $pasaje->pago_dolares = $request->pago_dolares;
-        $pasaje->pago_visa = 0;
+        $pasaje->pago_soles = ($request->pago_soles == '') ? 0 : $request->pago_soles;
+        $pasaje->pago_dolares = ($request->pago_dolares == '') ? 0 : $request->pago_dolares;
+        $pasaje->pago_visa = ($request->pago_visa == '') ? 0 : $request->pago_visa;;
 
-        $pasaje->deposito_soles = $request->deposito_soles;
-        $pasaje->deposito_dolares = 0;
+        $pasaje->deposito_soles =($request->deposito_soles == '') ? 0 : $request->deposito_soles;;
+        $pasaje->deposito_dolares = ($request->deposito_dolares == '') ? 0 : $request->deposito_dolares;;
 
         $pasaje->aerolinea_id=$request->aerolinea_id;
         $pasaje->telefono=$request->telefono;
@@ -182,7 +184,12 @@ class PasajeController extends Controller
             $pasaje->created_at =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
             $pasaje->save(); //exit();
         }
-        return "Datos Guardados Satisfactoriamente";
+
+        Session::put('pasaje_id',$pasaje->id);
+
+        return response()->json([
+            'pasaje' => $pasaje,
+            'mensaje' => "Datos Guardados Satisfactoriamente"]);
     }
 
     public function listaPorUsuario()
@@ -219,6 +226,24 @@ class PasajeController extends Controller
     public function mostrar()
     {
         return view('pasaje.mostrar');
+    }
+    public function imprimir(Request $request) {
+        ob_end_clean();
+        Fpdf::AddPage();
+        Fpdf::SetTitle('Boleta Cobranza');
+       // Fpdf::Image('assets/images/logo_dark.png',5,4,30);
+        //Establecemos el Encabezado  de la serie y Número
+        Fpdf::SetFont('Courier', 'B', 7);
+        Fpdf::setXY(40,3);
+        Fpdf::setFillColor(220,220,220);
+        Fpdf::Cell(30, 5, 'BOLETA DE COBRANZA',1,1,'C',1);
+        Fpdf::setFillColor(255,255,255);
+        Fpdf::setXY(40,8);
+        Fpdf::Cell(30, 5, '',1,1,'C',1);
+        Fpdf::SetFont('Courier', '', 7);
+        Fpdf::Line(4,15,70,15);
+        Fpdf::setXY(4,16);
+        Fpdf::Output();
     }
     /**
      * Display the specified resource.

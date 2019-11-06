@@ -35,12 +35,20 @@ var app = new Vue({
            { id: 622 , ruta: 'images/aerolineas/atsa.jpeg'},
        ],
        logo_linea:'images/aerolineas/peruvian.png',
+       empresa:[],
+       impresion:true,
+       pasaje_id:''
     },
     methods:{
         listarAerolineas(){
             axios.get('/aerolinea/filtro').then(({ data }) => (
                 this.aerolineas = data,
                 this.total_aerolineas = this.aerolineas.length
+            ))
+        },
+        empresarPorUsuario() {
+            axios.get('/empresas/empresaUsuario').then(({ data }) => (
+                this.empresa = data
             ))
         },
         seleccionarImage(event){
@@ -56,15 +64,16 @@ var app = new Vue({
         guardar(){
             axios.post('pasajes/guardar',this.pasaje)
                 .then((response) => {
+                    this.pasaje_id = response.data.pasaje.id
                     Swal.fire({
                         type : 'success',
                         title : 'VENTA PASAJES',
-                        text : response.data,
+                        text : response.data.mensaje,
                         confirmButtonText: 'Aceptar',
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
-                            window.location.href="pasajeCreate"
+                            //window.location.href="pasajeCreate"
                         }
                     })
                 })
@@ -72,9 +81,17 @@ var app = new Vue({
         verPasajes()
         {
             window.location.href="pasajeVentas";
+        },
+        imprimir()
+        {
+            axios.get('pasajeImprimir',{params:{pasaje_id: this.pasaje_id}})
+            .then((response) => {
+
+            })
         }
     },
     created() {
         this.listarAerolineas()
+        this.empresarPorUsuario()
     }
 })

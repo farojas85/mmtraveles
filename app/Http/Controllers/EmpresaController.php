@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Empresa;
+use App\User;
+use Illuminate\Support\Facades\Auth;
+use DB;
 use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
@@ -29,7 +32,7 @@ class EmpresaController extends Controller
 
     public function filtro()
     {
-        return Empresa::select('id','razon_social')->get();
+        return Empresa::select('id','razon_social','foto')->get();
     }
     public function create()
     {
@@ -69,26 +72,35 @@ class EmpresaController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Empresa  $empresa
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Empresa $empresa)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Empresa  $empresa
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Empresa $empresa)
     {
         //
+    }
+
+    public function empresaPorUsuario()
+    {
+        $user = User::with('roles')->where('id',Auth::user()->id)->first();
+        $role_name ='';
+        $pasaje = null;
+        foreach($user->roles as $role)
+        {
+            $role_name = $role->name;
+        }
+
+        $empresa = '';
+        if($role_name=='Administrador' || $role_name=='Gerente')
+        {
+            return Empresa::select('id','razon_social','foto')->get();
+        }
+
+        return Empresa::join('empresa_user as eu','empresas.id','=','eu.empresa_id')
+                        ->select('empresas.id','razon_social','empresas.foto')
+                        ->where('eu.user_id',Auth::user()->id)->get();
     }
 }

@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
             PagosTableSeeder::class,
             EmpresasTableSeeder::class,
             CountersTableSeeder::class,
-            ReporteCajaGeneralTableSeeder::class
+            ReporteCajaGeneralTableSeeder::class,
+            EmpresaUserTableSeeder::class
         ]);
     }
 }

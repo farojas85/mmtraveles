@@ -72,7 +72,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 text-center">
-                                        <img src="images/logo.png" height="100">
+                                        <img v-for="emp in empresa" :src="emp.foto" height="100">
                                     </div>
                                 </div>
                                 <div class="row">
@@ -151,7 +151,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!--<div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label for="razon_social" class="col-md-2 control-label">RAZ&Oacute;N SOCIAL</label>
@@ -172,7 +172,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group row">
@@ -305,7 +305,12 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="col-lg-offset-2 col-lg-10">
-                                                <button type="button" class="btn btn-success" @click="guardar">Registrar</button>
+                                                <button type="button" class="btn btn-success" @click="guardar">
+                                                    <i class="fa fa-save"></i> Registrar</button>
+                                                <span v-if="impresion==true">
+                                                    <a href="pasajePdf" target="_blank" class="btn btn-primary">
+                                                        <i class="fas fa-print"></i> Imprimir</a>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

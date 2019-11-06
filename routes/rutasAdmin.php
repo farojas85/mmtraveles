@@ -1,5 +1,7 @@
 <?php
 
+use Codedge\Fpdf\Fpdf\Fpdf;
+
 Route::group(['prefix' => 'configuraciones', 'middleware' => 'auth'], function(){
     Route::get('/', 'ConfiguracionController@index')->name('configuracion.index');
 });
@@ -36,6 +38,7 @@ Route::group(['prefix' => 'empresas', 'middleware' => 'auth'], function(){
     Route::get('/', 'EmpresaController@index')->name('empresas.index');
     Route::get('lista','EmpresaController@lista')->name('empresas.lista');
     Route::get('filtro','EmpresaController@filtro')->name('empresas.filtro');
+    Route::get('empresaUsuario','EmpresaController@empresaPorUsuario');
 });
 
 Route::group(['prefix' => 'lugares', 'middleware' => 'auth'], function(){
@@ -53,3 +56,10 @@ Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function
     Route::get('/tabla','ReportePlantillaController@tabla')->name('reporteplantilla.tabla');
 });
 
+Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
+    ob_end_clean();
+    $fpdf->AddPage();
+    $fpdf->SetFont('Courier', 'B', 18);
+    $fpdf->Cell(50, 25, 'Hello World!');
+    $fpdf->Output();
+});
