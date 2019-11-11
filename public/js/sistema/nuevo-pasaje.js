@@ -3,30 +3,36 @@ var app = new Vue({
     data:{
        pasaje:{
            pasajero:'',
+           tipo_documento:'',
+           numero_documento:'',
+           fecha_venta:'',
+           ticket_number:'',
+           aerolinea_id:'',
+           direccion:'',
+           ruc:'',
            codigo:'',
            ruta:'',
            tipo_viaje:'',
+           fecha_vuelo:'',
+           hora_vuelo:'',
+           vuelo:'',
+           cl:'',
+           st:'',
+           equipaje:'',
+           moneda:'',
+           cambio:'',
            not_igv:0,
-           aerolinea_id:'',
-           porcentaje:'',
-           razon_social:'',
-           direccion:'',
-           pasaje_total:'',
-           monto_neto:'',
-           tuaa:'',
-           pago_soles:'',
-           pago_dolares:'',
-           pago_visa:'',
-           deposito_soles:'',
-           deposito_dolares:'',
-           telefono:'',
-           observaciones:'',
-           fecha_venta:'',
-           razon_social:'',
-           direccion:''
+           tarifa:'',
+           tax:'',
+           service_fee:'',
+           sub_total:'',
+           igv:'',
+           total:''
        },
        aerolineas:[],
        total_aerolineas:'',
+       tipoDocumentos:[],
+       total_tipoDocumentos:'',
        images:[
            { id: 611 , ruta: 'images/aerolineas/peruvian.png'},
            { id: 612 , ruta: 'images/aerolineas/latam.jpg'},
@@ -36,14 +42,23 @@ var app = new Vue({
        ],
        logo_linea:'images/aerolineas/peruvian.png',
        empresa:[],
-       impresion:true,
-       pasaje_id:''
+       impresion:false,
+       pasaje_id:'',
+       errores:[],
+
     },
     methods:{
         listarAerolineas(){
             axios.get('/aerolinea/filtro').then(({ data }) => (
                 this.aerolineas = data,
                 this.total_aerolineas = this.aerolineas.length
+            ))
+        },
+        listarTipoDocumentos() {
+            axios.get('tipo-documentos/filtro').then(({ data }) => (
+                console.log(data),
+                this.tipoDocumentos = data,
+                this.total_tipoDocumentos = this.tipoDocumentos.length
             ))
         },
         empresarPorUsuario() {
@@ -99,5 +114,6 @@ var app = new Vue({
     created() {
         this.listarAerolineas()
         this.empresarPorUsuario()
+        this.listarTipoDocumentos()
     }
 })

@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             EmpresasTableSeeder::class,
             CountersTableSeeder::class,
             ReporteCajaGeneralTableSeeder::class,
-            EmpresaUserTableSeeder::class
+            EmpresaUserTableSeeder::class,
+            TipoDocumentosTableSeeder::class
         ]);
     }
 }
