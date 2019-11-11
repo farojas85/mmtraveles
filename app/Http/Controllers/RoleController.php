@@ -20,4 +20,9 @@ class RoleController extends Controller
     {
         return Role::paginate(5);
     }
+
+    public function filtro()
+    {
+        return Role::select('id','name')->get();
+    }
 }

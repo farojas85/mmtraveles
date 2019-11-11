@@ -39,48 +39,71 @@ class EmpresaController extends Controller
 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'razon_social' => 'required|max:191|string',
+            'ruc' => 'required|min:11|max:11',
+        ]);
+
+        $empresa = Empresa::create([
+            'razon_social' => $request->razon_social,
+            'nombre_comercial' => $request->nombre_comercial,
+            'ruc' => $request->ruc,
+            'direccion' => $request->direccion
+        ]);
+
+        return response()->json([
+            'mensaje' => 'Registro Agregado Satisfactoriamente'
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Empresa  $empresa
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Empresa $empresa)
+    public function show(Request $request)
     {
-        //
+        return Empresa::findOrFail($request->id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Empresa  $empresa
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Empresa $empresa)
+    public function edit(Request $request)
     {
-        //
+        return Empresa::finOrFail($request->id);
     }
 
-    public function update(Request $request, Empresa $empresa)
+    public function update(Request $request)
     {
-        //
+        $empresa = Empresa::findOrFail($request->id);
+        $empresa->razon_social = $request->razon_social;
+        $empresa->nombre_comercial = $request->nombre_comercial;
+        $empresa->ruc = $request->ruc;
+        $empresa->direccion = $request->direccion;
+        $empresa->save();
+
+        return response()->json([
+            'mensaje' => 'Registro Modificado Satisfactoriamente'
+        ]);
     }
 
 
-    public function destroy(Empresa $empresa)
+    public function destroy(Request $request)
     {
-        //
+        $empresa = Empresa::findOrFail($request->id);
+        $empresa->delete();
+
+        return response()->json([
+            'mensaje' => 'Empresa Retirada Satisfactoriamente'
+        ]);
+    }
+
+    public function showdelete()
+    {
+        return Empresa::onlyTrashed()->paginate(10);
+    }
+
+    public function restoredelete(Request $request) {
+        $empresa = Empresa::onlyTrashed()->where('id',$request->id)->first();
+
+        $empresa->restore();
+
+        return response()->json(['mensaje' => 'Registro Restaurado Satisfactoriamente']);
     }
 
     public function empresaPorUsuario()

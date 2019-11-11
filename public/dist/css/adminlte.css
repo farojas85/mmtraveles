@@ -22620,7 +22620,7 @@ html.maximized-card {
 .register-page {
   -ms-flex-align: center;
   align-items: center;
-  background: #e9ecef;
+  background-image: url('../../images/mmtravel_fondo.jpeg');
   display: -ms-flexbox;
   display: flex;
   height: 100vh;

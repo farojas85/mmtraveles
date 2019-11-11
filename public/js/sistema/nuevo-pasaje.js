@@ -77,6 +77,12 @@ var app = new Vue({
                         }
                     })
                 })
+                .catch((errors) => {
+                    if(response = errors.response) {
+                        this.errores = response.data.errors,
+                        console.clear()
+                    }
+                })
         },
         verPasajes()
         {

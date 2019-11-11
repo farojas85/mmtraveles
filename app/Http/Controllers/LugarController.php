@@ -50,4 +50,9 @@ class LugarController extends Controller
                     ->select('category.id','category.name')
                     ->get();
     }
+
+    public function filtro()
+    {
+        return Lugar::select('id','name')->get();
+    }
 }

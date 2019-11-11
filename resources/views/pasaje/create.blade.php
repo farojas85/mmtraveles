@@ -46,6 +46,7 @@
                         <div class="card-body">
                             <form  class="form-horizontal" role="form">
                                 @csrf
+
                                 <div class="row">
                                     <div class="col-md-8">
                                         <div class="row">

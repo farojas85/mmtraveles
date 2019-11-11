@@ -12,13 +12,15 @@ class User extends Authenticatable
     use Notifiable,HasRoles;
 
     protected $table = "user";
+
+    public $timestamps = false;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'lastname',  'username','email', 'password',
+        'id','name', 'lastname',  'username','email', 'password',
     ];
 
     /**
@@ -42,5 +44,10 @@ class User extends Authenticatable
     public function pasajes()
     {
         return $this->hasMany('App\Pasaje', 'counter_id', 'id');
+    }
+
+    public function local()
+    {
+        return $this->belongsTo(Local::class);
     }
 }

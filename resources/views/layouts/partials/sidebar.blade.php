@@ -144,8 +144,8 @@
                 </li>
                 @endcan
                 @can('entidad.index')
-                <li class="nav-item has-treeview {{  ( Request::is('empresas') || Request::is('aerolinea') || Request::is('local') || Request::is('ciudad') )? 'menu-open' :''}}">
-                    <a href="#" class="nav-link {{  ( Request::is('empresas') || Request::is('aerolinea') || Request::is('local') || Request::is('ciudad') )? 'active' :''}} ">
+                <li class="nav-item has-treeview {{  ( Request::is('empresas') || Request::is('aerolinea') || Request::is('locales') || Request::is('ciudad') )? 'menu-open' :''}}">
+                    <a href="#" class="nav-link {{  ( Request::is('empresas') || Request::is('aerolinea') || Request::is('locales') || Request::is('ciudad') )? 'active' :''}} ">
                         <i class="nav-icon far fa-building"></i>
                         <p>
                             Entidad
@@ -154,14 +154,14 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="empresas" class="nav-link">
+                            <a href="empresas" class="nav-link {{ Request::is('empresas') ? 'active' :''}}">
                                 <i class="fas fa-hotel nav-icon"></i>
                                 <p>Empresas</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
+                            <a href="locales" class="nav-link {{ Request::is('locales') ? 'active' :''}}">
+                                <i class="fas fa-map-marked-alt nav-icon"></i>
                                 <p>Locales</p>
                             </a>
                         </li>

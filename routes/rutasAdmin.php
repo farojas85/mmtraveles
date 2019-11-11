@@ -15,13 +15,17 @@ Route::group(['prefix' => 'aerolinea', 'middleware' => 'auth'], function(){
 Route::group(['prefix' => 'roles', 'middleware' => 'auth'], function(){
     Route::get('/', 'RoleController@index')->name('roles.index');
     Route::get('lista','RoleController@lista')->name('roles.lista');
+    Route::get('filtro','RoleController@filtro')->name('roles.filtro');
     Route::get('mostrarEliminados', 'RoleController@showdeletes')->name('roles.showdeletes');
 });
 
 Route::group(['prefix' => 'user', 'middleware' => 'auth'], function(){
     Route::get('/', 'UserController@index')->name('user.index');
     Route::get('lista','UserController@lista')->name('user.lista');
-
+    Route::post('store','UserController@store')->name('user.store');
+    Route::get('show','UserController@show');
+    Route::put('update','UserController@update');
+    Route::post('destroy','UserController@destroy');
 });
 
 Route::get('pasajeCreate','PasajeController@create')->name('pasajes.create');
@@ -39,11 +43,30 @@ Route::group(['prefix' => 'empresas', 'middleware' => 'auth'], function(){
     Route::get('lista','EmpresaController@lista')->name('empresas.lista');
     Route::get('filtro','EmpresaController@filtro')->name('empresas.filtro');
     Route::get('empresaUsuario','EmpresaController@empresaPorUsuario');
+    Route::post('store','EmpresaController@store');
+    Route::get('mostrarEliminados','EmpresaController@showdelete');
+    Route::get('show','EmpresaController@show');
+    Route::put('update','EmpresaController@update');
+    Route::post('destroy','EmpresaController@destroy');
+    Route::post('restaurar','EmpresaController@restoredelete');
 });
+
+Route::group(['prefix' => 'locales', 'middleware' => 'auth'], function(){
+    Route::get('/', 'LocalController@index')->name('locales.index');
+    Route::get('lista','LocalController@lista')->name('locales.lista');
+    Route::get('filtro','LocalController@filtro')->name('locales.filtro');
+    Route::post('store','LocalController@store');
+    Route::get('mostrarEliminados','LocalController@showdelete');
+    Route::get('show','LocalController@show');
+    Route::put('update','LocalController@update');
+    Route::post('destroy','LocalController@destroy');
+    Route::post('restaurar','LocalController@restoredelete');
+});
+
 
 Route::group(['prefix' => 'lugares', 'middleware' => 'auth'], function(){
     Route::get('/lista', 'LugarController@listarPorUsuario')->name('lugar.listarPorUsuario');
-
+    Route::get('filtro','LugarController@filtro');
 });
 
 Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], function(){

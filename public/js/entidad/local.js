@@ -1,35 +1,37 @@
 var app = new Vue({
     el:'#wrapper',
     data:{
-       empresas:[],
-       empresa:{
+       locales:[],
+       local:{
            id:'',
-           razon_social:'',
-           nombre_comercial:'',
-           ruc:'',
-           direccion:'',
+           nombre:'',
+           descripcion:'',
+           empresa_id:'',
+           lugar_id:'',
            estado:''
        },
-       total_empresas:0,
+       total_locales:0,
        errores:[],
        offset:4,
-       showdeletes:false
+       showdeletes:false,
+       empresas:[],
+       lugares:[]
     },
     computed:{
         isActived() {
-            return this.empresas.current_page;
+            return this.locales.current_page;
         },
         pagesNumber() {
-            if (!this.empresas.to) {
+            if (!this.locales.to) {
                 return [];
             }
-            var from = this.empresas.current_page - this.offset;
+            var from = this.locales.current_page - this.offset;
             if (from < 1) {
                 from = 1;
             }
             var to = from + (this.offset * 2);
-            if (to >= this.empresas.last_page) {
-                to = this.empresas.last_page;
+            if (to >= this.locales.last_page) {
+                to = this.locales.last_page;
             }
             var pagesArray = [];
             while (from <= to) {
@@ -40,56 +42,71 @@ var app = new Vue({
         },
     },
     methods:{
+        listarEmpresa(){
+            axios.get('empresas/filtro')
+                .then(({data}) =>(
+                    this.empresas = data
+                ))
+        },
+        listarLugares(){
+            axios.get('lugares/filtro')
+                .then(({data}) =>(
+                    this.lugares = data
+                ))
+        },
         listar() {
-            axios.get('/empresas/lista').then(({ data }) => (
-                this.empresas = data,
-                this.total_empresas = this.empresas.total
+            axios.get('/locales/lista').then(({ data }) => (
+                this.locales = data,
+                this.total_locales = this.locales.total
              ))
         },
         getResults(page=1) {
             if(this.showdeletes == false) {
-                axios.get('/empresas/lista?page=' + page)
+                axios.get('/locales/lista?page=' + page)
                 .then(response => {
-                    this.empresas = response.data
-                    this.total_empresas = this.empresas.total
+                    this.locales = response.data
+                    this.total_locales = this.locales.total
                 });
             }
             else {
-                axios.get('/empresas/mostrarEliminados?page=' + page)
+                axios.get('/locales/mostrarEliminados?page=' + page)
                 .then(response => {
-                    this.empresas = response.data
-                    this.total_empresas = this.empresas.total
+                    this.locales = response.data
+                    this.total_locales = this.locales.total
                 });
             }
         },
         changePage(page) {
-            this.empresas.current_page = page
+            this.locales.current_page = page
             this.getResults(page)
         },
         limpiar(){
             this.errores=[]
-            this.empresa.razon_social=''
-            this.empresa.nombre_comercial = ''
-            this.empresa.ruc=''
-            this.empresa.direccion=''
+            this.local.nombre=''
+            this.local.descripcion = ''
+            this.local.empresa_id=''
+            this.local.lugar_id=''
+            this.local.estado =''
         },
         nuevo()
         {
+            this.listarEmpresa()
+            this.listarLugares()
             this.limpiar()
-            $('#empresa-create').modal('show')
+            $('#local-create').modal('show')
         },
         guardar() {
-            axios.post('empresas/store',this.empresa)
+            axios.post('locales/store',this.local)
                 .then((response) => {
                     Swal.fire({
                         type : 'success',
-                        title : 'EMPRESA',
+                        title : 'LOCAL',
                         text : response.data.mensaje,
                         confirmButtonText: 'Aceptar',
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
-                            $('#empresa-create').modal('hide')
+                            $('#local-create').modal('hide')
                             this.listar()
                             this.getResults()
                         }
@@ -103,38 +120,41 @@ var app = new Vue({
                 })
         },
         cargarDatos(id){
-            axios.get('empresas/show',{params: {id:id }})
+            axios.get('locales/show',{params: {id:id }})
                 .then((response) => {
-                    this.empresa.id= response.data.id
-                    this.empresa.razon_social= response.data.razon_social
-                    this.empresa.nombre_comercial= response.data.nombre_comercial
-                    this.empresa.ruc= response.data.ruc
-                    this.empresa.direccion= response.data.direccion
-                    this.empresa.estado = response.data.estado
+                    this.local.id= response.data.id
+                    this.local.nombre= response.data.nombre
+                    this.local.empresa_id= response.data.empresa_id
+                    this.local.lugar_id= response.data.lugar_id
+                    this.local.estado  = response.data.estado
                 })
         },
         mostrar(id){
             this.limpiar()
+            this.listarEmpresa()
+            this.listarLugares()
             this.cargarDatos(id)
-            $('#empresa-show').modal('show')
+            $('#local-show').modal('show')
         },
         editar(id) {
             this.limpiar()
+            this.listarEmpresa()
+            this.listarLugares()
             this.cargarDatos(id)
-            $('#empresa-edit').modal('show')
+            $('#local-edit').modal('show')
         },
         actualizar() {
-            axios.put('empresas/update',this.empresa)
+            axios.put('locales/update',this.local)
                 .then((response) => {
                     Swal.fire({
                         type : 'success',
-                        title : 'EMPRESA',
+                        title : 'LOCALES',
                         text : response.data.mensaje,
                         confirmButtonText: 'Aceptar',
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
-                            $('#empresa-edit').modal('hide')
+                            $('#local-edit').modal('hide')
                             this.listar()
                             this.getResults()
                         }
@@ -159,11 +179,11 @@ var app = new Vue({
                 cancelButtonColor:"#e3342f"
             }).then( response => {
                 if(response.value){
-                    axios.post('/empresas/destroy',{id:id})
+                    axios.post('/locales/destroy',{id:id})
                     .then((response) => (
                         swal.fire({
                             type : 'success',
-                            title : 'Menú',
+                            title : 'LOCALES',
                             text : response.data.mensaje,
                             confirmButtonText: 'Aceptar',
                             confirmButtonColor:"#1abc9c",
@@ -189,12 +209,11 @@ var app = new Vue({
         },
         mostrarEliminados() {
             this.showdeletes = true
-            axios.get('/empresas/mostrarEliminados').then(({ data }) => (
-                this.empresas = data,
-                this.total_empresas = this.empresas.total
+            axios.get('/locales/mostrarEliminados').then(({ data }) => (
+                this.locales = data,
+                this.total_locales = this.locales.total
             ))
             this.getResults()
-
         },
         mostrarTodos() {
             this.showdeletes = false
@@ -213,11 +232,11 @@ var app = new Vue({
                 cancelButtonColor:"#e3342f"
             }).then( response => {
                 if(response.value){
-                    axios.post('/empresas/restaurar',{id:id})
+                    axios.post('/locales/restaurar',{id:id})
                     .then((response) => (
                         swal.fire({
                             type : 'success',
-                            title : 'EMPRESAS',
+                            title : 'LOCALES',
                             text : response.data.mensaje,
                             confirmButtonText: 'Aceptar',
                             confirmButtonColor:"#1abc9c",
