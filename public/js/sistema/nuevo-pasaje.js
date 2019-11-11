@@ -3,7 +3,7 @@ var app = new Vue({
     data:{
        pasaje:{
            pasajero:'',
-           tipo_documento:'',
+           tipo_documento_id:'',
            numero_documento:'',
            fecha_venta:'',
            ticket_number:'',
@@ -20,13 +20,13 @@ var app = new Vue({
            st:'',
            equipaje:'',
            moneda:'',
-           cambio:'',
+           cambio:0,
            not_igv:0,
            tarifa:'',
            tax:'',
            service_fee:'',
            sub_total:'',
-           igv:'',
+           igv:0,
            total:''
        },
        aerolineas:[],
@@ -88,6 +88,7 @@ var app = new Vue({
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
+                            this.impresion=true;
                             //window.location.href="pasajeCreate"
                         }
                     })

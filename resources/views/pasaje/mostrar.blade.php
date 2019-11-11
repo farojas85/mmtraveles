@@ -58,17 +58,21 @@
                                                     <td colspan="12">-- DATOS NO REGISTRADOS --</td>
                                                 </tr>
                                                 <tr v-else v-for="(repo,index) in pasajes" :key="repo.id">
+                                                    
                                                     <td>@{{index+1}}</td>
-                                                    <td>@{{repo.user.name}}</td>
+                                                    <td>
+                                                        <span v-if="repo.counter_id==null">--</span>
+                                                        <span v-else>@{{repo.user.name}}</span>
+                                                    </td>
                                                     <td>@{{repo.viajecode}}</td>
                                                     <td>@{{repo.pasajero}}</td>
-                                                    <td>@{{repo.aerolinea.name}}</td>
-                                                    <td>@{{repo.pasaje_total.toFixed(2)}}</td>
-                                                    <td>@{{repo.pago_soles.toFixed(2)}}</td>
-                                                    <td>@{{repo.pago_dolares.toFixed(2)}}</td>
-                                                    <td>@{{repo.pago_visa.toFixed(2)}}</td>
-                                                    <td>@{{repo.deposito_soles.toFixed(2)}}</td>
-                                                    <td>@{{repo.deposito_dolares.toFixed(2)}}</td>
+                                                    <td>@{{repo.aerolinea.name }}</td>
+                                                    <td>@{{repo.pasaje_total}}</td>
+                                                    <td>@{{repo.pago_soles}}</td>
+                                                    <td>@{{repo.pago_dolares}}</td>
+                                                    <td>@{{repo.pago_visa}}</td>
+                                                    <td>@{{repo.deposito_soles}}</td>
+                                                    <td>@{{repo.deposito_dolares}}</td>
                                                     <td>@{{repo.created_at}}</td>
                                                 </tr>
                                             </tbody>

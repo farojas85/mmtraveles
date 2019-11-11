@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
 use Session;
+use DB;
 
 class PasajeController extends Controller
 {
@@ -44,35 +45,95 @@ class PasajeController extends Controller
      */
     public function store(Request $request)
     {
+        $rules =[
+            'pasajero' => 'required',
+            'tipo_documento_id' => 'required',
+            'numero_documento' => 'required',
+            'fecha_venta' => 'required',
+            'ticket_number' => 'required',
+            'aerolinea_id' => 'required',
+            'codigo' => 'required',
+            'ruta' => 'required',
+            'tipo_viaje' => 'required',
+            'fecha_vuelo' => 'required',
+            'hora_vuelo' => 'required',
+            'vuelo' => 'required',
+            'moneda' => 'required',
+            'tarifa' => 'required',
+            'tax' => 'required',
+            'service_fee' => 'required',
+            'sub_total' => 'required',
+            'total' => 'required'
+        ]; 
+        
+        $mensaje= [
+            'required' => 'Campo Obligatorio'
+        ];
+        
+        $this->validate($request,$rules,$mensaje);
+        
         $pasaje = new Pasaje();
+        $pasaje->counter_id = Auth::user()->id;
         $pasaje->pasajero = $request->pasajero;
+        $pasaje->tipo_documento_id = $request->tipo_documento_id;
+        $pasaje->numero_documento = $request->numero_documento;
+        $pasaje->dni = $request->numero_documento;
+        
+        if(is_null($request->fecha_venta) || $request->fecha_venta == "" )
+        {
+            $date = Carbon::now();
+            $pasaje->created_at_venta =  $date->format('Y-m-d H:i:s');
+            $pasaje->created_at = $date->format('Y-m-d H:i:s');
+            
+        }
+        else{
+            $pasaje->created_at_venta =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
+            $pasaje->created_at =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
+  
+        }
+        $pasaje->ticket_number = $request->ticket_number;
+        $pasaje->aerolinea_id=$request->aerolinea_id;
+        $pasaje->direccion= $request->direccion;
+        $pasaje->ruc = $request->ruc;
         $pasaje->viajecode = $request->codigo;
         $pasaje->ruta = $request->ruta;
         $pasaje->tipo_viaje = $request->tipo_viaje;
-        $pasaje->pasaje_total = $request->pasaje_total;
+        $pasaje->fecha_vuelo = $request->fecha_vuelo;
+        $pasaje->hora_vuelo = $request->hora_vuelo;
+        $pasaje->vuelo = $request->vuelo;
+        $pasaje->cl = $request->cl;
+        $pasaje->st = $request->st;
+        $pasaje->equipaje = $request->equipaje;
+        $pasaje->moneda = $request->moneda;
+        $pasaje->cambio = $request->cambio;
+        $pasaje->tarifa = $request->tarifa;
+        $pasaje->tax = $request->tax;
+        $pasaje->service_fee = $request->service_fee;
+        $pasaje->sub_total = $pasaje->tax + $pasaje->service_fee;
+        $pasaje->not_igv = $request->not_igv;
+        
+        /*$pasaje->pasaje_total = $request->pasaje_total;
         $pasaje->monto_neto = $request->monto_neto;
         $pasaje->fare = $request->monto_neto/1.18;
         $pasaje->igv = $pasaje->fare*0.18;
-        $pasaje->tuaa = $request->tuaa;
-        $pasaje->not_igv = $request->not_igv;
-        $pasaje->razon_social = $request->razon_social;
-        $pasaje->direccion= $request->direccion;
+        $pasaje->tuaa = $request->tuaa;*/
 
         if($request->not_igv == 1){
-            $pasaje->comision = $pasaje->pasaje_total - $pasaje->fare - $pasaje->tuaa;
+            $pasaje->igv = 0;
         }
-        else {
-            $pasaje->comision = $pasaje->pasaje_total - $pasaje->monto_neto - $pasaje->tuaa;
+        else{
+            $pasaje->igv = $pasaje->sub_total*0.18;
         }
-
-        $pasaje->comision_costamar = 0;
-        $pasaje->comision_kiu = 0;
-        $pasaje->comision_sabre = 0;
+        
+        $pasaje->total = $request->total;
+       // $pasaje->comision_costamar = 0;
+        //$pasaje->comision_kiu = 0;
+        //$pasaje->comision_sabre = 0;
 
         //COMISIONES COSTAMAR
         //COMISIONES COSTAMAR
         //AVIANCA 614
-        if($request->aerolinea_id==614)
+        /*if($request->aerolinea_id==614)
         {
         $pasaje->comision_costamar = $pasaje->monto_neto; //CAMBIAMOS $pasaje->monto_neto*0.02
         }
@@ -138,7 +199,6 @@ class PasajeController extends Controller
         $pasaje->deposito_soles =($request->deposito_soles == '') ? 0 : $request->deposito_soles;;
         $pasaje->deposito_dolares = ($request->deposito_dolares == '') ? 0 : $request->deposito_dolares;;
 
-        $pasaje->aerolinea_id=$request->aerolinea_id;
         $pasaje->telefono=$request->telefono;
         $pasaje->observaciones=$request->observaciones;
 
@@ -170,20 +230,9 @@ class PasajeController extends Controller
         }
         if ($request->internacional==9) {
             $pasaje->comision_costamar = $pasaje->monto_neto*0.09;
-        }
+        }*/
 
-        if(is_null($request->fecha_venta) || $request->fecha_venta == "" )
-        {
-            $date = Carbon::now();
-            $pasaje->created_at_venta =  $date->format('Y-m-d H:i:s');
-            $pasaje->created_at = $date->format('Y-m-d H:i:s');
-            $pasaje->save();
-        }
-        else{
-            $pasaje->created_at_venta =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
-            $pasaje->created_at =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
-            $pasaje->save(); //exit();
-        }
+        $pasaje->save();
 
         Session::put('pasaje_id',$pasaje->id);
 
@@ -199,18 +248,54 @@ class PasajeController extends Controller
         $user = User::with('roles')->where('id',Auth::user()->id)->first();
         $role_name ='';
         $pasaje = null;
+        
         foreach($user->roles as $role)
         {
             $role_name = $role->name;
         }
          $condicion ='';
-        if($role_name == 'Responsable' || $role_name == 'Gerente' || $role_name == 'Administrador'){
+        if($role_name == 'Gerente' || $role_name == 'Administrador'){
             $condicion = '%';
 
             $pasaje =  Pasaje::with(['user','aerolinea'])
-                            ->where('created_at','>=', $date->format('Y-m-d'))
                             ->orderBy('created_at','DESC')
                             ->get();
+        }
+        else if($role_name == 'Responsable' )
+        {
+            $usercat = DB::table('user_category')
+                            ->where('user_id',Auth::user()->id)
+                            ->select('category_id')
+                            ->first();
+            
+            $userd = DB::table('user_category')
+                            ->where('category_id',$usercat->category_id)
+                            ->select('user_id')
+                            ->get();
+            $userd_count = DB::table('user_category')
+                            ->where('category_id',$usercat->category_id)
+                            ->count();
+        
+            if(Auth::user()->id == 8){
+                $pasaje =  Pasaje::with(['user','aerolinea'])
+                            ->orderBy('created_at','DESC')
+                            ->get();
+                
+            }
+            else
+            {
+                $useres =array();
+                foreach($userd as $det)
+                {
+                    array_push($useres,$det->user_id);
+                }
+                
+                $pasaje =  Pasaje::with(['user','aerolinea'])
+                            ->whereIn('counter_id',$useres)
+                            ->orderBy('created_at','DESC')
+                            ->get();
+            }
+                            
         }
         else {
             $condicion2 = Auth::user()->id;

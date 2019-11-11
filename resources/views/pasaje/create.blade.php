@@ -64,17 +64,17 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label for="tipo_documento" class="col-md-2 col-form-label">FOID/DNI</label>
+                                                    <label for="tipo_documento_id" class="col-md-3 col-form-label">FOID/DNI</label>
                                                     <div class="col-md-4">
-                                                        <select class="form-control" v-model="pasaje.tipo_documento">
+                                                        <select class="form-control" v-model="pasaje.tipo_documento_id" name="tipo_documento_id">
                                                             <option value="">-Tipo Doc.-</option>
                                                             <option v-for="tipo in tipoDocumentos" :key="tipo.id" :value="tipo.id">
                                                                 @{{tipo.nombre_corto}}
                                                             </option>
                                                         </select>
-                                                        <small class="text-danger" v-for="error in errores.tipo_documento">@{{ error }}</small>
+                                                        <small class="text-danger" v-for="error in errores.tipo_documento_id">@{{ error }}</small>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <input type="text" name="numero_documento" class="form-control" id="numero_documento"
                                                                 v-model="pasaje.numero_documento" placeholder="Número Documento ">
                                                         <small class="text-danger" v-for="error in errores.numero_documento">@{{ error }}</small>
@@ -103,7 +103,7 @@
                                                 <div class="form-group row">
                                                     <label for="ticker_number" class="col-md-3 col-form-label">Nro. Ticket</label>
                                                     <div class="col-md-6">
-                                                        <input type="text" name="ticker_number" id="ticker_number" v-model="pasaje.ticker_number"
+                                                        <input type="text" name="ticket_number" id="ticket_number" v-model="pasaje.ticket_number"
                                                                 class="form-control" placeholder="Número Ticket">
                                                         <small class="text-danger" v-for="error in errores.ticket_number">@{{ error }}</small>
                                                     </div>
@@ -156,9 +156,9 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
-                                                            <label for="ticker_number" class="col-md-4 col-form-label">Nro. de Boleto</label>
+                                                            <label for="ticket_number" class="col-md-4 col-form-label">Nro. de Boleto</label>
                                                             <div class="col-md-8">
-                                                                <input type="text" name="ticker_number" id="ticker_number" v-model="pasaje.ticker_number"
+                                                                <input type="text" name="ticket_number" id="ticket_number" v-model="pasaje.ticket_number"
                                                                         class="form-control" placeholder="Número Ticket">
                                                                 <small class="text-danger" v-for="error in errores.ticket_number">@{{ error }}</small>
                                                             </div>
@@ -208,7 +208,7 @@
                                                             <label for="fecha_vuelo" class="col-md-2 col-form-label">Fecha</label>
                                                             <div class="col-md-4">
                                                                 <input type="text" name="fecha_vuelo" class="form-control" v-model="pasaje.fecha_vuelo"
-                                                                        id="fecha_vuelo" placeholder="Fecha Vuelo">
+                                                                        id="fecha_vuelo" placeholder="Fecha: 08 NOV">
                                                                         <small class="text-danger" v-for="error in errores.fecha_vuelo">@{{ error }}</small>
                                                             </div>
                                                             <label for="hora_vuelo" class="col-md-2 col-form-label">HORA</label>
@@ -280,7 +280,7 @@
                                                             <label for="moneda" class="col-md-3 col-form-label">Tipo Cambio</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="cambio" id="cambio" v-model="pasaje.cambio"
-                                                                    class="form-control" placeholder="Tipo cambio: 3.56">
+                                                                    class="form-control" placeholder="Tipo cambio: 3.56" value='0.00'>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -288,7 +288,7 @@
                                                             <div class="col-md-6">
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input type="checkbox" name="not_igv" v-model="pasaje.not_igv">
+                                                                        <input type="checkbox" name="not_igv" v-model="pasaje.not_igv" checked>
                                                                     </label>
                                                                 </div>
                                                             </div>
