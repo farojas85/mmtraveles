@@ -292,17 +292,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="tarifa" class="col-md-4 col-form-label">Pago Soles</label>
+                                                            <label for="pago_soles" class="col-md-4 col-form-label">Pago Soles</label>
                                                             <div class="col-md-6">
-                                                                <input type="text" name="tarifa" id="tarifa" v-model="pasaje.pago_soles"
+                                                                <input type="text" name="pago_soles" id="pago_soles" v-model="pasaje.pago_soles"
                                                                     class="form-control" placeholder="Pago Soles (S/)">
                                                                 <small class="text-danger" v-for="error in errores.pago_soles">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="tarifa" class="col-md-4 col-form-label">Pago Dolares</label>
+                                                            <label for="pago_dolares" class="col-md-4 col-form-label">Pago Dolares</label>
                                                             <div class="col-md-6">
-                                                                <input type="text" name="tarifa" id="tarifa" v-model="pasaje.pago_dolares"
+                                                                <input type="text" name="pago_dolares" id="pago_dolares" v-model="pasaje.pago_dolares"
                                                                     class="form-control" placeholder="Pago Soles (USD$)">
                                                                 <small class="text-danger" v-for="error in errores.pago_dolares">@{{ error }}</small>
                                                             </div>

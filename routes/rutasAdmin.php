@@ -93,6 +93,7 @@ Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function
 });
 
 Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
+
     $pasaje_id = Session::get('pasaje_id');
     $user = App\User::with(['roles','local'])->where('id',Auth::user()->id)->first();
     $role_name ='';
@@ -106,9 +107,7 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
 
     $empresa = App\Empresa::where('id','=',$user->local->empresa_id)->first();
 
-    $local = App\Local::join('local_user as lu','locals.id','=','lu.local_id')
-                            ->where('lu.user_id',Auth::user()->id)
-                            ->first();
+    $local = App\Local::where('id',$user->local_id)->first();
 
     $aerolinea='';
     switch($pasaje->aerolinea_id)
@@ -349,12 +348,15 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
 });
 
 Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
+
     $fpdf = new Fpdf();
 
     $pasaje_id = $pasaje_id;
+
     $user = App\User::with(['roles','local'])->where('id',Auth::user()->id)->first();
     $role_name ='';
     $pasaje = null;
+
     foreach($user->roles as $role)
     {
         $role_name = $role->name;
@@ -362,9 +364,10 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $pasaje = App\Pasaje::with(['user','aerolinea'])->where('id',$pasaje_id)->first();
 
 
-    $local = App\Local::join('local_user as lu','locals.id','=','lu.local_id')
+    /*$local = App\Local::join('local_user as lu','locals.id','=','lu.local_id')
                             ->where('lu.user_id',$pasaje->counter_id)
-                            ->first();
+                            ->first();*/
+    $local = App\Local::where('id',$pasaje->user->local_id)->first();
 
     $empresa = App\Empresa::where('id','=',$local->empresa->id)->first();
 
@@ -551,6 +554,7 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->setXY(60,120);
     $fpdf->Cell(30,4,$moneda." ".number_format($pasaje->tax,2)." PE",0,0,'L',0);
     $fpdf->SetFont('Courier', 'B', 10);
+
     $fpdf->setXY(90,120);
     $fpdf->Cell(30,4,number_format($pasaje->tax*$pasaje->cambio,2)." OD",0,0,'L',0);
     $fpdf->SetFont('Courier', 'B', 10);

@@ -28,8 +28,8 @@ var app = new Vue({
            sub_total:'',
            igv:0,
            total:'',
-           pago_soles:'',
-           pago_dolares:'',
+           pago_soles:0,
+           pago_dolares:0
 
        },
        aerolineas:[],

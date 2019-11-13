@@ -64,7 +64,7 @@
                                     <div class="table-responsive">
                                         <div class="table-responsive">
                                             <table class="table table-sm table-hover table-bordered">
-                                            
+
                                                 <thead>
                                                     <tr>
                                                         <th><input type="checkbox" v-model="seleccionarTodo" @click="seleccionar_todo"></th>
@@ -73,9 +73,9 @@
                                                         <th>Pasajero</th>
                                                         <th>Aerolinea</th>
                                                         <th>Moneda</th>
-                                                        <th>Pasaje</th>
-                                                        <!--<th>Pago S/</th>
-                                                        <th>Pago $</th>-->
+                                                        <th>Tarifa Neta</th>
+                                                        <th>Pago S/</th>
+                                                        <th>Pago $</th>
                                                         <th>Visa</th>
                                                         <th>Fecha</th>
                                                         <th>Acciones</th>
@@ -98,7 +98,13 @@
                                                             <span v-if="repo.moneda=='PEN' ">Soles(S/)</span>
                                                             <span v-else>Dolares(U$)</span>
                                                         </td>
-                                                        <td>@{{repo.total}}</td>
+                                                        <td>@{{repo.tarifa}}</td>
+                                                        <td>
+                                                            @{{repo.pago_soles.toFixed(2)}}
+                                                        </td>
+                                                        <td>
+                                                            @{{repo.pago_dolares.toFixed(2)}}
+                                                        </td>
                                                         <!--<td>
                                                             <span v-if="repo.moneda=='OD'">@{{(repo.total*repo.cambio).toFixed(2)}}</span>
                                                             <span v-else>@{{repo.total}}</span>
@@ -110,7 +116,7 @@
                                                         <td>@{{repo.pago_visa}}</td>
                                                         <td>@{{repo.created_at}}</td>
                                                         <td>
-                                                            <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"  title="Mostrar Empresa" 
+                                                            <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"  title="Mostrar Empresa"
                                                                 target="_blank">
                                                                 <i class="fas fa-print"></i>
                                                             </a>

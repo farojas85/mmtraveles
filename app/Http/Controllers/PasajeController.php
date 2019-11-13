@@ -52,7 +52,8 @@ class PasajeController extends Controller
             'tax' => 'required',
             'service_fee' => 'required',
             'sub_total' => 'required',
-            'total' => 'required'
+            'total' => 'required',
+            'pago_dolares' => 'required'
         ];
 
         $mensaje= [
@@ -95,6 +96,8 @@ class PasajeController extends Controller
         $pasaje->equipaje = $request->equipaje;
         $pasaje->moneda = $request->moneda;
         $pasaje->cambio = $request->cambio;
+        $pasaje->pago_soles = ($request->pago_soles=='') ? 0 : $request->pago_soles;
+        $pasaje->pago_dolares =  ($request->pago_dolares=='') ? 0 : $request->pago_dolares;
         $pasaje->tarifa = $request->tarifa;
         $pasaje->tax = $request->tax;
         $pasaje->service_fee = $request->service_fee;
@@ -226,11 +229,11 @@ class PasajeController extends Controller
         ];
 
         $this->validate($request,$rules,$mensaje);
-        
+
         $pasaje_count = Pasaje::where('pasaje.created_at','>=',$request->fecha_ini)
                                 ->where('pasaje.created_at','<=',$request->fecha_fin)
                                 ->count();
-        
+
         $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
                             ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
                             ->where('pasaje.created_at','>=',$request->fecha_ini)
@@ -241,27 +244,27 @@ class PasajeController extends Controller
                                         'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at')
                             ->orderBy('pasaje.created_at','DESC')
                             ->get();
-                            
+
         return response()->json([
             'contar' => $pasaje_count,
             'pasaje' => $pasaje
             ]);
 
     }
-    
+
     public function eliminarSeleccionados(Request $request)
     {
         $pasaje = Pasaje::whereIn('id' , $request)->get();
-        
+
         foreach($pasaje as $pa)
         {
             $pa->delete();
         }
-        
+
         return response()->json([
             'mensaje' => "Registros Eliminados Satisfactoriamente"]);
     }
-    
+
     public function destroy(Request $request)
     {
         $pasaje = Pasaje::findOrFail($request->id);

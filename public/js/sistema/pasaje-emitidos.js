@@ -49,7 +49,7 @@ var app = new Vue({
                     this.total_reporte = -1;
                 }
                 this.errores=[]
-            }) 
+            })
             .catch((errors) => {
                 if(response = errors.response) {
                     this.errores = response.data.errors,
@@ -105,7 +105,7 @@ var app = new Vue({
                             confirmButtonColor:"#1abc9c",
                         }).then(respuesta => {
                             if(respuesta.value) {
-                                this.listarEmitidos();
+                                this.buscar();
                             }
                         })
                     ))
@@ -122,9 +122,9 @@ var app = new Vue({
                 )
             })
         },
-        
-        
-        
+
+
+
         eliminarSeleccionados() {
             swal.fire({
                 title:"¿Está Seguro de Eliminar?",
