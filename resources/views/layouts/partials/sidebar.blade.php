@@ -126,9 +126,9 @@
                         @endcan
                         @can('pasajes.comisiones')
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="pasaje-emitidos" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Pasajes Comisiones</p>
+                                <p>Pasajes Emitidos</p>
                             </a>
                         </li>
                         @endcan

@@ -27,22 +27,11 @@ class PasajeController extends Controller
         return view('');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('pasaje.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $rules =[
@@ -64,32 +53,32 @@ class PasajeController extends Controller
             'service_fee' => 'required',
             'sub_total' => 'required',
             'total' => 'required'
-        ]; 
-        
+        ];
+
         $mensaje= [
             'required' => 'Campo Obligatorio'
         ];
-        
+
         $this->validate($request,$rules,$mensaje);
-        
+
         $pasaje = new Pasaje();
         $pasaje->counter_id = Auth::user()->id;
         $pasaje->pasajero = $request->pasajero;
         $pasaje->tipo_documento_id = $request->tipo_documento_id;
         $pasaje->numero_documento = $request->numero_documento;
         $pasaje->dni = $request->numero_documento;
-        
+
         if(is_null($request->fecha_venta) || $request->fecha_venta == "" )
         {
             $date = Carbon::now();
             $pasaje->created_at_venta =  $date->format('Y-m-d H:i:s');
             $pasaje->created_at = $date->format('Y-m-d H:i:s');
-            
+
         }
         else{
             $pasaje->created_at_venta =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
             $pasaje->created_at =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
-  
+
         }
         $pasaje->ticket_number = $request->ticket_number;
         $pasaje->aerolinea_id=$request->aerolinea_id;
@@ -111,12 +100,6 @@ class PasajeController extends Controller
         $pasaje->service_fee = $request->service_fee;
         $pasaje->sub_total = $pasaje->tax + $pasaje->service_fee;
         $pasaje->not_igv = $request->not_igv;
-        
-        /*$pasaje->pasaje_total = $request->pasaje_total;
-        $pasaje->monto_neto = $request->monto_neto;
-        $pasaje->fare = $request->monto_neto/1.18;
-        $pasaje->igv = $pasaje->fare*0.18;
-        $pasaje->tuaa = $request->tuaa;*/
 
         if($request->not_igv == 1){
             $pasaje->igv = 0;
@@ -124,113 +107,8 @@ class PasajeController extends Controller
         else{
             $pasaje->igv = $pasaje->sub_total*0.18;
         }
-        
+
         $pasaje->total = $request->total;
-       // $pasaje->comision_costamar = 0;
-        //$pasaje->comision_kiu = 0;
-        //$pasaje->comision_sabre = 0;
-
-        //COMISIONES COSTAMAR
-        //COMISIONES COSTAMAR
-        //AVIANCA 614
-        /*if($request->aerolinea_id==614)
-        {
-        $pasaje->comision_costamar = $pasaje->monto_neto; //CAMBIAMOS $pasaje->monto_neto*0.02
-        }
-        //PERUVIAN 611
-        if($request->aerolinea_id==611)
-        {
-        $pasaje->comision_costamar = $pasaje->monto_neto*0.06;
-        }
-        //LC PERU 613 COSTAMAR
-        if($request->aerolinea_id==613)
-        {
-        $pasaje->comision_costamar = $pasaje->monto_neto*0.08;
-        }
-        //LC PERU 618 COSTAMAR 2
-        if($request->aerolinea_id==618)
-        {
-        $pasaje->comision_costamar = $pasaje->monto_neto*0.08;
-        }
-        if($request->aerolinea_id==617)
-        {
-        $pasaje->comision_costamar = $pasaje->monto_neto*0.08;
-        }
-
-        //COMISIONES SABRE
-            //PERUVIAN 611 y AVIANCA 614 y LATAM 612 y LC PERU 613
-        if($request->aerolinea_id==611
-            || $request->aerolinea_id==612
-            || $request->aerolinea_id==613
-            || $request->aerolinea_id==614
-            || $request->aerolinea_id==617)
-        {
-            if ($pasaje->tipo_viaje==1) {
-                $pasaje->comision_sabre = 1;
-            }
-            else{
-                $pasaje->comision_sabre = 2;
-            }
-        }
-
-
-    //COMISIONES KIU
-        //STAR PERU 615
-        if($request->aerolinea_id==615)
-        {
-            $pasaje->comision = $pasaje->pasaje_total-$pasaje->monto_neto-$pasaje->tuaa;
-            $pasaje->comision_kiu = $pasaje->fare*0.04;
-
-            if($request->not_igv){
-             $pasaje->comision = $pasaje->pasaje_total-$pasaje->fare-$pasaje->tuaa;
-
-            }
-            else{
-            $pasaje->comision = $pasaje->pasaje_total-$pasaje->monto_neto-$pasaje->tuaa;
-            }
-
-        //$pasaje->comision_kiu = $pasaje->monto_neto*0.02;
-        }
-
-        $pasaje->pago_soles = ($request->pago_soles == '') ? 0 : $request->pago_soles;
-        $pasaje->pago_dolares = ($request->pago_dolares == '') ? 0 : $request->pago_dolares;
-        $pasaje->pago_visa = ($request->pago_visa == '') ? 0 : $request->pago_visa;;
-
-        $pasaje->deposito_soles =($request->deposito_soles == '') ? 0 : $request->deposito_soles;;
-        $pasaje->deposito_dolares = ($request->deposito_dolares == '') ? 0 : $request->deposito_dolares;;
-
-        $pasaje->telefono=$request->telefono;
-        $pasaje->observaciones=$request->observaciones;
-
-        $pasaje->counter_id = Auth::user()->id;
-
-        if ($request->internacional==1) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.01;
-        }
-        if ($request->internacional==2) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.02;
-        }
-        if ($request->internacional==3) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.03;
-        }
-        if ($request->internacional==4) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.04;
-        }
-        if ($request->internacional==5) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.05;
-        }
-        if ($request->internacional==6) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.06;
-        }
-        if ($request->internacional==7) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.07;
-        }
-        if ($request->internacional==8) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.08;
-        }
-        if ($request->internacional==9) {
-            $pasaje->comision_costamar = $pasaje->monto_neto*0.09;
-        }*/
 
         $pasaje->save();
 
@@ -248,7 +126,7 @@ class PasajeController extends Controller
         $user = User::with('roles')->where('id',Auth::user()->id)->first();
         $role_name ='';
         $pasaje = null;
-        
+
         foreach($user->roles as $role)
         {
             $role_name = $role->name;
@@ -267,7 +145,7 @@ class PasajeController extends Controller
                             ->where('user_id',Auth::user()->id)
                             ->select('category_id')
                             ->first();
-            
+
             $userd = DB::table('user_category')
                             ->where('category_id',$usercat->category_id)
                             ->select('user_id')
@@ -275,12 +153,12 @@ class PasajeController extends Controller
             $userd_count = DB::table('user_category')
                             ->where('category_id',$usercat->category_id)
                             ->count();
-        
+
             if(Auth::user()->id == 8){
                 $pasaje =  Pasaje::with(['user','aerolinea'])
                             ->orderBy('created_at','DESC')
                             ->get();
-                
+
             }
             else
             {
@@ -289,13 +167,13 @@ class PasajeController extends Controller
                 {
                     array_push($useres,$det->user_id);
                 }
-                
+
                 $pasaje =  Pasaje::with(['user','aerolinea'])
                             ->whereIn('counter_id',$useres)
                             ->orderBy('created_at','DESC')
                             ->get();
             }
-                            
+
         }
         else {
             $condicion2 = Auth::user()->id;
@@ -330,48 +208,67 @@ class PasajeController extends Controller
         Fpdf::setXY(4,16);
         Fpdf::Output();
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Pasaje  $pasaje
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Pasaje $pasaje)
+
+    public function pasajeEmitidos()
     {
-        //
+        return view('pasaje.emitidos');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Pasaje  $pasaje
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pasaje $pasaje)
+    public function reporteEmitidos(Request $request)
     {
-        //
-    }
+        $rules =[
+            'fecha_ini' => 'required',
+            'fecha_fin' => 'required',
+        ];
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Pasaje  $pasaje
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Pasaje $pasaje)
-    {
-        //
-    }
+        $mensaje= [
+            'required' => 'Campo Obligatorio'
+        ];
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Pasaje  $pasaje
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Pasaje $pasaje)
+        $this->validate($request,$rules,$mensaje);
+        
+        $pasaje_count = Pasaje::where('pasaje.created_at','>=',$request->fecha_ini)
+                                ->where('pasaje.created_at','<=',$request->fecha_fin)
+                                ->count();
+        
+        $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
+                            ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+                            ->where('pasaje.created_at','>=',$request->fecha_ini)
+                            ->where('pasaje.created_at','<=',$request->fecha_fin)
+                            ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
+                                        'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
+                                        'ruta','pasaje.total','pago_soles','pago_dolares',
+                                        'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at')
+                            ->orderBy('pasaje.created_at','DESC')
+                            ->get();
+                            
+        return response()->json([
+            'contar' => $pasaje_count,
+            'pasaje' => $pasaje
+            ]);
+
+    }
+    
+    public function eliminarSeleccionados(Request $request)
     {
-        //
+        $pasaje = Pasaje::whereIn('id' , $request)->get();
+        
+        foreach($pasaje as $pa)
+        {
+            $pa->delete();
+        }
+        
+        return response()->json([
+            'mensaje' => "Registros Eliminados Satisfactoriamente"]);
+    }
+    
+    public function destroy(Request $request)
+    {
+        $pasaje = Pasaje::findOrFail($request->id);
+        $pasaje->delete();
+
+        return response()->json([
+            'mensaje' => 'Pasaje Eliminado Satisfactoriamente'
+        ]);
     }
 }

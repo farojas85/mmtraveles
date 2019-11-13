@@ -269,9 +269,7 @@
                                                             <label for="moneda" class="col-md-3 col-form-label">Moneda</label>
                                                             <div class="col-md-6">
                                                                 <select name="moneda" class="form-control" v-model="pasaje.moneda">
-                                                                    <option value="">Moneda</option>
-                                                                    <option value="PEN">Soles</option>
-                                                                    <option value="OD">D&oacute;lares</option>
+                                                                    <option value="USD">D&oacute;lares</option>
                                                                 </select>
                                                                 <small class="text-danger" v-for="error in errores.moneda">@{{ error }}</small>
                                                             </div>
@@ -293,10 +291,26 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group row">
+                                                            <label for="tarifa" class="col-md-4 col-form-label">Pago Soles</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="tarifa" id="tarifa" v-model="pasaje.pago_soles"
+                                                                    class="form-control" placeholder="Pago Soles (S/)">
+                                                                <small class="text-danger" v-for="error in errores.pago_soles">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="tarifa" class="col-md-4 col-form-label">Pago Dolares</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="tarifa" id="tarifa" v-model="pasaje.pago_dolares"
+                                                                    class="form-control" placeholder="Pago Soles (USD$)">
+                                                                <small class="text-danger" v-for="error in errores.pago_dolares">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
-                                                            <label for="tarifa" class="col-md-3 col-form-label">Air Fare/Tarifa</label>
+                                                            <label for="tarifa" class="col-md-4 col-form-label">Air Fare/Tarifa Neta</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="tarifa" id="tarifa" v-model="pasaje.tarifa"
                                                                     class="form-control" placeholder="Tarifa">
@@ -304,7 +318,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="tax" class="col-md-3 col-form-label">Tax/Impuestos</label>
+                                                            <label for="tax" class="col-md-3 col-form-label">Tax/TUAA</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="tax" id="tax" v-model="pasaje.tax"
                                                                     class="form-control" placeholder="Tax / Impuestos">
