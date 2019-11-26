@@ -39,25 +39,40 @@
                                             @{{lugar.name}}
                                         </option>
                                     </select>
+                                    <small class="text-danger" v-for="error in errores.lugar_id">@{{ error }}</small>
                                 </div>
                                 <div class="col-md-3 noimpre">
-                                    <div class="input-group mb-3" title="Fecha Inicio">
+                                    <div class="input-group" title="Fecha Inicio">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Fec. Ini.</span>
                                         </div>
                                         <input type="date" name="fecha_inicio" class="form-control"
                                                 v-model="busqueda.fecha_ini">
                                     </div>
+                                    <small class="text-danger" v-for="error in errores.fecha_ini">@{{ error }}</small>
                                 </div>
                                 <div class="col-md-3 noimpre">
-                                    <div class="input-group mb-3" title="Fecha Inicio">
+                                    <div class="input-group" title="Fecha Inicio">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Fec. Fin.</span>
                                         </div>
                                         <input type="date" name="fecha_final" class="form-control"
                                             v-model="busqueda.fecha_fin">
                                     </div>
+                                    <small class="text-danger" v-for="error in errores.fecha_fin">@{{ error }}</small>
                                 </div>
+                                <div class="col-md-3 noimpre">
+                                    <select name="aerolinea_id" class="form-control" v-model="busqueda.aerolinea_id" >
+                                        <option value>-AEROLÍNEA-</option>
+                                        <option value="%">TODOS</option>
+                                        <option v-for="aero in aerolineas" :key="aero.id" :value="aero.id">
+                                            @{{ aero.name }}
+                                        </option>
+                                    </select>
+                                    <small class="text-danger" v-for="error in errores.aerolinea_id">@{{ error }}</small>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-3 noimpre">
                                     <button type="button" class="btn btn-primary" @click="buscar">
                                         <i class="fas fa-search"></i> Buscar

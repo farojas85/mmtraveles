@@ -30,17 +30,30 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-12">
-                        <input type="text" class="form-control" name="username" v-model="user.username"
-                            placeholder="Nombre de Usuario" >
-                        <small class="text-danger" v-for="error in errores.username">@{{ error }}</small>
+                    <div class="col-12" v-if="mostrar_password">
+                        <div class="input-group">
+                            <div class="input-group-prepend" @click="mostrarPasswords" style ="cursor:pointer" title="Ocultar Contrasena">
+                                <span class="input-group-text"><i class="fas fa-eye-slash"></i></span>
+                            </div>
+                            <input type="text" class="form-control" v-model="user.password" placeholder="Contraseña">
+                        </div>
+                        <small class="text-danger" v-for="error in errores.password">@{{ error }}</small>
+                    </div>
+                    <div class="col-12" v-else>
+                        <div class="input-group">
+                            <div class="input-group-prepend" @click="mostrarPasswords" style ="cursor:pointer" title="Mostrar Contraseña">
+                                <span class="input-group-text"><i class="fas fa-eye" ></i></span>
+                            </div>
+                            <input type="password" class="form-control" v-model="user.password" placeholder="Contraseña">
+                        </div>
+                        <small class="text-danger" v-for="error in errores.password">@{{ error }}</small>
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-12">
-                        <input type="password" class="form-control" name="password" v-model="user.password"
-                            placeholder="Contraseña de Usuario" >
-                        <small class="text-danger" v-for="error in errores.password">@{{ error }}</small>
+                        <input type="text" class="form-control" name="username" v-model="user.username"
+                            placeholder="Nombre de Usuario" >
+                        <small class="text-danger" v-for="error in errores.username">@{{ error }}</small>
                     </div>
                 </div>
                 <div class="form-group row">

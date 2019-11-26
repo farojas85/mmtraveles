@@ -116,6 +116,10 @@
                                                         <td>@{{repo.pago_visa}}</td>
                                                         <td>@{{repo.created_at}}</td>
                                                         <td>
+                                                             <button type="button" class="btn btn-info btn-xs"
+                                                                title="Ver Adicionales" @click="verAdicionales(repo.id)">
+                                                                <i class="fas fa-cart-plus"></i>
+                                                            </button>
                                                             <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"  title="Mostrar Empresa"
                                                                 target="_blank">
                                                                 <i class="fas fa-print"></i>
@@ -161,6 +165,56 @@
             </div>
         </div>
     </section>
+    <div class="modal" tabindex="-1" role="dialog" id="adicional-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registros Adicionales</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Descripci&oacute;n</th>
+                                            <th>Monto</th>
+                                            <th>Service Fee</th>
+                                            <th>Importe</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-if="total_adicionales==0">
+                                            <td  colspan="4" class="text-center text-danger">-- Adicionales No Registrados --</td>
+                                        </tr>
+                                        <tr v-else v-for="adic in adicionales">
+                                            <td>@{{adic.descripcion}}</td>
+                                            <td>@{{adic.monto.toFixed(2)}}</td>
+                                            <td>@{{adic.tuaa.toFixed(2)}}</td>
+                                            <td>@{{adic.total.toFixed(2)}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th colspan="3" class="text-right"> Total</th>
+                                            <td>@{{suma_adicionales }}</td>
+                                        </tr>
+                                    </tbody>
+                                
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('scripties')

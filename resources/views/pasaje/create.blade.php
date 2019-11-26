@@ -127,7 +127,7 @@
                                                         <div class="form-group row">
                                                             <label for="aerolinea_id" class="col-md-3 col-form-label">L&Iacute;NEA A&Eacute;REA</label>
                                                             <div class="col-md-6">
-                                                                <select name="aerolinea_id" class="form-control" v-model="pasaje.aerolinea_id">
+                                                                <select name="aerolinea_id" class="form-control" v-model="pasaje.aerolinea_id" @change="filtroPorId">
                                                                     <option value="">-SELECCIONAR-</option>
                                                                     <option v-for="aero in aerolineas" :key="aero.id" :value="aero.id">
                                                                         @{{aero.name}}
@@ -139,8 +139,8 @@
                                                         <div class="form-group row">
                                                             <label for="direccion" class="col-md-3 col-form-label">DIRECCI&Oacute;N</label>
                                                             <div class="col-md-9">
-                                                                <input type="text" name="direccion"  class="form-control" v-model="pasaje.direccion"
-                                                                        id="direccion" placeholder="Dirección">
+                                                                <textarea  name="direccion"  class="form-control" v-model="pasaje.direccion"
+                                                                        id="direccion" placeholder="Dirección" readonly rows="2"></textarea>
                                                                 <small class="text-danger" v-for="error in errores.direccion">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -148,7 +148,7 @@
                                                             <label for="direccion" class="col-md-3 col-form-label">R.U.C.</label>
                                                             <div class="col-md-9">
                                                                 <input type="text" name="ruc"  class="form-control" v-model="pasaje.ruc"
-                                                                        id="ruc" placeholder="R.U.C">
+                                                                        id="ruc" placeholder="R.U.C" readonly>
                                                                 <small class="text-danger" v-for="error in errores.ruc">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -196,7 +196,7 @@
                                                                 <small class="text-danger" v-for="error in errores.ruta">@{{ error }}</small>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <select name="tipo_viaje" class="form-control" v-model="pasaje.tipo_viaje">
+                                                                <select name="tipo_viaje" class="form-control" v-model="pasaje.tipo_viaje" @change="cambiarHorario">
                                                                     <option value="">-TIPO VIAJE-</option>
                                                                     <option value="1">IDA</option>
                                                                     <option value="2">IDA Y VUELTA</option>
@@ -206,16 +206,30 @@
                                                         </div>
                                                         <div class="form-group row">
                                                             <label for="fecha_vuelo" class="col-md-2 col-form-label">Fecha</label>
-                                                            <div class="col-md-4">
-                                                                <input type="text" name="fecha_vuelo" class="form-control" v-model="pasaje.fecha_vuelo"
+                                                            <div class="col-md-4" title="Fecha Viaje">
+                                                                <input type="date" name="fecha_vuelo" class="form-control" v-model="pasaje.fecha_vuelo"
                                                                         id="fecha_vuelo" placeholder="Fecha: 08 NOV">
                                                                         <small class="text-danger" v-for="error in errores.fecha_vuelo">@{{ error }}</small>
                                                             </div>
-                                                            <label for="hora_vuelo" class="col-md-2 col-form-label">HORA</label>
-                                                            <div class="col-md-4">
+                                                            <label for="hora_vuelo" class="col-md-3 col-form-label">Hora Ida</label>
+                                                            <div class="col-md-3">
                                                                 <input type="text" name="hora_vuelo" class="form-control" v-model="pasaje.hora_vuelo"
-                                                                        id="hora_vuelo" placeholder="Hora: 16:30">
+                                                                        id="hora_vuelo" placeholder="16:30">
                                                                 <small class="text-danger" v-for="error in errores.hora_vuelo">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row" v-if="hora_regreso">
+                                                            <label for="fecha_retorno" class="col-md-2 col-form-label">Fec. Ret.</label>
+                                                            <div class="col-md-4" title="Fecha de Retorno">
+                                                                <input type="date" name="fecha_retorno" class="form-control" v-model="pasaje.fecha_retorno"
+                                                                        id="fecha_vuelo" placeholder="Fecha: 08 NOV">
+                                                                        <small class="text-danger" v-for="error in errores.fecha_vuelo">@{{ error }}</small>
+                                                            </div>
+                                                            <label for="hora_vuelta" class="col-md-3 col-form-label">Hora Vuelta</label>
+                                                            <div class="col-md-3">
+                                                                <input type="text" name="hora_vuelta" class="form-control" v-model="pasaje.hora_vuelta"
+                                                                        id="hora_vuelta" placeholder="16:30">
+                                                                <small class="text-danger" v-for="error in errores.hora_vuelta">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -266,8 +280,12 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
-                                                            <label for="moneda" class="col-md-3 col-form-label">Moneda</label>
+                                                            <label for="moneda" class="col-md-3 col-form-label">Monto</label>
                                                             <div class="col-md-6">
+                                                                <input type="text" name="monto_neto" id="monto_neto" v-model="pasaje.monto_neto"
+                                                                    class="form-control" placeholder="Monto" value='0.00'>
+                                                            </div>
+                                                            <div class="col-md-3">
                                                                 <select name="moneda" class="form-control" v-model="pasaje.moneda">
                                                                     <option value="USD">D&oacute;lares</option>
                                                                 </select>
@@ -281,16 +299,16 @@
                                                                     class="form-control" placeholder="Tipo cambio: 3.56" value='0.00'>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group row">
+                                                        <!--<div class="form-group row">
                                                             <label for="inputEmail1" class="col-md-4 col-form-label">Exonerado del IGV</label>
                                                             <div class="col-md-6">
                                                                 <div class="checkbox">
                                                                     <label>
-                                                                        <input type="checkbox" name="not_igv" v-model="pasaje.not_igv" checked>
+                                                                        <input type="checkbox" name="not_igv" v-model="pasaje.not_igv" checked @change="calcularIgv">
                                                                     </label>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div>-->
                                                         <div class="form-group row">
                                                             <label for="pago_soles" class="col-md-4 col-form-label">Pago Soles</label>
                                                             <div class="col-md-6">
@@ -307,13 +325,37 @@
                                                                 <small class="text-danger" v-for="error in errores.pago_dolares">@{{ error }}</small>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group row">
+                                                            <label for="pago_visa" class="col-md-4 col-form-label">Pago Visa</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="pago_visa" id="pago_visa" v-model="pasaje.pago_visa"
+                                                                    class="form-control" placeholder="Pago Visa">
+                                                                <small class="text-danger" v-for="error in errores.pago_visa">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="deposito_soles" class="col-md-4 col-form-label">Dep&oacute;sito Soles</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="deposito_soles" id="deposito_soles" v-model="pasaje.deposito_soles"
+                                                                    class="form-control" placeholder="Pago Visa">
+                                                                <small class="text-danger" v-for="error in errores.deposito_soles">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label for="deposito_dolares" class="col-md-4 col-form-label">Dep&oacute;sito Dolares</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="deposito_dolares" id="deposito_dolares" v-model="pasaje.deposito_dolares"
+                                                                    class="form-control" placeholder="Pago Visa">
+                                                                <small class="text-danger" v-for="error in errores.deposito_dolares">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
                                                             <label for="tarifa" class="col-md-4 col-form-label">Air Fare/Tarifa Neta</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="tarifa" id="tarifa" v-model="pasaje.tarifa"
-                                                                    class="form-control" placeholder="Tarifa">
+                                                                    class="form-control" placeholder="Tarifa" @change="calcularTotal">
                                                                 <small class="text-danger" v-for="error in errores.tarifa">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -321,7 +363,7 @@
                                                             <label for="tax" class="col-md-3 col-form-label">Tax/TUAA</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="tax" id="tax" v-model="pasaje.tax"
-                                                                    class="form-control" placeholder="Tax / Impuestos">
+                                                                    class="form-control" placeholder="Tax / Impuestos" @change="calcularTotal">
                                                                 <small class="text-danger" v-for="error in errores.tax">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -329,7 +371,7 @@
                                                             <label for="service_fee" class="col-md-3 col-form-label">Service FEE</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="service_fee" id="service_fee" v-model="pasaje.service_fee"
-                                                                    class="form-control" placeholder="Service FEE">
+                                                                    class="form-control" placeholder="Service FEE" @change="calcularTotal">
                                                                 <small class="text-danger" v-for="error in errores.service_fee">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -337,7 +379,7 @@
                                                             <label for="sub_total" class="col-md-3 col-form-label">Sub Total</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="sub_total" id="sub_total" v-model="pasaje.sub_total"
-                                                                    class="form-control" placeholder="Sub Total">
+                                                                    class="form-control" placeholder="Sub Total" readonly >
                                                                 <small class="text-danger" v-for="error in errores.sub_total">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -345,7 +387,7 @@
                                                             <label for="igv" class="col-md-3 col-form-label">I.G.V.:</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="igv" id="igv" v-model="pasaje.igv"
-                                                                    class="form-control" placeholder="0.00">
+                                                                    class="form-control" placeholder="0.00"  @change="calcularTotal" >
                                                                 <small class="text-danger" v-for="error in errores.igv">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -353,7 +395,7 @@
                                                             <label for="total" class="col-md-3 col-form-label">TOTAL</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="total" id="total" v-model="pasaje.total"
-                                                                    class="form-control" placeholder="TOTAL">
+                                                                    class="form-control" placeholder="TOTAL" readonly>
                                                                 <small class="text-danger" v-for="error in errores.total">@{{ error }}</small>
                                                             </div>
                                                         </div>
@@ -363,6 +405,62 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!--
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card card-success">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Datos Adicionales</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label class="col-md-1 col-form-label col-form-label-sm" >Detalle</label>
+                                                    <div class="col-md-5"><input type="text" class="form-control form-control-sm" v-model="adicional.detalle" id="detalle" title="Detalle Adicional"></div>
+                                                    <div class="col-md-1"><input type="text" class="form-control form-control-sm" placeholder="Monto" v-model="adicional.monto" id="montod" title="Monto Del Detalle"></div>
+                                                    <div class="col-md-1"><input type="text" class="form-control form-control-sm" placeholder="Service FEE" v-model="adicional.service_fee" id="fee" title="Ingrese Service Fee"></div>
+                                                    <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm" @click="agregarAdicional">A&ntildeadir</button></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-bordered">
+                                                                <thead class="bg-dark">
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Detalle</th>
+                                                                        <th>Monto</th>
+                                                                        <th>Service FEE</th>
+                                                                        <th>Importe</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr v-if="pasaje.adicionales.length==0">
+                                                                        <td colspan="5" class="text-danger text-center">--Datos No Añadidos--</td>
+                                                                    </tr>
+                                                                    <tr v-else v-for="(adic,index) in pasaje.adicionales">
+                                                                        <td><button type="button" class="btn btn-danger btn-sm" @click="eliminarAdicional(index)"><i class="fas fa-trash"></i></button></td>
+                                                                        <td>@{{adic.detalle }}</td>
+                                                                        <td>@{{adic.monto.toFixed(2)}}</td>
+                                                                        <td>@{{adic.service_fee.toFixed(2)}}</td>
+                                                                        <td>@{{adic.importe.toFixed(2)}}</td>
+                                                                    </tr>
+                                                                    <tr v-if="pasaje.adicionales.length>0">
+                                                                        <td colspan="2"></td>
+                                                                        <td></td>
+                                                                        <th class="bg-dark text-right">TOTAL</th>
+                                                                        <td>@{{ total_importe }}</td>
+
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
                                 <div class="row no-print">
                                     <div class="col-md-12">
                                         <div class="form-group">

@@ -16,12 +16,14 @@ var app = new Vue({
     methods:{
         listaPasaje(){
             axios.get('/pasajes/ventas').then((response) => {
+                console.log(response.data)
                 this.pasajes = response.data
                 this.total_pasajes = this.pasajes.length
                 this.suma_reporte =0
-                this.pasajes.forEach(element => {
-                    this.suma_reporte += element.pasaje_total
-                });
+                for(let i = 0; i <this.total_pasajes; i++)
+                {
+                    this.suma_reporte += parseFloat(this.pasajes[i].tarifa)
+                }
             })
         },
     },

@@ -8,11 +8,15 @@ var app = new Vue({
        busqueda:{
             lugar_id:'',
             fecha_ini:'',
-            fecha_fin:''
+            fecha_fin:'',
+            aerolinea_id:''
        },
        lugar:'',
        lugar_detalle:'',
-       suma_reporte:0
+       suma_reporte:0,
+       aerolineas:[],
+       total_aerolineas:0,
+       errores:[]
     },
     methods: {
 
@@ -37,17 +41,33 @@ var app = new Vue({
             })
         },
         buscar(){
-            axios.get('/reporte-caja-general/tabla',{params:this.busqueda }).then((response) => {
+            axios.get('/reporte-caja-general/tabla',{params:this.busqueda })
+            .then((response) => {
                 this.reporte = response.data
                 this.total_reporte = this.reporte.length
                 this.suma_reporte =0
                 this.reporte.forEach(element => {
-                    this.suma_reporte += element.pasaje_total
-                });
+                    this.suma_reporte += element.tarifa
+                })
+                this.errores=[]
+            })
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors,
+                    console.clear()
+                }
+            })
+        },
+        listarAerolineas() {
+            axios.get('/reporte-caja-general/listarAerolineas')
+            .then((response) => {
+                this.aerolineas = response.data
+                this.total_aerolineas = this.aerolineas.length
             })
         }
     },
     created() {
         this.listarLugares();
+        this.listarAerolineas();
     }
 })

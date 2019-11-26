@@ -16,9 +16,10 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
+
 use Session;
 
-class PasajesExport implements FromArray, WithHeadings
+class PasajesExport implements FromArray, WithHeadings,WithColumnFormatting
 {
     protected $datos;
     
@@ -38,21 +39,31 @@ class PasajesExport implements FromArray, WithHeadings
         return [
             'ID',
             'COUNTER',
+            'TICKET',
             'CODIGO',
             'AEROLINEA',
             'PASAJERO',
             'RUTA',
-            'PASAJE_TOTAL',
+            'TARIFA',
+            'TAX/TUAA',
+            'SERVICE_FEE',
+            'TOTAL',
             'PAGO_SOLES',
             'PAGO_DOLARES',
             'PAGO_VISA',
             'DEPOSITO_SOLES',
-            'DEPOSITO_DOLAES',
+            'DEPOSITO_DOLARES',
             'FECHA'
 
         ];
     }
-
+    
+    public function columnFormats(): array
+    {
+        return [
+            'C' => NumberFormat::FORMAT_NUMBER,
+        ];
+    }
     /*public function registerEvents(): array
     {
         return [

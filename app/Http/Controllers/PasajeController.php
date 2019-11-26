@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Pasaje;
+use App\PasajeAdicional;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Codedge\Fpdf\Facades\Fpdf;
@@ -53,11 +54,13 @@ class PasajeController extends Controller
             'service_fee' => 'required',
             'sub_total' => 'required',
             'total' => 'required',
-            'pago_dolares' => 'required'
+            'monto_neto' => 'required'
         ];
 
         $mensaje= [
-            'required' => 'Campo Obligatorio'
+            'required' => 'Campo Obligatorio',
+            //'max' => 'Pago Dolares no debe exceder de TOTAL'
+            //'same' => 'Pago Dolares debe ser Igual a Total'
         ];
 
         $this->validate($request,$rules,$mensaje);
@@ -67,7 +70,7 @@ class PasajeController extends Controller
         $pasaje->pasajero = $request->pasajero;
         $pasaje->tipo_documento_id = $request->tipo_documento_id;
         $pasaje->numero_documento = $request->numero_documento;
-        $pasaje->dni = $request->numero_documento;
+        $pasaje->dni = null;
 
         if(is_null($request->fecha_venta) || $request->fecha_venta == "" )
         {
@@ -89,31 +92,61 @@ class PasajeController extends Controller
         $pasaje->ruta = $request->ruta;
         $pasaje->tipo_viaje = $request->tipo_viaje;
         $pasaje->fecha_vuelo = $request->fecha_vuelo;
+        $pasaje->fecha_retorno =  ($request->fecha_retorno== '') ?null : $request->hora_vuelta;
         $pasaje->hora_vuelo = $request->hora_vuelo;
+        $pasaje->hora_vuelta = ($request->hora_vuelta== '') ? null : $request->hora_vuelta;
         $pasaje->vuelo = $request->vuelo;
         $pasaje->cl = $request->cl;
         $pasaje->st = $request->st;
         $pasaje->equipaje = $request->equipaje;
+
+        $pasaje->monto_neto = $request->monto_neto;
+
         $pasaje->moneda = $request->moneda;
+
         $pasaje->cambio = $request->cambio;
         $pasaje->pago_soles = ($request->pago_soles=='') ? 0 : $request->pago_soles;
         $pasaje->pago_dolares =  ($request->pago_dolares=='') ? 0 : $request->pago_dolares;
+        $pasaje->pago_visa =  ($request->pago_visa=='') ? 0 : $request->pago_visa;
+        $pasaje->deposito_soles =  ($request->deposito_soles=='') ? 0 : $request->deposito_soles;
+        $pasaje->deposito_dolares =  ($request->deposito_dolares=='') ? 0 : $request->deposito_dolares;
+
         $pasaje->tarifa = $request->tarifa;
         $pasaje->tax = $request->tax;
         $pasaje->service_fee = $request->service_fee;
-        $pasaje->sub_total = $pasaje->tax + $pasaje->service_fee;
+        $pasaje->sub_total = $pasaje->tarifa + $pasaje->tax + $pasaje->service_fee;
         $pasaje->not_igv = $request->not_igv;
 
-        if($request->not_igv == 1){
-            $pasaje->igv = 0;
-        }
-        else{
-            $pasaje->igv = $pasaje->sub_total*0.18;
-        }
+        $pasaje->igv = ($request->igv == 0) ? 0 : $request->igv;
 
         $pasaje->total = $request->total;
 
+        $suma_pago = $pasaje->pago_soles + $pasaje->pago_dolares*$pasaje->cambio;
+
+        if($suma_pago > $pasaje->total*$request->cambio)
+        {
+            $pasaje->redondeo = $suma_pago - ($pasaje->total*$request->cambio) ;
+        }
+        else{
+            $pasaje->redondeo = 0;
+        }
+
         $pasaje->save();
+
+
+
+        foreach($request->adicionales as $adic)
+        {
+            $pasaje_adicional = new PasajeAdicional();
+            $pasaje_adicional->pasaje_id = $pasaje->id;
+            $pasaje_adicional->descripcion = $adic['detalle'];
+            $pasaje_adicional->monto = $adic['monto'];
+            $pasaje_adicional->tuaa = $adic['service_fee'];
+            $pasaje_adicional->total = $adic['importe'];
+
+            //return $pasaje_adicional;
+           $pasaje_adicional->save();
+        }
 
         Session::put('pasaje_id',$pasaje->id);
 
@@ -182,7 +215,6 @@ class PasajeController extends Controller
             $condicion2 = Auth::user()->id;
             $pasaje= Pasaje::with(['user','aerolinea'])
                         ->where('counter_id', Auth::user()->id)
-                        ->where('created_at','>=', $date->format('Y-m-d'))
                         ->orderBy('created_at','DESC')
                         ->get();
         }
@@ -240,7 +272,7 @@ class PasajeController extends Controller
                             ->where('pasaje.created_at','<=',$request->fecha_fin)
                             ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                         'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
-                                        'ruta','pasaje.total','pago_soles','pago_dolares',
+                                        'ruta','pasaje.tarifa','pago_soles','pago_dolares',
                                         'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at')
                             ->orderBy('pasaje.created_at','DESC')
                             ->get();
@@ -250,6 +282,11 @@ class PasajeController extends Controller
             'pasaje' => $pasaje
             ]);
 
+    }
+
+    public function pasajeAdicionales(Request $request)
+    {
+        return PasajeAdicional::where('pasaje_id',$request->id)->get();
     }
 
     public function eliminarSeleccionados(Request $request)
@@ -267,6 +304,14 @@ class PasajeController extends Controller
 
     public function destroy(Request $request)
     {
+        $pasaje_adicional = PasajeAdicional::where('pasaje_id',$request->id)->get();
+
+        foreach($pasaje_adicional as $pa)
+        {
+            $panter = PasajeAdicional::findOrFail('id',$pa->id);
+            $panter->delete();
+        }
+
         $pasaje = Pasaje::findOrFail($request->id);
         $pasaje->delete();
 

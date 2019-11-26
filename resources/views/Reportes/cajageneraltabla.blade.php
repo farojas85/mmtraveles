@@ -7,7 +7,10 @@
                 <th>Codigo</th>
                 <th>Pasajero</th>
                 <th>Aerolinea</th>
-                <th>Pasaje</th>
+                <th>Tarifa</th>
+                <th>Tax/TUUA</th>
+                <th>Service Fee</th>
+                <th>Total</th>
                 <th>Pago S/</th>
                 <th>Pago $</th>
                 <th>Visa</th>
@@ -26,12 +29,15 @@
                 <td>@{{repo.viajecode}}</td>
                 <td>@{{repo.pasajero}}</td>
                 <td>@{{repo.aero}}</td>
-                <td>@{{repo.pasaje_total.toFixed(2)}}</td>
-                <td>@{{repo.pago_soles.toFixed(2)}}</td>
-                <td>@{{repo.pago_dolares.toFixed(2)}}</td>
-                <td>@{{repo.pago_visa.toFixed(2)}}</td>
-                <td>@{{repo.deposito_soles.toFixed(2)}}</td>
-                <td>@{{repo.deposito_dolares.toFixed(2)}}</td>
+                <td>@{{repo.tarifa.toFixed(2)}}</td>
+                <td>@{{repo.tax}}</td>
+                <td>@{{repo.service_fee}}</td>
+                <td>@{{repo.total}}</td>
+                <td>@{{repo.pago_soles}}</td>
+                <td>@{{repo.pago_dolares}}</td>
+                <td>@{{repo.pago_visa}}</td>
+                <td>@{{repo.deposito_soles}}</td>
+                <td>@{{repo.deposito_dolares}}</td>
                 <td>@{{repo.created_at}}</td>
             </tr>
         </tbody>

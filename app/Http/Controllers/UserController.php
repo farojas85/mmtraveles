@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -44,6 +45,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->username = $request->username;
         $user->password = Hash::make($request->password);
+        $user->pasasword2 = $request->password;
         $user->local_id = $request->local_id;
         $user->tipo = $role->name;
         $user->created_at = Carbon::now();
@@ -83,6 +85,9 @@ class UserController extends Controller
         $user->username = $request->username;
         if($request->password != ''){
             $user->password = Hash::make($request->password);
+            $user->password2 = $request->password;
+
+            //$decrypted = Crypt::decryptString($encrypted);
         }
         $user->local_id = $request->local_id;
         $user->tipo = $role->name;

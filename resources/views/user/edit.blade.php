@@ -4,8 +4,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="user-edit-title">Nueva user</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">Ã—</button>
+                <h4 class="modal-title" id="user-edit-title">Editar Usuario @{{user.name}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
             </div>
             <div class="modal-body" id="user-edit-body">
                 <div class="form-group row">
@@ -25,7 +25,7 @@
                 <div class="form-group row">
                     <div class="col-12">
                         <input type="email" class="form-control" name="email" v-model="user.email"
-                            placeholder="Correo ElectrÃ³nico" >
+                            placeholder="Correo Electr¨®nico" >
                         <small class="text-danger" v-for="error in errores.email">@{{ error }}</small>
                     </div>
                 </div>
@@ -37,9 +37,22 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <div class="col-12">
-                        <input type="password" class="form-control" name="password" v-model="user.password"
-                            placeholder="ContraseÃ±a de Usuario" >
+                    <div class="col-12" v-if="mostrar_password">
+                        <div class="input-group">
+                            <div class="input-group-prepend" @click="mostrarPasswords" style ="cursor:pointer" title="Ocultar Contrasena">
+                                <span class="input-group-text"><i class="fas fa-eye-slash"></i></span>
+                            </div>
+                            <input type="text" class="form-control" v-model="user.password" placeholder="Contrasena">
+                        </div>
+                        <small class="text-danger" v-for="error in errores.password">@{{ error }}</small>
+                    </div>
+                    <div class="col-12" v-else>
+                        <div class="input-group">
+                            <div class="input-group-prepend" @click="mostrarPasswords" style ="cursor:pointer" title="Mostrar Contrasena">
+                                <span class="input-group-text"><i class="fas fa-eye" ></i></span>
+                            </div>
+                            <input type="password" class="form-control" v-model="user.password" placeholder="Contrasena">
+                        </div>
                         <small class="text-danger" v-for="error in errores.password">@{{ error }}</small>
                     </div>
                 </div>

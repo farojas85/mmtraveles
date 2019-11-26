@@ -13,6 +13,9 @@ var app = new Vue({
        pasajesEliminar:[],
        seleccionarTodo:false,
        encontrados:'',
+       adicionales:[],
+       total_adicionales:0,
+       suma_adicionales:0
     },
     computed:{
         isActived() {
@@ -49,7 +52,7 @@ var app = new Vue({
                     this.total_reporte = -1;
                 }
                 this.errores=[]
-            })
+            }) 
             .catch((errors) => {
                 if(response = errors.response) {
                     this.errores = response.data.errors,
@@ -105,7 +108,7 @@ var app = new Vue({
                             confirmButtonColor:"#1abc9c",
                         }).then(respuesta => {
                             if(respuesta.value) {
-                                this.buscar();
+                                this.listarEmitidos();
                             }
                         })
                     ))
@@ -122,9 +125,9 @@ var app = new Vue({
                 )
             })
         },
-
-
-
+        
+        
+        
         eliminarSeleccionados() {
             swal.fire({
                 title:"¿Está Seguro de Eliminar?",
@@ -163,6 +166,20 @@ var app = new Vue({
                     `Ocurrió un Error: ${error.response.status}`
                 )
             })
+        },
+        verAdicionales(id) {
+            axios.get('/pasaje-emitidos/pasaje-adicional',{params:{id:id}})
+            .then(response => {
+                this.adicionales = response.data
+                this.total_adicionales = this.adicionales.length
+                var suma =0;
+                for(let i=0;i < this.total_adicionales; i++)
+                {
+                    suma = parseFloat(suma) + parseFloat(this.adicionales[i].total)
+                }
+                this.suma_adicionales = suma.toFixed(2)
+                $('#adicional-modal').modal('show')
+            });
         }
     },
     created() {

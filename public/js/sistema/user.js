@@ -18,6 +18,7 @@ var app = new Vue({
        },
        total_users:0,
        errores:[],
+       mostrar_password:false,
        offset:4,
     },
     computed:{
@@ -124,6 +125,7 @@ var app = new Vue({
                     this.user.name= response.data.name
                     this.user.lastname= response.data.lastname
                     this.user.username = response.data.username
+                    this.user.password = response.data.password2
                     this.user.email= response.data.email
                     this.user.local_id= response.data.local_id
                     this.user.role_id = response.data.roles[0]['id']
@@ -208,6 +210,9 @@ var app = new Vue({
                 )
             })
         },
+        mostrarPasswords(){
+            this.mostrar_password = !this.mostrar_password;
+        }
     },
     created() {
         this.listar()
