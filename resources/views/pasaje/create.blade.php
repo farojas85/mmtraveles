@@ -41,6 +41,10 @@
                                         href="pasajeVentas">
                                    Ver Pasajes vendidos
                                 </a>
+                                <a class="btn btn-info no-print"
+                                         href="opcionalesVentas">
+                                    Registrar Adicionales
+                                 </a>
                             </h3>
                         </div>
                         <div class="card-body">
@@ -87,7 +91,7 @@
                                     <div class="col-md-6">
                                         <div class="card card-success">
                                             <div class="card-header">
-                                                <h3 class="card-title">Cabecera</h3>
+                                                <h3 class="card-title">Fecha Venta</h3>
                                             <!-- /.card-tools -->
                                             </div>
                                             <!-- /.card-header -->
@@ -405,62 +409,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card card-success">
-                                            <div class="card-header">
-                                                <h3 class="card-title">Datos Adicionales</h3>
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="form-group row">
-                                                    <label class="col-md-1 col-form-label col-form-label-sm" >Detalle</label>
-                                                    <div class="col-md-5"><input type="text" class="form-control form-control-sm" v-model="adicional.detalle" id="detalle" title="Detalle Adicional"></div>
-                                                    <div class="col-md-1"><input type="text" class="form-control form-control-sm" placeholder="Monto" v-model="adicional.monto" id="montod" title="Monto Del Detalle"></div>
-                                                    <div class="col-md-1"><input type="text" class="form-control form-control-sm" placeholder="Service FEE" v-model="adicional.service_fee" id="fee" title="Ingrese Service Fee"></div>
-                                                    <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm" @click="agregarAdicional">A&ntildeadir</button></div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-sm table-bordered">
-                                                                <thead class="bg-dark">
-                                                                    <tr>
-                                                                        <th>#</th>
-                                                                        <th>Detalle</th>
-                                                                        <th>Monto</th>
-                                                                        <th>Service FEE</th>
-                                                                        <th>Importe</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr v-if="pasaje.adicionales.length==0">
-                                                                        <td colspan="5" class="text-danger text-center">--Datos No Añadidos--</td>
-                                                                    </tr>
-                                                                    <tr v-else v-for="(adic,index) in pasaje.adicionales">
-                                                                        <td><button type="button" class="btn btn-danger btn-sm" @click="eliminarAdicional(index)"><i class="fas fa-trash"></i></button></td>
-                                                                        <td>@{{adic.detalle }}</td>
-                                                                        <td>@{{adic.monto.toFixed(2)}}</td>
-                                                                        <td>@{{adic.service_fee.toFixed(2)}}</td>
-                                                                        <td>@{{adic.importe.toFixed(2)}}</td>
-                                                                    </tr>
-                                                                    <tr v-if="pasaje.adicionales.length>0">
-                                                                        <td colspan="2"></td>
-                                                                        <td></td>
-                                                                        <th class="bg-dark text-right">TOTAL</th>
-                                                                        <td>@{{ total_importe }}</td>
 
-                                                                    </tr>
-
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>-->
                                 <div class="row no-print">
                                     <div class="col-md-12">
                                         <div class="form-group">

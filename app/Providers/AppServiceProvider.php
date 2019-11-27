@@ -32,6 +32,5 @@ class AppServiceProvider extends ServiceProvider
         View()->composer('home',function($view){
             $view->with('aerolinea_count',Aerolinea::count('id'));
         });
-
     }
 }

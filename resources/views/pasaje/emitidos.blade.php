@@ -202,10 +202,10 @@
                                             <td>@{{suma_adicionales }}</td>
                                         </tr>
                                     </tbody>
-                                
+
                                 </table>
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>

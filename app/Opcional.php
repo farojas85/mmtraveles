@@ -2,11 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
-class Adicional extends Model
+class Opcional extends Model
 {
-    protected $fillable = ['id','descripcion'];
+    use SoftDeletes;
 
     public function OpcionalDetalles()
     {

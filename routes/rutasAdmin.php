@@ -32,6 +32,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function(){
 
 Route::get('pasajeCreate','PasajeController@create')->name('pasajes.create');
 Route::get('pasajeVentas','PasajeController@mostrar')->name('pasajes.ventas');
+Route::get('opcionalesVentas','OpcionalController@index')->name('opcional.index');
 
 Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
     Route::get('/', 'PasajeController@index')->name('pasajes.index');
@@ -73,6 +74,26 @@ Route::group(['prefix' => 'locales', 'middleware' => 'auth'], function(){
     Route::post('restaurar','LocalController@restoredelete');
 });
 
+Route::group(['prefix' => 'adicional', 'middleware' => 'auth'], function(){
+    Route::get('lista','AdicionalController|@lista')->name('adicional.lista');
+    Route::get('filtro','AdicionalController@filtro')->name('adicional.filtro');
+    Route::get('filtroId','AdicionalController@filtroPorId');
+    Route::get('mostrarEliminados','AdicionalController@showdelete');
+    Route::get('show','AdicionalController@show');
+    Route::put('update','AdicionalController@update');
+    Route::post('destroy','AdicionalController@destroy');
+    Route::post('restaurar','AdicionalController@restoredelete');
+});
+Route::group(['prefix' => 'opcional', 'middleware' => 'auth'], function(){
+    Route::get('lista','OpcionalController@lista')->name('locales.lista');
+    Route::get('filtro','OpcionalController@filtro')->name('locales.filtro');
+    Route::post('store','OpcionalController@store');
+    Route::get('mostrarEliminados','OpcionalController@showdelete');
+    Route::get('show','OpcionalController@show');
+    Route::put('update','OpcionalController@update');
+    Route::post('destroy','OpcionalController@destroy');
+    Route::post('restaurar','OpcionalController@restoredelete');
+});
 
 Route::group(['prefix' => 'lugares', 'middleware' => 'auth'], function(){
     Route::get('/lista', 'LugarController@listarPorUsuario')->name('lugar.listarPorUsuario');
