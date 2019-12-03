@@ -34,7 +34,8 @@ var app = new Vue({
             importe:''
         },
         total_importe:0,
-        otros:false
+        otros:false,
+        pasaje_id:''
     },
     methods:{
         listarAerolineas(){
@@ -61,48 +62,53 @@ var app = new Vue({
                 this.adicional.detalle =''
             }
         },
-        calcularIgv(e)
-        {
-            if(event.target.checked === true)
-            {
-                this.pasaje.igv = 0
-            }
-            else
-            {
-                 this.pasaje.igv = parseFloat(this.pasaje.sub_total)*0.18
-            }
-             this.pasaje.total = parseFloat(this.pasaje.sub_total) + parseFloat(this.pasaje.igv)
-        },
         calcularTotal()
         {
-            this.pasaje.sub_total = parseFloat(this.pasaje.tarifa) + parseFloat(this.pasaje.tax) + parseFloat(this.pasaje.service_fee);
-            this.pasaje.total = parseFloat(this.pasaje.sub_total) + parseFloat(this.pasaje.igv)
+            this.opcional.sub_total = parseFloat(this.total_importe);
+            this.opcional.total = parseFloat(this.opcional.sub_total) + parseFloat(this.opcional.igv)
         },
         guardar(){
-            axios.post('pasajes/guardar',this.pasaje)
-                .then((response) => {
-                    console.log(response.data)
-
-                    this.pasaje_id = response.data.pasaje.id
-                    Swal.fire({
-                        type : 'success',
-                        title : 'VENTA PASAJES',
-                        text : response.data.mensaje,
-                        confirmButtonText: 'Aceptar',
-                        confirmButtonColor:"#1abc9c",
-                    }).then(respuesta => {
-                        if(respuesta.value) {
-                            this.impresion=true
-                            //window.location.href="pasajeCreate"
+            if(this.opcional.adicionales.length== 0){
+                Swal.fire({
+                    type : 'warning',
+                    title : 'REGISTRO ADICIONALES',
+                    text : 'Debe Registrar al menos un Detalle en Adicionales',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                })
+            }
+            else {
+                axios.post('opcional/guardar',this.opcional)
+                    .then((response) => {
+                        console.log(response.data)
+                        this.opcional_id = response.data.opcional.id
+                        Swal.fire({
+                            type : 'success',
+                            title : 'REGISTRO ADICIONALES',
+                            text : response.data.mensaje,
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor:"#1abc9c",
+                        }).then(respuesta => {
+                            if(respuesta.value) {
+                                //window.location.href="pasajeCreate"
+                            }
+                        })
+                    })
+                    .catch((errors) => {
+                        response = errors.response
+                        if(response) {
+                            this.errores = response.data.errors,
+                            Swal.fire({
+                                type : 'warning',
+                                title : 'REGISTRO ADICIONALES',
+                                text : 'Ingrese datos en Campos Obligatorios',
+                                confirmButtonText: 'Aceptar',
+                                confirmButtonColor:"#1abc9c",
+                            }),
+                            console.clear()
                         }
                     })
-                })
-                .catch((errors) => {
-                    if(response = errors.response) {
-                        this.errores = response.data.errors,
-                        console.clear()
-                    }
-                })
+            }
         },
 
         verPasajes()
@@ -120,7 +126,7 @@ var app = new Vue({
         },
         agregarAdicional() {
 
-            if($('#adicional_name').val() === null || $('#adicional_name').val() === ''){
+            if($('#detalle').val() === null || $('#detalle').val() === '' || $('#montod').val() ==='' || $('#fee').val()==='' ){
                 Swal.fire({
                         type : 'warning',
                         title : 'DATOS ADICIONALES',
@@ -156,12 +162,42 @@ var app = new Vue({
                     }
                     this.total_importe= suma.toFixed(2)
                     this.opcional.monto_pagar =this.total_importe
-                    this.opcional.sub_total = this.
+                    this.opcional.sub_total = this.total_importe
+                    this.opcional.igv = 0
+                    this.opcional.total =(parseFloat(this.opcional.sub_total) + parseFloat(this.opcional.igv)).toFixed(2)
+                    
+                    this.adicional.adicional_id=''
+                    this.adicional.detalle = ''
+                    this.adicional.monto = ''
+                    this.adicional.service_fee=''
+                    this.adicional.importe=''
                 }
             }
         },
         eliminarAdicional(ind) {
+            
             this.opcional.adicionales.splice(ind,1)
+            
+            if(this.opcional.adicionales.length===0)
+            {
+                this.opcional.total = 0;
+                this.opcional.monto_pagar = 0;
+                this.opcional.sub_total = 0;
+                this.opcional.igv=0;
+            }
+            else {
+                
+                let suma = 0;
+                for(let i=0;i<this.opcional.adicionales.length;i++) {
+                    suma = parseFloat(suma) + parseFloat(this.opcional.adicionales[i].importe)
+                }
+                this.total_importe= suma.toFixed(2)
+                this.opcional.monto_pagar =this.total_importe
+                this.opcional.sub_total = this.total_importe
+                this.opcional.igv = 0
+                this.opcional.total =(parseFloat(this.opcional.sub_total) + parseFloat(this.opcional.igv)).toFixed(2)
+            }
+            
         }
     },
     created() {

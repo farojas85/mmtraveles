@@ -22,20 +22,20 @@ var app = new Vue({
            st:'',
            equipaje:'',
            moneda:'USD',
-           monto_neto:0,
+           monto_neto:'',
            cambio:3.55,
            not_igv:1,
-           tarifa:0,
-           tax:0,
-           service_fee:0,
+           tarifa:'',
+           tax:'',
+           service_fee:'',
            sub_total:0,
-           igv:0,
+           igv:'',
            total:0,
-           pago_soles:0,
-           pago_dolares:0,
-           pago_visa:0,
-           deposito_soles:0,
-           deposito_dolares:0,
+           pago_soles:'',
+           pago_dolares:'',
+           pago_visa:'',
+           deposito_soles:'',
+           deposito_dolares:'',
            adicionales:[]
         },
         aerolineas:[],
@@ -145,6 +145,7 @@ var app = new Vue({
                     }).then(respuesta => {
                         if(respuesta.value) {
                             this.impresion=true
+                            document.getElementById("btn-guardar").disabled = true;
                             //window.location.href="pasajeCreate"
                         }
                     })
@@ -185,7 +186,7 @@ var app = new Vue({
                      Swal.fire({
                             type : 'warning',
                             title : 'DATOS ADICIONALES',
-                            text : 'Ya se ecuentra a単adido el Detalle',
+                            text : 'Ya se ecuentra añadido el Detalle',
                             confirmButtonText: 'Aceptar',
                             confirmButtonColor:"#1abc9c",
                         })

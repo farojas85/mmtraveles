@@ -22,7 +22,7 @@ var app = new Vue({
                 this.suma_reporte =0
                 for(let i = 0; i <this.total_pasajes; i++)
                 {
-                    this.suma_reporte += parseFloat(this.pasajes[i].tarifa)
+                    this.suma_reporte += parseFloat(this.pasajes[i].total)
                 }
             })
         },

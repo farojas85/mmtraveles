@@ -134,9 +134,9 @@
                         @endcan
                         @can('pasajes.depositos')
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="opcionalesListado" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Pjes. Pagos/Dep&oacute;sitos</p>
+                                <p>Adicionales</p>
                             </a>
                         </li>
                         @endcan

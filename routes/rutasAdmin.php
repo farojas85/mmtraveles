@@ -33,6 +33,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function(){
 Route::get('pasajeCreate','PasajeController@create')->name('pasajes.create');
 Route::get('pasajeVentas','PasajeController@mostrar')->name('pasajes.ventas');
 Route::get('opcionalesVentas','OpcionalController@index')->name('opcional.index');
+Route::get('opcionalesListado','OpcionalController@mostrar')->name('opcional.mostrar');
 
 Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
     Route::get('/', 'PasajeController@index')->name('pasajes.index');
@@ -87,7 +88,8 @@ Route::group(['prefix' => 'adicional', 'middleware' => 'auth'], function(){
 Route::group(['prefix' => 'opcional', 'middleware' => 'auth'], function(){
     Route::get('lista','OpcionalController@lista')->name('locales.lista');
     Route::get('filtro','OpcionalController@filtro')->name('locales.filtro');
-    Route::post('store','OpcionalController@store');
+    Route::post('guardar','OpcionalController@store');
+    Route::get('ventas','OpcionalController@listaPorUsuario')->name('opcional.ventas');
     Route::get('mostrarEliminados','OpcionalController@showdelete');
     Route::get('show','OpcionalController@show');
     Route::put('update','OpcionalController@update');

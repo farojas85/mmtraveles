@@ -287,7 +287,8 @@
                                                             <label for="moneda" class="col-md-3 col-form-label">Monto</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="monto_neto" id="monto_neto" v-model="pasaje.monto_neto"
-                                                                    class="form-control" placeholder="Monto" value='0.00'>
+                                                                    class="form-control" placeholder="Monto">
+                                                                <small class="text-danger" v-for="error in errores.monto_neto">@{{ error }}</small>
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <select name="moneda" class="form-control" v-model="pasaje.moneda">
@@ -314,23 +315,23 @@
                                                             </div>
                                                         </div>-->
                                                         <div class="form-group row">
-                                                            <label for="pago_soles" class="col-md-4 col-form-label">Pago Soles</label>
+                                                            <label for="pago_soles" class="col-md-4 col-form-label text-right">Pago Soles S/ </label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="pago_soles" id="pago_soles" v-model="pasaje.pago_soles"
-                                                                    class="form-control" placeholder="Pago Soles (S/)">
+                                                                    class="form-control" placeholder="Pago Soles">
                                                                 <small class="text-danger" v-for="error in errores.pago_soles">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="pago_dolares" class="col-md-4 col-form-label">Pago Dolares</label>
+                                                            <label for="pago_dolares" class="col-md-4 col-form-label text-right">Pago Dolares $ </label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="pago_dolares" id="pago_dolares" v-model="pasaje.pago_dolares"
-                                                                    class="form-control" placeholder="Pago Soles (USD$)">
+                                                                    class="form-control" placeholder="Pago Dólares">
                                                                 <small class="text-danger" v-for="error in errores.pago_dolares">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="pago_visa" class="col-md-4 col-form-label">Pago Visa</label>
+                                                            <label for="pago_visa" class="col-md-4 col-form-label text-right">Pago Visa $ </label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="pago_visa" id="pago_visa" v-model="pasaje.pago_visa"
                                                                     class="form-control" placeholder="Pago Visa">
@@ -338,18 +339,18 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="deposito_soles" class="col-md-4 col-form-label">Dep&oacute;sito Soles</label>
+                                                            <label for="deposito_soles" class="col-md-4 col-form-label text-right">Dep&oacute;sito Soles </label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="deposito_soles" id="deposito_soles" v-model="pasaje.deposito_soles"
-                                                                    class="form-control" placeholder="Pago Visa">
+                                                                    class="form-control" placeholder="Déposito Soles">
                                                                 <small class="text-danger" v-for="error in errores.deposito_soles">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="deposito_dolares" class="col-md-4 col-form-label">Dep&oacute;sito Dolares</label>
+                                                            <label for="deposito_dolares" class="col-md-4 col-form-label text-right">Dep&oacute;sito Dolares </label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="deposito_dolares" id="deposito_dolares" v-model="pasaje.deposito_dolares"
-                                                                    class="form-control" placeholder="Pago Visa">
+                                                                    class="form-control" placeholder="Depósito Dolares">
                                                                 <small class="text-danger" v-for="error in errores.deposito_dolares">@{{ error }}</small>
                                                             </div>
                                                         </div>

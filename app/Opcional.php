@@ -13,4 +13,8 @@ class Opcional extends Model
     {
         return $this->hasMany(OpcionalDetalle::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'counter_id');
+    }
 }

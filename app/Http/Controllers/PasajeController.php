@@ -135,7 +135,7 @@ class PasajeController extends Controller
 
 
 
-        foreach($request->adicionales as $adic)
+        /*foreach($request->adicionales as $adic)
         {
             $pasaje_adicional = new PasajeAdicional();
             $pasaje_adicional->pasaje_id = $pasaje->id;
@@ -146,7 +146,7 @@ class PasajeController extends Controller
 
             //return $pasaje_adicional;
            $pasaje_adicional->save();
-        }
+        }*/
 
         Session::put('pasaje_id',$pasaje->id);
 
