@@ -44,7 +44,7 @@
                                                     <th>Codigo</th>
                                                     <th>Pasajero</th>
                                                     <th>Aerolinea</th>
-                                                    <th>Pasaje</th>
+                                                    <th>Monto</th>
                                                     <th>Pago S/</th>
                                                     <th>Pago $</th>
                                                     <th>Visa</th>

@@ -48,6 +48,7 @@ Route::group(['prefix' => 'pasaje-emitidos', 'middleware' => 'auth'], function()
     Route::get('/', 'PasajeController@pasajeEmitidos')->name('pasaje-emitidos.index');
     Route::get('tabla','PasajeController@reporteEmitidos')->name('pasaje-emitidos.reporte');
     Route::get('pasaje-adicional','PasajeController@pasajeAdicionales');
+    Route::get('listar-lugar','PasajeController@listarLugar');
 });
 
 Route::group(['prefix' => 'empresas', 'middleware' => 'auth'], function(){
@@ -161,8 +162,15 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     }
     //oBTENEMOS EL uSUARIO
     $fpdf->AddPage();
+    $fpdf->SetAutoPageBreak(false,15);
     $fpdf->Image($empresa->foto,2,2,$ancho);
+    if($pasaje->aerolinea_id==622)
+    {
+    $fpdf->Image($aerolinea,120,4,80);
+    }
+    else {
     $fpdf->Image($aerolinea,130,2,40);
+    }
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(30,25);
     $fpdf->Cell(150,5, 'ELECTRONIC TICKET',0,0,'C',0);
@@ -231,9 +239,9 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->setXY(20,74);
     $fpdf->Cell(78,4, utf8_decode('ADRESS/DIRECCION:'),0,0,'',0);
 
-    $fpdf->SetFont('Courier', '', 10);
+    $fpdf->SetFont('Courier', '', 7);
     $fpdf->setXY(98,74);
-    $fpdf->Cell(80,4, $pasaje->direccion,0,0,'L',0);
+    $fpdf->Cell(80,4,mb_substr($pasaje->direccion,0,48),0,0,'L',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,78);
@@ -266,51 +274,98 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,104);
     $fpdf->Cell(40,4, utf8_decode('Desde/Hacia'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(20,108);
-    $fpdf->Cell(40,4, $pasaje->ruta,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(60,104);
     $fpdf->Cell(40,4, utf8_decode('Vuelo'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(60,108);
-    $fpdf->Cell(40,4, $pasaje->vuelo,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(100,104);
     $fpdf->Cell(10,4, utf8_decode('CL'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(100,108);
-    $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(110,104);
     $fpdf->Cell(20,4, utf8_decode('FECHA'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(110,108);
-    $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(130,104);
     $fpdf->Cell(20,4, utf8_decode('HORA'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(130,108);
-    $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(150,104);
     $fpdf->Cell(15,4, utf8_decode('ST'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(150,108);
-    $fpdf->Cell(15,4, trim($pasaje->st),0,0,'C',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(165,104);
     $fpdf->Cell(20,4, utf8_decode('BAG/EQP'),0,0,'C',0);
+
+
     $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(165,108);
-    $fpdf->Cell(20,4, $pasaje->equipaje,0,0,'C',0);
+
+    if($pasaje->tipo_viaje == 2)
+    {
+        $fpdf->setXY(20,108);
+        $fpdf->Cell(40,4,$pasaje->ruta,0,0,'C',0);
+
+        $fpdf->setXY(20,112);
+        $fpdf->Cell(40,4,$pasaje->ruta_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(60,108);
+        $fpdf->Cell(40,4, $pasaje->vuelo,0,0,'C',0);
+
+        $fpdf->setXY(60,112);
+        $fpdf->Cell(40,4, $pasaje->vuelo_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(100,108);
+        $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
+
+        $fpdf->setXY(100,112);
+        $fpdf->Cell(10,4, $pasaje->cl_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(110,108);
+        $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(110,112);
+        $fpdf->Cell(20,4, $pasaje->fecha_retorno,0,0,'C',0);
+
+        $fpdf->setXY(130,108);
+        $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(130,112);
+        $fpdf->Cell(20,4, $pasaje->hora_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(150,108);
+        $fpdf->Cell(15,4, trim($pasaje->st),0,0,'C',0);
+
+        $fpdf->setXY(150,112);
+        $fpdf->Cell(15,4, trim($pasaje->st_vuelta),0,0,'C',0);
+
+        $fpdf->setXY(165,108);
+        $fpdf->Cell(20,4, $pasaje->equipaje,0,0,'C',0);
+
+        $fpdf->setXY(165,112);
+        $fpdf->Cell(20,4, $pasaje->equipaje_vuelta,0,0,'C',0);
+    }
+    else {
+
+        $fpdf->setXY(20,108);
+        $fpdf->Cell(40,4,$pasaje->ruta,0,0,'C',0);
+
+        $fpdf->setXY(60,108);
+        $fpdf->Cell(40,4, $pasaje->vuelo,0,0,'C',0);
+
+        $fpdf->setXY(100,108);
+        $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
+
+        $fpdf->setXY(110,108);
+        $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(130,108);
+        $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(150,108);
+        $fpdf->Cell(15,4, trim($pasaje->st),0,0,'C',0);
+
+         $fpdf->setXY(165,108);
+        $fpdf->Cell(20,4, $pasaje->equipaje,0,0,'C',0);
+    }
+
+    $fpdf->SetFont('Courier', '', 10);
 
     //deetalle montos
     $moneda = ($pasaje->moneda == 'PEN') ? 'S/' : 'USD';
@@ -343,7 +398,7 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->setXY(60,128);
     $fpdf->Cell(30,4,$moneda." ".number_format($pasaje->total,2),0,0,'L',0);
 
-    //POLITICAS DE VUELO
+     //POLITICAS DE VUELO
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->SetFillColor(210,210,210);
     $fpdf->setXY(20,140);
@@ -352,20 +407,21 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->SetFont('Courier', '', 7);
     $fpdf->SetFillColor(255,255,255);
     $fpdf->setXY(20,146);
-    $fpdf->MultiCell(165,4, utf8_decode('TODO PASAJERO DEBE PRESENTARDE CON LA DOCUMENTACION CORRESPONDIENTE EN EL COUNTER , DEBERA PRESENTARSE 02 HORAS ANTES DE LA SALIDA DE VUELO PROGRAMADO.'),0,'J',0);
-    $fpdf->setXY(20,150);
-    $fpdf->MultiCell(165,4, utf8_decode('PARA REALISAR EL CHECK-IN Y DECLARACION  DE LOS EQUIPAJES ,EL VUELO CIERRA 45 MINUTOS ANTES  EN CASO DE NO PRESENTARSE EN EL HORARIO ESTABLECIDO SERA CATALOGADO.'),0,'J',0);
-    $fpdf->setXY(20,164);
-    $fpdf->MultiCell(165,4, utf8_decode('COMO NO SHOW, PASAJERO CON ALGUNA NESECIDADO O CONDICION MEDICA  DEBE INFORMAR AL MOMENTO DE REALIZAR LA COMPRA , AL MOMENTO DE REALIZAR EL VIAJE.'),0,'J',0);
-    $fpdf->setXY(20,172);
-    $fpdf->MultiCell(165,4, utf8_decode('DEVOLUCIONES: SON TARIFAS NO REEMBOLSABLES DE ACUERDO A CADA POLITICA DE CADA LINEA AEREA.'),0,'J',0);
+    $fpdf->MultiCell(165,3, utf8_decode('TODO PASAJERO DEBE PRESENTARDE CON LA DOCUMENTACION CORRESPONDIENTE EN EL COUNTER , DEBERA PRESENTARSE 02 HORAS ANTES DE LA SALIDA DE VUELO PROGRAMADO.'),0,'J',0);
+    $fpdf->setXY(20,154);
+    $fpdf->MultiCell(165,3, utf8_decode('PARA REALISAR EL CHECK-IN Y DECLARACION  DE LOS EQUIPAJES ,EL VUELO CIERRA 45 MINUTOS ANTES  EN CASO DE NO PRESENTARSE EN EL HORARIO ESTABLECIDO SERA CATALOGADO.'),0,'J',0);
+    $fpdf->setXY(20,162);
+    $fpdf->MultiCell(165,3, utf8_decode('COMO NO SHOW, PASAJERO CON ALGUNA NESECIDADO O CONDICION MEDICA  DEBE INFORMAR AL MOMENTO DE REALIZAR LA COMPRA , AL MOMENTO DE REALIZAR EL VIAJE.'),0,'J',0);
+    $fpdf->setXY(20,170);
+    $fpdf->MultiCell(165,3, utf8_decode('DEVOLUCIONES: SON TARIFAS NO REEMBOLSABLES DE ACUERDO A CADA POLITICA DE CADA LINEA AEREA.'),0,'J',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->SetFillColor(210,210,210);
-    $fpdf->setXY(20,182);
+    $fpdf->setXY(20,176);
     $fpdf->Cell(165,4, utf8_decode('POLÍTICAS  Y CONDICIONES DE COMPRA '),1,1,'C',1);
 
-     $cond_y=182;
+    $fpdf->Image('images/sellos.PNG',100,230,100);
+    $cond_y=182;
     if($pasaje->aerolinea_id == 622)
     {
         $fpdf->SetFont('Courier', '', 6);
@@ -382,6 +438,11 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
         $fpdf->MultiCell(165,3, utf8_decode('TRANSPORTE DE MENORES NO ACOMPANADOS:FAVOR CONSIDERAR LA DOCUMENTACION REQUERIDA PARA EL TRANSPORTE DE UN MENOR VIAJANDO SOLO.PARA MAYOR DETALLE INGRESAR A SERVICIOS ESPECIALES EN NUESTRA PAGINA WEB: WWW.ATSAAIRLINES.COM. NO SE ACEPTARAN INFANTES NI NINOS QUE NO HAYAN ALCANZADO 05 ANOS DE EDAD, VIAJANDO SOLOS.'),0,'J',0);
         $fpdf->setXY(20,$cond_y+38);
         $fpdf->MultiCell(165,3, utf8_decode('POR CUALQUIER OTRA CONSULTA,COMUNIQUESE AL TELEFONO 717-3268,AL CORREO ATSAAIRLINES@ATSAPERU.COM O VISITE WWW.ATSAAIRLINES.COM.'),0,'J',0);
+         $fpdf->SetFont('Courier', '', 7);
+        $fpdf->setXY(20,$cond_y+104);
+        $fpdf->MultiCell(165,3, utf8_decode('*PRESENTARSE EN COUNTER 02 HORAS ANTES DE SU VUELO PARA RECIBIR SU TARJETA/EQUIPAJE /01 Equipaje de Mano 05Kg por Pasajero '.
+                                            ' / Equipaje de Bodega / 10 Kg. por Pasajero / No se permite Exceso de Equipaje'),0,'J',0);
+
     }
     else if($pasaje->aerolinea_id == 628) {
         $fpdf->SetFont('Courier', '', 5);
@@ -443,8 +504,6 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
                                             'DE UN PAÍS. PARA TALES PASAJEROS, EL TRATADO APLICABLE, INCLUIDOS LOS CONTRATOS ESPECIALES DE TRANSPORTE REALIZADOS EN CUALQUIERA '.
                                             'TARIFAS APLICABLES, GOBIERNOS Y PUEDEN LIMITAR LA RESPONSABILIDAD DEL PORTADOR. VERIFÍCALO CON SU PORTADOR PARA MÁS INFORMACIÓN.'),0,'J',0);
     }
-
-    $fpdf->Image('images/sellos.PNG',100,230,100);
     $fpdf->Output();
 });
 
@@ -492,6 +551,7 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
 
     //oBTENEMOS EL uSUARIO
     $fpdf->AddPage();
+    $fpdf->SetAutoPageBreak(false,15);
     switch($empresa->id)
     {
         case 1 : $ancho = 40;break;
@@ -500,7 +560,15 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
         case 4 ; $ancho = 50;break;
     }
     $fpdf->Image($empresa->foto,2,2,$ancho);
-    $fpdf->Image($aerolinea,140,2,40);
+
+    if($pasaje->aerolinea_id==622)
+    {
+    $fpdf->Image($aerolinea,120,4,80);
+    }
+    else {
+    $fpdf->Image($aerolinea,130,2,40);
+    }
+
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(30,25);
     $fpdf->Cell(150,5, 'ELECTRONIC TICKET',0,0,'C',0);
@@ -569,9 +637,9 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->setXY(20,74);
     $fpdf->Cell(78,4, utf8_decode('ADRESS/DIRECCION:'),0,0,'',0);
 
-    $fpdf->SetFont('Courier', '', 10);
+    $fpdf->SetFont('Courier', '', 7);
     $fpdf->setXY(98,74);
-    $fpdf->Cell(80,4, $pasaje->direccion,0,0,'L',0);
+    $fpdf->Cell(80,4,mb_substr($pasaje->direccion,0,48),0,0,'L',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,78);
@@ -604,51 +672,100 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,104);
     $fpdf->Cell(40,4, utf8_decode('Desde/Hacia'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(20,108);
-    $fpdf->Cell(40,4, $pasaje->ruta,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(60,104);
     $fpdf->Cell(40,4, utf8_decode('Vuelo'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(60,108);
-    $fpdf->Cell(40,4, $pasaje->vuelo,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(100,104);
     $fpdf->Cell(10,4, utf8_decode('CL'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(100,108);
-    $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(110,104);
     $fpdf->Cell(20,4, utf8_decode('FECHA'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(110,108);
-    $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(130,104);
     $fpdf->Cell(20,4, utf8_decode('HORA'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(130,108);
-    $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
 
-    $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(150,104);
     $fpdf->Cell(15,4, utf8_decode('ST'),0,0,'C',0);
-    $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(150,108);
-    $fpdf->Cell(15,4, trim($pasaje->st),0,0,'C',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(165,104);
     $fpdf->Cell(20,4, utf8_decode('BAG/EQP'),0,0,'C',0);
+
+
     $fpdf->SetFont('Courier', '', 10);
-    $fpdf->setXY(165,108);
-    $fpdf->Cell(20,4, $pasaje->equipaje,0,0,'C',0);
+
+    if($pasaje->tipo_viaje == 2)
+    {
+        $fpdf->setXY(20,108);
+        $fpdf->Cell(40,4,$pasaje->ruta,0,0,'C',0);
+
+        $fpdf->setXY(20,112);
+        $fpdf->Cell(40,4,$pasaje->ruta_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(60,108);
+        $fpdf->Cell(40,4, $pasaje->vuelo,0,0,'C',0);
+
+        $fpdf->setXY(60,112);
+        $fpdf->Cell(40,4, $pasaje->vuelo_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(100,108);
+        $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
+
+        $fpdf->setXY(100,112);
+        $fpdf->Cell(10,4, $pasaje->cl_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(110,108);
+        $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(110,112);
+        $fpdf->Cell(20,4, $pasaje->fecha_retorno,0,0,'C',0);
+
+        $fpdf->setXY(130,108);
+        $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(130,112);
+        $fpdf->Cell(20,4, $pasaje->hora_vuelta,0,0,'C',0);
+
+        $fpdf->setXY(150,108);
+        $fpdf->Cell(15,4, trim($pasaje->st),0,0,'C',0);
+
+        $fpdf->setXY(150,112);
+        $fpdf->Cell(15,4, trim($pasaje->st_vuelta),0,0,'C',0);
+
+        $fpdf->setXY(165,108);
+        $fpdf->Cell(20,4, $pasaje->equipaje,0,0,'C',0);
+
+        $fpdf->setXY(165,112);
+        $fpdf->Cell(20,4, $pasaje->equipaje_vuelta,0,0,'C',0);
+    }
+    else {
+
+        $fpdf->setXY(20,108);
+        $fpdf->Cell(40,4,$pasaje->ruta,0,0,'C',0);
+
+        $fpdf->setXY(60,108);
+        $fpdf->Cell(40,4, $pasaje->vuelo,0,0,'C',0);
+
+        $fpdf->setXY(100,108);
+        $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
+
+        $fpdf->setXY(110,108);
+        $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(130,108);
+        $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
+
+        $fpdf->setXY(150,108);
+        $fpdf->Cell(15,4, trim($pasaje->st),0,0,'C',0);
+
+         $fpdf->setXY(165,108);
+        $fpdf->Cell(20,4, $pasaje->equipaje,0,0,'C',0);
+    }
+
+
+
+    $fpdf->SetFont('Courier', '', 10);
 
     //deetalle montos
     $moneda = ($pasaje->moneda == 'PEN') ? 'S/' : 'USD';
@@ -704,6 +821,7 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->setXY(20,176);
     $fpdf->Cell(165,4, utf8_decode('POLÍTICAS  Y CONDICIONES DE COMPRA '),1,1,'C',1);
 
+    $fpdf->Image('images/sellos.PNG',100,230,100);
     $cond_y=182;
     if($pasaje->aerolinea_id == 622)
     {
@@ -721,6 +839,11 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
         $fpdf->MultiCell(165,3, utf8_decode('TRANSPORTE DE MENORES NO ACOMPANADOS:FAVOR CONSIDERAR LA DOCUMENTACION REQUERIDA PARA EL TRANSPORTE DE UN MENOR VIAJANDO SOLO.PARA MAYOR DETALLE INGRESAR A SERVICIOS ESPECIALES EN NUESTRA PAGINA WEB: WWW.ATSAAIRLINES.COM. NO SE ACEPTARAN INFANTES NI NINOS QUE NO HAYAN ALCANZADO 05 ANOS DE EDAD, VIAJANDO SOLOS.'),0,'J',0);
         $fpdf->setXY(20,$cond_y+38);
         $fpdf->MultiCell(165,3, utf8_decode('POR CUALQUIER OTRA CONSULTA,COMUNIQUESE AL TELEFONO 717-3268,AL CORREO ATSAAIRLINES@ATSAPERU.COM O VISITE WWW.ATSAAIRLINES.COM.'),0,'J',0);
+         $fpdf->SetFont('Courier', '', 7);
+        $fpdf->setXY(20,$cond_y+104);
+        $fpdf->MultiCell(165,3, utf8_decode('*PRESENTARSE EN COUNTER 02 HORAS ANTES DE SU VUELO PARA RECIBIR SU TARJETA/EQUIPAJE /01 Equipaje de Mano 05Kg por Pasajero '.
+                                            ' / Equipaje de Bodega / 10 Kg. por Pasajero / No se permite Exceso de Equipaje'),0,'J',0);
+
     }
     else if($pasaje->aerolinea_id == 628) {
         $fpdf->SetFont('Courier', '', 5);
@@ -782,6 +905,6 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
                                             'DE UN PAÍS. PARA TALES PASAJEROS, EL TRATADO APLICABLE, INCLUIDOS LOS CONTRATOS ESPECIALES DE TRANSPORTE REALIZADOS EN CUALQUIERA '.
                                             'TARIFAS APLICABLES, GOBIERNOS Y PUEDEN LIMITAR LA RESPONSABILIDAD DEL PORTADOR. VERIFÍCALO CON SU PORTADOR PARA MÁS INFORMACIÓN.'),0,'J',0);
     }
-    $fpdf->Image('images/sellos.PNG',100,230,100);
+
     $fpdf->Output();
 });

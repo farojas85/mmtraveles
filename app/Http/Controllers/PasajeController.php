@@ -72,16 +72,16 @@ class PasajeController extends Controller
         $pasaje->numero_documento = $request->numero_documento;
         $pasaje->dni = null;
 
+        $date = Carbon::now();
         if(is_null($request->fecha_venta) || $request->fecha_venta == "" )
         {
-            $date = Carbon::now();
             $pasaje->created_at_venta =  $date->format('Y-m-d H:i:s');
             $pasaje->created_at = $date->format('Y-m-d H:i:s');
 
         }
         else{
             $pasaje->created_at_venta =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
-            $pasaje->created_at =  Carbon::parse($request->fecha_venta)->format('Y-m-d H:i:s');
+            $pasaje->created_at = $date->format('Y-m-d H:i:s');
 
         }
         $pasaje->ticket_number = $request->ticket_number;
@@ -130,6 +130,9 @@ class PasajeController extends Controller
         else{
             $pasaje->redondeo = 0;
         }
+
+        $pasaje->deuda_detalle=$request->deuda_detalle;
+        $pasaje->deuda_monto=$request->deuda_monto;
 
         $pasaje->save();
 
@@ -272,7 +275,7 @@ class PasajeController extends Controller
                             ->where('pasaje.created_at','<=',$request->fecha_fin)
                             ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                         'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
-                                        'ruta','pasaje.tarifa','pago_soles','pago_dolares',
+                                        'ruta','pasaje.total','pago_soles','pago_dolares',
                                         'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at')
                             ->orderBy('pasaje.created_at','DESC')
                             ->get();
@@ -318,5 +321,14 @@ class PasajeController extends Controller
         return response()->json([
             'mensaje' => 'Pasaje Eliminado Satisfactoriamente'
         ]);
+    }
+
+    public function listarLugar() {
+        return Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                    ->join('locals as lo','lo.id','=','u.local_id')
+                    ->join('category as lu','lu.id','=','lo.lugar_id')
+                    ->select('lu.id','lu.name')
+                    ->groupBy('lu.id','lu.name')
+                    ->get();
     }
 }

@@ -29,14 +29,17 @@ var app = new Vue({
            tax:'',
            service_fee:'',
            sub_total:0,
-           igv:'',
+           igv:0,
            total:0,
            pago_soles:'',
            pago_dolares:'',
            pago_visa:'',
            deposito_soles:'',
            deposito_dolares:'',
-           adicionales:[]
+           adicionales:[],
+           deuda:'',
+           deuda_detalle:'',
+           deuda_monto:''
         },
         aerolineas:[],
         aerolinea:{
@@ -124,6 +127,7 @@ var app = new Vue({
         },
         calcularTotal()
         {
+
             this.pasaje.sub_total = parseFloat(this.pasaje.tarifa) + parseFloat(this.pasaje.tax) + parseFloat(this.pasaje.service_fee);
             this.pasaje.total = parseFloat(this.pasaje.sub_total) + parseFloat(this.pasaje.igv)
         },
@@ -161,6 +165,12 @@ var app = new Vue({
         verPasajes()
         {
             window.location.href="pasajeVentas";
+        },
+        seleccionarDeuda(e){
+            this.pasaje.deuda_detalle=''
+            if(e.target.value=="essalud"){
+                this.pasaje.deuda_detalle = "Es-Salud";
+            }
         },
         imprimir()
         {

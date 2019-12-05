@@ -6,10 +6,14 @@ var app = new Vue({
        offset:4,
        pasaje:[],
        busqueda:{
+           lugar:'',
+           local:'',
+           counter:'',
            fecha_ini:'',
            fecha_fin:''
        },
        errores:[],
+       lugares:[],
        pasajesEliminar:[],
        seleccionarTodo:false,
        encontrados:'',
@@ -52,7 +56,7 @@ var app = new Vue({
                     this.total_reporte = -1;
                 }
                 this.errores=[]
-            }) 
+            })
             .catch((errors) => {
                 if(response = errors.response) {
                     this.errores = response.data.errors,
@@ -76,6 +80,12 @@ var app = new Vue({
         changePage(page) {
             this.reporte.current_page = page
             this.getResults(page)
+        },
+        listarLugares() {
+            axios.get('/pasaje-emitidos/listar-lugar')
+            .then(response => {
+                this.lugares = response.data
+            });
         },
         seleccionar_todo() {
             this.pasajesEliminar = []
@@ -108,7 +118,8 @@ var app = new Vue({
                             confirmButtonColor:"#1abc9c",
                         }).then(respuesta => {
                             if(respuesta.value) {
-                                this.listarEmitidos();
+                                this.listarEmitidos()
+                                this.getResults()
                             }
                         })
                     ))
@@ -125,9 +136,6 @@ var app = new Vue({
                 )
             })
         },
-        
-        
-        
         eliminarSeleccionados() {
             swal.fire({
                 title:"¿Está Seguro de Eliminar?",
@@ -151,6 +159,7 @@ var app = new Vue({
                         }).then(respuesta => {
                             if(respuesta.value) {
                                 this.listarEmitidos()
+                                this.getResults()
                             }
                         })
                     ))
@@ -183,6 +192,7 @@ var app = new Vue({
         }
     },
     created() {
+        this.listarLugares()
         //this.listarEmitidos();
         //this.getResults();
     },

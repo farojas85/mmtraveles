@@ -31,7 +31,45 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="input-group" title="Fecha Inicio">
+                                    <div class="input-group input-group-sm" title="Local">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Lugar:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.lugar">
+                                            <option value="">-LUGAR-</option>
+                                            <option value="%" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm" title="Local">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Local:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.local">
+                                            <option value="">-LOCAL-</option>
+                                            <option value="%" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm" title="Counter">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Counter:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.counter">
+                                            <option value="">-LOCAL-</option>
+                                            <option value="%" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.counter">@{{ error }}</small>
+                                </div>
+                            </div>
+                            <div class="row mt-2 ">
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm" title="Fecha Inicio">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Fecha Inicio:</span>
                                         </div>
@@ -40,7 +78,7 @@
                                     <small class="text-danger" v-for="error in errores.fecha_ini">@{{ error }}</small>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="input-group" title="Fecha Inicio">
+                                    <div class="input-group input-group-sm" title="Fecha Inicio">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text ">Fecha Final:</span>
                                         </div>
@@ -73,7 +111,7 @@
                                                         <th>Pasajero</th>
                                                         <th>Aerolinea</th>
                                                         <th>Moneda</th>
-                                                        <th>Tarifa Neta</th>
+                                                        <th>Total</th>
                                                         <th>Pago S/</th>
                                                         <th>Pago $</th>
                                                         <th>Visa</th>
@@ -98,7 +136,7 @@
                                                             <span v-if="repo.moneda=='PEN' ">Soles(S/)</span>
                                                             <span v-else>Dolares(U$)</span>
                                                         </td>
-                                                        <td>@{{repo.tarifa}}</td>
+                                                        <td>@{{repo.total}}</td>
                                                         <td>
                                                             @{{repo.pago_soles.toFixed(2)}}
                                                         </td>
