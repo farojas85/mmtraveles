@@ -2,10 +2,12 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 
 class Pasaje extends Model
 {
+    use SoftDeletes;
     protected $table ='pasaje';
 
     protected $fillable = ['id','aerolinea_id','counter_id','pasajero','viajecode',

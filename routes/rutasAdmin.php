@@ -49,6 +49,8 @@ Route::group(['prefix' => 'pasaje-emitidos', 'middleware' => 'auth'], function()
     Route::get('tabla','PasajeController@reporteEmitidos')->name('pasaje-emitidos.reporte');
     Route::get('pasaje-adicional','PasajeController@pasajeAdicionales');
     Route::get('listar-lugar','PasajeController@listarLugar');
+    Route::get('listar-local','PasajeController@listarLocal');
+    Route::get('listar-counter','PasajeController@listarCounter');
 });
 
 Route::group(['prefix' => 'empresas', 'middleware' => 'auth'], function(){

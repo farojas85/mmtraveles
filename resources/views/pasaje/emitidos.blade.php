@@ -35,9 +35,12 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Lugar:</span>
                                         </div>
-                                        <select class="form-control" v-model="busqueda.lugar">
+                                        <select class="form-control" v-model="busqueda.lugar" @change="listarLocales">
                                             <option value="">-LUGAR-</option>
-                                            <option value="%" selected>TODOS</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="lugar in lugares" :key='lugar.id' :value="lugar.id">
+                                                @{{lugar.name}}
+                                            </option>
                                         </select>
                                     </div>
                                     <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
@@ -47,9 +50,12 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Local:</span>
                                         </div>
-                                        <select class="form-control" v-model="busqueda.local">
+                                        <select class="form-control" v-model="busqueda.local" @change="listarCounters">
                                             <option value="">-LOCAL-</option>
-                                            <option value="%" selected>TODOS</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="local in locales" :key='local.id' :value="local.id">
+                                                @{{local.nombre}}
+                                            </option>
                                         </select>
                                     </div>
                                     <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
@@ -60,8 +66,11 @@
                                             <span class="input-group-text">Counter:</span>
                                         </div>
                                         <select class="form-control" v-model="busqueda.counter">
-                                            <option value="">-LOCAL-</option>
-                                            <option value="%" selected>TODOS</option>
+                                            <option value="">-COUNTER-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="counter in counters" :key='counter.id' :value="counter.id">
+                                                @{{counter.name}} @{{counter.lastname}}
+                                            </option>
                                         </select>
                                     </div>
                                     <small class="text-danger" v-for="error in errores.counter">@{{ error }}</small>
@@ -154,10 +163,10 @@
                                                         <td>@{{repo.pago_visa}}</td>
                                                         <td>@{{repo.created_at}}</td>
                                                         <td>
-                                                             <button type="button" class="btn btn-info btn-xs"
+                                                            <!--<button type="button" class="btn btn-info btn-xs"
                                                                 title="Ver Adicionales" @click="verAdicionales(repo.id)">
                                                                 <i class="fas fa-cart-plus"></i>
-                                                            </button>
+                                                            </button>-->
                                                             <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"  title="Mostrar Empresa"
                                                                 target="_blank">
                                                                 <i class="fas fa-print"></i>

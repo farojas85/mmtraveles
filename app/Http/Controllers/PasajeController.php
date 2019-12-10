@@ -255,6 +255,9 @@ class PasajeController extends Controller
     public function reporteEmitidos(Request $request)
     {
         $rules =[
+            'lugar' => 'required',
+            'local' => 'required',
+            'counter' => 'required',
             'fecha_ini' => 'required',
             'fecha_fin' => 'required',
         ];
@@ -265,20 +268,32 @@ class PasajeController extends Controller
 
         $this->validate($request,$rules,$mensaje);
 
-        $pasaje_count = Pasaje::where('pasaje.created_at','>=',$request->fecha_ini)
-                                ->where('pasaje.created_at','<=',$request->fecha_fin)
-                                ->count();
+        $pasaje_count = Pasaje::where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                                 ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                                 ->count();
 
-        $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
-                            ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
-                            ->where('pasaje.created_at','>=',$request->fecha_ini)
-                            ->where('pasaje.created_at','<=',$request->fecha_fin)
-                            ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
-                                        'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
-                                        'ruta','pasaje.total','pago_soles','pago_dolares',
-                                        'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at')
-                            ->orderBy('pasaje.created_at','DESC')
-                            ->get();
+        $pasaje = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                        ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->join('locals as lo','lo.id','=','u.local_id')
+                        ->join('category as lu','lu.id','=','lo.lugar_id')
+                        ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
+                                'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
+                                'ruta','pasaje.total','pago_soles','pago_dolares',
+                                'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at',
+                                'pasaje.created_at_venta')
+                        ->where('lu.id','like',$request->lugar)
+                        ->where('lo.id','like',$request->local)
+                        ->where('u.id','like',$request->counter)
+                        ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                        ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                        ->get();
+        // $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
+        //                     ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+        //                     ->where('pasaje.created_at','>=',$request->fecha_ini)
+        //                     ->where('pasaje.created_at','<=',$request->fecha_fin)
+
+        //                     ->orderBy('pasaje.created_at','DESC')
+        //                     ->get();
 
         return response()->json([
             'contar' => $pasaje_count,
@@ -287,6 +302,54 @@ class PasajeController extends Controller
 
     }
 
+    public function todos(Request $request)
+    {
+        $rules =[
+            'lugar' => 'required',
+            'local' => 'required',
+            'counter' => 'required',
+            'fecha_ini' => 'required',
+            'fecha_fin' => 'required',
+        ];
+
+        $mensaje= [
+            'required' => 'Campo Obligatorio'
+        ];
+
+        $this->validate($request,$rules,$mensaje);
+
+        $pasaje_count = Pasaje::where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                                 ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                                 ->count();
+
+        $pasaje = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                        ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->join('locals as lo','lo.id','=','u.local_id')
+                        ->join('category as lu','lu.id','=','lo.lugar_id')
+                        ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
+                                'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
+                                'ruta','pasaje.total','pago_soles','pago_dolares',
+                                'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at',
+                                'pasaje.created_at_venta')
+                        ->where('lu.id','like',$request->lugar)
+                        ->where('lo.id','like',$request->local)
+                        ->where('u.id','like',$request->counter)
+                        ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                        ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                        ->get();
+        // $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
+        //                     ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+        //                     ->where('pasaje.created_at','>=',$request->fecha_ini)
+        //                     ->where('pasaje.created_at','<=',$request->fecha_fin)
+
+        //                     ->orderBy('pasaje.created_at','DESC')
+        //                     ->get();
+
+        return response()->json([
+            'contar' => $pasaje_count,
+            'pasaje' => $pasaje
+            ]);
+    }
     public function pasajeAdicionales(Request $request)
     {
         return PasajeAdicional::where('pasaje_id',$request->id)->get();
@@ -307,13 +370,13 @@ class PasajeController extends Controller
 
     public function destroy(Request $request)
     {
-        $pasaje_adicional = PasajeAdicional::where('pasaje_id',$request->id)->get();
+       /*$pasaje_adicional = PasajeAdicional::where('pasaje_id',$request->id)->get();
 
         foreach($pasaje_adicional as $pa)
         {
             $panter = PasajeAdicional::findOrFail('id',$pa->id);
             $panter->delete();
-        }
+        }*/
 
         $pasaje = Pasaje::findOrFail($request->id);
         $pasaje->delete();
@@ -329,6 +392,27 @@ class PasajeController extends Controller
                     ->join('category as lu','lu.id','=','lo.lugar_id')
                     ->select('lu.id','lu.name')
                     ->groupBy('lu.id','lu.name')
+                    ->get();
+    }
+
+    public function listarLocal(Request $request) {
+        return Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                    ->join('locals as lo','lo.id','=','u.local_id')
+                    ->join('category as lu','lu.id','=','lo.lugar_id')
+                    ->select('lo.id','lo.nombre')
+                    ->where('lu.id','LIKE',$request->lugar)
+                    ->groupBy('lo.id','lo.nombre')
+                    ->get();
+    }
+
+    public function listarCounter(Request $request) {
+        return Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                    ->join('locals as lo','lo.id','=','u.local_id')
+                    ->join('category as lu','lu.id','=','lo.lugar_id')
+                    ->select('u.id','u.name','u.lastname')
+                    ->where('lu.id','LIKE',$request->lugar)
+                    ->where('lo.id','LIKE',$request->local)
+                    ->groupBy('u.id','u.name','u.lastname')
                     ->get();
     }
 }

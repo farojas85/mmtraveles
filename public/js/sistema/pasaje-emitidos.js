@@ -14,6 +14,8 @@ var app = new Vue({
        },
        errores:[],
        lugares:[],
+       locales:[],
+       counters:[],
        pasajesEliminar:[],
        seleccionarTodo:false,
        encontrados:'',
@@ -49,6 +51,7 @@ var app = new Vue({
         buscar() {
            axios.get('/pasaje-emitidos/tabla',{params: this.busqueda})
            .then((respuesta ) => {
+               //console.log(respuesta.data)
                 this.reporte = respuesta.data.pasaje
                 this.total_reporte = this.reporte.length
                 this.encontrados =respuesta.data.contar
@@ -60,12 +63,13 @@ var app = new Vue({
             .catch((errors) => {
                 if(response = errors.response) {
                     this.errores = response.data.errors,
-                    console.clear()
+                    console.log(this.errores)
                 }
             })
         },
         listarEmitidos(){
-            axios.get('/pasaje-emitidos/tabla').then(({ data }) => (
+            axios.get('/pasaje-emitidos/tabla',{params: this.busqueda}).then(({ data }) => (
+                console.log(data),
                 this.reporte = data,
                 this.total_reporte = this.reporte.total
              ))
@@ -85,6 +89,31 @@ var app = new Vue({
             axios.get('/pasaje-emitidos/listar-lugar')
             .then(response => {
                 this.lugares = response.data
+                this.locales =  []
+                this.counters=[]
+                this.busqueda.lugar = ''
+                this.busqueda.local = ''
+                this.busqueda.counter = ''
+            });
+        },
+        listarLocales(e) {
+            axios.get('/pasaje-emitidos/listar-local',{params: { lugar: e.target.value}})
+            .then(response => {
+                this.locales = response.data
+                this.counters = []
+                this.busqueda.local = ''
+                this.busqueda.counter = ''
+            });
+        },
+        listarCounters(e) {
+            axios.get('/pasaje-emitidos/listar-counter',
+                {params: {
+                    lugar: this.busqueda.lugar,
+                    local: e.target.value
+            }})
+            .then(response => {
+                this.counters = response.data
+                this.busqueda.counter = ''
             });
         },
         seleccionar_todo() {
@@ -118,8 +147,9 @@ var app = new Vue({
                             confirmButtonColor:"#1abc9c",
                         }).then(respuesta => {
                             if(respuesta.value) {
-                                this.listarEmitidos()
-                                this.getResults()
+                                this.errores=[]
+                                this.buscar()
+                                //this.getResults()
                             }
                         })
                     ))
@@ -158,8 +188,9 @@ var app = new Vue({
                             confirmButtonColor:"#1abc9c",
                         }).then(respuesta => {
                             if(respuesta.value) {
-                                this.listarEmitidos()
-                                this.getResults()
+                                this.errores= []
+                                this.buscar()
+                                //this.getResults()
                             }
                         })
                     ))
