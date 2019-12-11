@@ -4,12 +4,16 @@ var app = new Vue({
        reporte:[],
        total_reporte:'',
        lugares:[],
+       locales:[],
+       counters:[],
        total_lugares:'',
        busqueda:{
-            lugar_id:'',
+            lugar:'',
+            local:'',
+            counter:'',
+            aerolinea:'',
             fecha_ini:'',
-            fecha_fin:'',
-            aerolinea_id:''
+            fecha_fin:''
        },
        lugar:'',
        lugar_detalle:'',
@@ -19,10 +23,9 @@ var app = new Vue({
        errores:[]
     },
     methods: {
-
         listarLugares() {
             axios.get('/lugares/lista').then((response) => {
-                this.lugares = response.data,
+                this.lugares = response.data
                 this.total_lugares = this.lugares.length
                 let lugard=''
                 indice=0
@@ -36,9 +39,39 @@ var app = new Vue({
                         lugard += " - "+this.lugares[x].name;
                     }
                 }
-
                 this.lugar_detalle = lugard;
+                this.locales=[]
+                this.counters=[]
+                this.aerolineas=[]
+                this.busqueda.lugar=''
+                this.busqueda.local=''
+                this.busqueda.counter=''
+                this.busqueda.aerolinea=''
             })
+        },
+        listarLocales(e) {
+            axios.get('/pasaje-emitidos/listar-local',{params: { lugar: e.target.value}})
+            .then(response => {
+                this.locales = response.data
+                this.counters = []
+                this.aerolineas=[]
+                this.busqueda.local = ''
+                this.busqueda.counter = ''
+                this.busqueda.aerolinea=''
+            });
+        },
+        listarCounters(e) {
+            axios.get('/pasaje-emitidos/listar-counter',
+                {params: {
+                    lugar: this.busqueda.lugar,
+                    local: e.target.value
+            }})
+            .then(response => {
+                this.counters = response.data
+                this.aerolineas=[]
+                this.busqueda.counter = ''
+                this.busqueda.aerolinea=''
+            });
         },
         buscar(){
             axios.get('/reporte-caja-general/tabla',{params:this.busqueda })
@@ -58,8 +91,14 @@ var app = new Vue({
                 }
             })
         },
-        listarAerolineas() {
-            axios.get('/reporte-caja-general/listarAerolineas')
+        listarAerolineas(e) {
+            axios.get('/reporte-caja-general/listarAerolineas',{
+                params:{
+                    lugar: this.busqueda.lugar,
+                    local: this.busqueda.local,
+                    counter: e.target.value
+                }
+            })
             .then((response) => {
                 this.aerolineas = response.data
                 this.total_aerolineas = this.aerolineas.length
@@ -67,7 +106,6 @@ var app = new Vue({
         }
     },
     created() {
-        this.listarLugares();
-        this.listarAerolineas();
+        this.listarLugares()
     }
 })

@@ -1,6 +1,6 @@
 <div class="table-responsive">
     <table class="table table-sm table-hover table-bordered">
-        <thead>
+        <thead class="bg-navy">
             <tr>
                 <th>Nº</th>
                 <th >Counter</th>
@@ -23,7 +23,8 @@
             <tr v-if="total_reporte == 0">
                 <td colspan="12">-- DATOS NO REGISTRADOS --</td>
             </tr>
-            <tr v-else v-for="(repo,index) in reporte" :key="repo.id">
+            <tr v-else v-for="(repo,index) in reporte" :key="repo.id"
+                style="font-size:11pt">
                 <td>@{{index+1}}</td>
                 <td>@{{repo.counter}}</td>
                 <td>@{{repo.viajecode}}</td>

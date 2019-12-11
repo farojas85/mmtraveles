@@ -32,17 +32,69 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <select name="lugar_id" class="form-control" v-model="busqueda.lugar_id">
-                                        <option value="">-LUGAR-</option>
-                                        <option value="%">TODOS</option>
-                                        <option v-for="lugar in lugares" :key="lugar.id" :value="lugar.id">
-                                            @{{lugar.name}}
-                                        </option>
-                                    </select>
-                                    <small class="text-danger" v-for="error in errores.lugar_id">@{{ error }}</small>
+                                    <div class="input-group input-group-sm" title="Local">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Lugar:&nbsp;&nbsp;&nbsp;</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.lugar" @change="listarLocales">
+                                            <option value="">-LUGAR-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="lugar in lugares" :key='lugar.id' :value="lugar.id">
+                                                @{{lugar.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.lugar">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group input-group-sm" title="Local">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Local:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.local" @change="listarCounters">
+                                            <option value="">-LOCAL-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="local in locales" :key='local.id' :value="local.id">
+                                                @{{local.nombre}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group input-group-sm" title="Counter">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Counter:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.counter" @change="listarAerolineas">
+                                            <option value="">-COUNTER-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="counter in counters" :key='counter.id' :value="counter.id">
+                                                @{{counter.name}} @{{counter.lastname}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.counter">@{{ error }}</small>
                                 </div>
                                 <div class="col-md-3 noimpre">
-                                    <div class="input-group" title="Fecha Inicio">
+                                    <div class="input-group input-group-sm" title="Counter">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Aerol&iacute;nea:</span>
+                                        </div>
+                                        <select name="aerolinea_id" class="form-control" v-model="busqueda.aerolinea" >
+                                            <option value>-AEROLÍNEA-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="aero in aerolineas" :key="aero.id" :value="aero.id">
+                                                @{{ aero.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.aerolinea">@{{ error }}</small>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-3 noimpre">
+                                    <div class="input-group input-group-sm" title="Fecha Inicio">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Fec. Ini.</span>
                                         </div>
@@ -52,7 +104,7 @@
                                     <small class="text-danger" v-for="error in errores.fecha_ini">@{{ error }}</small>
                                 </div>
                                 <div class="col-md-3 noimpre">
-                                    <div class="input-group" title="Fecha Inicio">
+                                    <div class="input-group input-group-sm" title="Fecha Inicio">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Fec. Fin.</span>
                                         </div>
@@ -62,28 +114,16 @@
                                     <small class="text-danger" v-for="error in errores.fecha_fin">@{{ error }}</small>
                                 </div>
                                 <div class="col-md-3 noimpre">
-                                    <select name="aerolinea_id" class="form-control" v-model="busqueda.aerolinea_id" >
-                                        <option value>-AEROLÍNEA-</option>
-                                        <option value="%">TODOS</option>
-                                        <option v-for="aero in aerolineas" :key="aero.id" :value="aero.id">
-                                            @{{ aero.name }}
-                                        </option>
-                                    </select>
-                                    <small class="text-danger" v-for="error in errores.aerolinea_id">@{{ error }}</small>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-3 noimpre">
-                                    <button type="button" class="btn btn-primary" @click="buscar">
+                                    <button type="button" class="btn btn-primary btn-sm" @click="buscar">
                                         <i class="fas fa-search"></i> Buscar
                                     </button>
-                                    <a class="btn btn-success"
+                                    <a class="btn btn-success btn-sm"
                                         href="excelReporte" >
                                         <i class="fas fa-file-excel"></i> Exportar
                                     </a>
                                 </div>
                             </div>
-                            <div class="row" id="detalle-tabla">
+                            <div class="row " id="detalle-tabla">
                                 <div class="col-md-12 text-center" v-if="total_reporte == 0">
                                     <p class="text-primary">Seleccione los Datos y haz clic en Buscar</p>
                                     <p class="text-danger"><span class="text-secondary">En esta &aacute;rea se mostrar&aacute;</span> El Listado de Reporte Caja General</p>

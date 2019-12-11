@@ -34,6 +34,7 @@ Route::get('pasajeCreate','PasajeController@create')->name('pasajes.create');
 Route::get('pasajeVentas','PasajeController@mostrar')->name('pasajes.ventas');
 Route::get('opcionalesVentas','OpcionalController@index')->name('opcional.index');
 Route::get('opcionalesListado','OpcionalController@mostrar')->name('opcional.mostrar');
+//Route::get('pasajeEditar/{id}','PasajeController@editar')->name('pasaje.editar');
 
 Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
     Route::get('/', 'PasajeController@index')->name('pasajes.index');
@@ -46,11 +47,20 @@ Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
 
 Route::group(['prefix' => 'pasaje-emitidos', 'middleware' => 'auth'], function(){
     Route::get('/', 'PasajeController@pasajeEmitidos')->name('pasaje-emitidos.index');
-    Route::get('tabla','PasajeController@reporteEmitidos')->name('pasaje-emitidos.reporte');
+    Route::get('activos','PasajeController@reporteEmitidos')->name('pasaje-emitidos.reporte');
+    Route::get('todos','PasajeController@todos')->name('pasaje-emitidos.todos');
+    Route::get('eliminados','PasajeController@eliminados')->name('pasaje-emitidos.eliminados');
     Route::get('pasaje-adicional','PasajeController@pasajeAdicionales');
     Route::get('listar-lugar','PasajeController@listarLugar');
     Route::get('listar-local','PasajeController@listarLocal');
     Route::get('listar-counter','PasajeController@listarCounter');
+    Route::get('show','PasajeController@show');
+    Route::get('editar','PasajeController@editar');
+    Route::post('eliminar-temporal','PasajeController@eliminarTemporal');
+    Route::post('eliminar-permanente','PasajeController@eliminarPermanente');
+    Route::post('restaurar','PasajeController@restaurar');
+    Route::post('eliminar-seleccionados-temporal','PasajeController@eliminarSeleccionadosTemporal');
+    Route::post('eliminar-seleccionados-permanente','PasajeController@eliminarSeleccionadosPermanente');
 });
 
 Route::group(['prefix' => 'empresas', 'middleware' => 'auth'], function(){

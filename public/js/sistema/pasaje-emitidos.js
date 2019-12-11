@@ -4,24 +4,28 @@ var app = new Vue({
        reporte:[],
        total_reporte:0,
        offset:4,
-       pasaje:[],
+       pasaje:{},
        busqueda:{
            lugar:'',
            local:'',
            counter:'',
+           aerolinea:'',
            fecha_ini:'',
            fecha_fin:''
        },
+       show_pasaje:'',
        errores:[],
        lugares:[],
        locales:[],
        counters:[],
+       aerolineas:[],
        pasajesEliminar:[],
        seleccionarTodo:false,
        encontrados:'',
        adicionales:[],
        total_adicionales:0,
-       suma_adicionales:0
+       suma_adicionales:0,
+       tipoDocumentos:[]
     },
     computed:{
         isActived() {
@@ -48,14 +52,19 @@ var app = new Vue({
         },
     },
     methods: {
+        listarTipoDocumentos() {
+            axios.get('tipo-documentos/filtro').then(({ data }) => (
+                this.tipoDocumentos = data
+                //this.total_tipoDocumentos = this.tipoDocumentos.length
+            ))
+        },
         buscar() {
-           axios.get('/pasaje-emitidos/tabla',{params: this.busqueda})
+           axios.get('/pasaje-emitidos/'+this.show_pasaje,{params: this.busqueda})
            .then((respuesta ) => {
                //console.log(respuesta.data)
                 this.reporte = respuesta.data.pasaje
                 this.total_reporte = this.reporte.length
-                this.encontrados =respuesta.data.contar
-                if(this.encontrados == 0){
+                if(this.total_reporte == 0){
                     this.total_reporte = -1;
                 }
                 this.errores=[]
@@ -67,8 +76,21 @@ var app = new Vue({
                 }
             })
         },
+        listarEliminados() {
+            this.show_pasaje='eliminados'
+            this.buscar()
+        },
+        listarTodos() {
+            this.show_pasaje = 'todos'
+            this.buscar()
+        },
+        listarActivos() {
+            this.show_pasaje = 'activos'
+            this.buscar()
+        },
         listarEmitidos(){
-            axios.get('/pasaje-emitidos/tabla',{params: this.busqueda}).then(({ data }) => (
+            axios.get('/pasaje-emitidos/tabla',{params: this.busqueda})
+            .then(({ data }) => (
                 console.log(data),
                 this.reporte = data,
                 this.total_reporte = this.reporte.total
@@ -91,9 +113,11 @@ var app = new Vue({
                 this.lugares = response.data
                 this.locales =  []
                 this.counters=[]
+                this.aerolineas=[]
                 this.busqueda.lugar = ''
                 this.busqueda.local = ''
                 this.busqueda.counter = ''
+                this.busqueda.aerolinea=''
             });
         },
         listarLocales(e) {
@@ -101,8 +125,10 @@ var app = new Vue({
             .then(response => {
                 this.locales = response.data
                 this.counters = []
+                this.aerolineas=[]
                 this.busqueda.local = ''
                 this.busqueda.counter = ''
+                this.busqueda.aerolinea=''
             });
         },
         listarCounters(e) {
@@ -113,8 +139,23 @@ var app = new Vue({
             }})
             .then(response => {
                 this.counters = response.data
+                this.aerolineas=[]
                 this.busqueda.counter = ''
+                this.busqueda.aerolinea=''
             });
+        },
+        listarAerolineas(e) {
+            axios.get('/reporte-caja-general/listarAerolineas',{
+                params:{
+                    lugar: this.busqueda.lugar,
+                    local: this.busqueda.local,
+                    counter: e.target.value
+                }
+            })
+            .then((response) => {
+                this.aerolineas = response.data
+                this.busqueda.aerolinea = ''
+            })
         },
         seleccionar_todo() {
             this.pasajesEliminar = []
@@ -128,69 +169,91 @@ var app = new Vue({
         eliminar(id) {
             swal.fire({
                 title:"¿Está Seguro de Eliminar?",
-                text:'No podrás revertirlo',
+                text:'Pasaje Emitidos',
                 type:"question",
                 showCancelButton: true,
-                confirmButtonText:"Si",
-                confirmButtonColor:"#38c172",
-                cancelButtonText:"No",
+                confirmButtonText:"<i class='fas fa-trash-alt'></i> A Papelera",
+                confirmButtonColor:"#6610f2",
+                cancelButtonText:"<i class='fas fa-eraser'></i> Permanentemente",
                 cancelButtonColor:"#e3342f"
-            }).then( response => {
-                if(response.value){
-                    axios.post('/pasajes/destroy',{id:id})
-                    .then((response) => (
-                        swal.fire({
-                            type : 'success',
-                            title : 'Pasajes',
-                            text : response.data.mensaje,
-                            confirmButtonText: 'Aceptar',
-                            confirmButtonColor:"#1abc9c",
-                        }).then(respuesta => {
-                            if(respuesta.value) {
-                                this.errores=[]
-                                this.buscar()
-                                //this.getResults()
-                            }
-                        })
-                    ))
-                    .catch((errors) => {
-                        if(response = errors.response) {
-                            this.errores = response.data.errors
-                        }
-                    })
+            }).then( (response) => {
+                if(response.value) {
+                    this.eliminarTemporal(id)
+                }
+                else if( response.dismiss === swal.DismissReason.cancel) {
+                   this.eliminarPermanente(id)
                 }
             }).catch(error => {
-                this.$Progress.fail()
                 swal.showValidationError(
                     `Ocurrió un Error: ${error.response.status}`
                 )
             })
         },
-        eliminarSeleccionados() {
+        eliminarTemporal(id) {
+            axios.post('/pasaje-emitidos/eliminar-temporal',{id:id})
+            .then((response) => (
+                swal.fire({
+                    type : 'success',
+                    title : 'Pasajes Emitidos',
+                    text : response.data.mensaje,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                }).then(respuesta => {
+                    if(respuesta.value) {
+                       this.listarActivos()
+                    }
+                })
+            ))
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                }
+            })
+        },
+        eliminarPermanente(id) {
+            axios.post('/pasaje-emitidos/eliminar-permanente',{id:id})
+            .then((response) => (
+                swal.fire({
+                    type : 'success',
+                    title : 'Pasajes Emitidos',
+                    text : response.data.mensaje,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                }).then(respuesta => {
+                    if(respuesta.value) {
+                       this.listarActivos()
+                    }
+                })
+            ))
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                }
+            })
+        },
+        restaurar(id) {
             swal.fire({
-                title:"¿Está Seguro de Eliminar?",
-                text:'No podrás revertirlo',
+                title:"¿Está Seguro de Restaurar?",
+                text:'Pasajes Emitidos',
                 type:"question",
                 showCancelButton: true,
                 confirmButtonText:"Si",
-                confirmButtonColor:"#38c172",
+                confirmButtonColor:"#28a745",
                 cancelButtonText:"No",
-                cancelButtonColor:"#e3342f"
-            }).then( response => {
-                if(response.value){
-                    axios.post('/pasajes/eliminarSeleccionados',this.pasajesEliminar)
+                cancelButtonColor:"#dc3545"
+            }).then( (response) => {
+                if(response.value) {
+                    axios.post('/pasaje-emitidos/restaurar',{id:id})
                     .then((response) => (
                         swal.fire({
                             type : 'success',
-                            title : 'Menú',
+                            title : 'Pasajes Emitidos',
                             text : response.data.mensaje,
                             confirmButtonText: 'Aceptar',
                             confirmButtonColor:"#1abc9c",
                         }).then(respuesta => {
                             if(respuesta.value) {
-                                this.errores= []
-                                this.buscar()
-                                //this.getResults()
+                            this.listarActivos()
                             }
                         })
                     ))
@@ -200,11 +263,91 @@ var app = new Vue({
                         }
                     })
                 }
+            }).catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                    swal.fire({
+                        type : 'error',
+                        title : 'Módulos',
+                        text : this.errores,
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor:"#1abc9c",
+                    })
+                }
+            })
+        },
+        eliminarSeleccionados() {
+            swal.fire({
+                title:"¿Está Seguro de Eliminar?",
+                text:'Pasaje Emitidos',
+                type:"question",
+                showCancelButton: true,
+                confirmButtonText:"<i class='fas fa-trash-alt'></i> A Papelera",
+                confirmButtonColor:"#6610f2",
+                cancelButtonText:"<i class='fas fa-eraser'></i> Permanentemente",
+                cancelButtonColor:"#e3342f"
+            }).then( (response) => {
+                if(response.value) {
+                    this.eliminarSeleccionadosTemporal()
+                }
+                else if( response.dismiss === swal.DismissReason.cancel) {
+                   this.eliminarSeleccionadosPermanente()
+                }
             }).catch(error => {
-                this.$Progress.fail()
                 swal.showValidationError(
                     `Ocurrió un Error: ${error.response.status}`
                 )
+            })
+        },
+        eliminarSeleccionadosTemporal() {
+            axios.post('/pasaje-emitidos/eliminar-seleccionados-temporal',this.pasajesEliminar)
+            .then((response) => (
+                swal.fire({
+                    type : 'success',
+                    title : 'Menú',
+                    text : response.data.mensaje,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                }).then(respuesta => {
+                    if(respuesta.value) {
+                       this.listarActivos()
+                    }
+                })
+            ))
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                }
+            })
+        },
+        eliminarSeleccionadosPermanente() {
+            axios.post('/pasaje-emitidos/eliminar-seleccionados-permanente',this.pasajesEliminar)
+            .then((response) => (
+                swal.fire({
+                    type : 'success',
+                    title : 'Pasajes Emitidos',
+                    text : response.data.mensaje,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                }).then(respuesta => {
+                    if(respuesta.value) {
+                        this.listarActivos()
+                        //this.getResults()
+                    }
+                })
+            ))
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                }
+            })
+        },
+        editarPasaje(id) {
+            axios.get('pasaje-emitidos/editar',{params:{id:id}})
+            .then((response) => {
+                this.pasaje = response.data
+                this.listarTipoDocumentos()
+                $('#editar-pasaje').modal('show');
             })
         },
         verAdicionales(id) {

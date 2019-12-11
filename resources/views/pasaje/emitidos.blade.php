@@ -30,7 +30,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="input-group input-group-sm" title="Local">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Lugar:</span>
@@ -43,9 +43,9 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
+                                    <small class="text-danger" v-for="error in errores.lugar">@{{ error }}</small>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="input-group input-group-sm" title="Local">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Local:</span>
@@ -60,12 +60,12 @@
                                     </div>
                                     <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <div class="input-group input-group-sm" title="Counter">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Counter:</span>
                                         </div>
-                                        <select class="form-control" v-model="busqueda.counter">
+                                        <select class="form-control" v-model="busqueda.counter" @change="listarAerolineas">
                                             <option value="">-COUNTER-</option>
                                             <option value="%">TODOS</option>
                                             <option v-for="counter in counters" :key='counter.id' :value="counter.id">
@@ -74,6 +74,21 @@
                                         </select>
                                     </div>
                                     <small class="text-danger" v-for="error in errores.counter">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-3 noimpre">
+                                    <div class="input-group input-group-sm" title="Counter">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Aerol&iacute;nea:</span>
+                                        </div>
+                                        <select name="aerolinea_id" class="form-control" v-model="busqueda.aerolinea" >
+                                            <option value>-AEROLÍNEA-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="aero in aerolineas" :key="aero.id" :value="aero.id">
+                                                @{{ aero.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.aerolinea">@{{ error }}</small>
                                 </div>
                             </div>
                             <div class="row mt-2 ">
@@ -96,7 +111,7 @@
                                     <small class="text-danger" v-for="error in errores.fecha_fin">@{{ error }}</small>
                                 </div>
                                  <div class="col-md-4">
-                                    <button type="button" class="btn btn-primary" @click="buscar">
+                                    <button type="button" class="btn btn-primary" @click="listarActivos">
                                         <i class="fas fa-search"></i> Buscar
                                     </button>
                                 </div>
@@ -108,78 +123,83 @@
                                             <i class="fas fa-tasks"></i> Eliminar Seleccionados
                                         </button>
                                     </span>
+                                    <div class="btn-group" v-if="show_pasaje!=''">
+                                        <button type="button" class="btn btn-info bt-sm btn-rounded">Mostrar</button>
+                                        <button type="button" class="btn btn-info bt-sm btn-rounded dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a class="dropdown-item" href="#" @click="listarTodos">Todos</a>
+                                                <a class="dropdown-item" href="#" @click="listarActivos">Activos</a>
+                                                <a class="dropdown-item" href="#" @click="listarEliminados">Eliminados Temporalmente</a>
+                                            </div>
+                                        </button>
+                                    </div>
                                     <div class="table-responsive">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-hover table-bordered">
 
-                                                <thead>
-                                                    <tr>
-                                                        <th><input type="checkbox" v-model="seleccionarTodo" @click="seleccionar_todo"></th>
-                                                        <th>Nº</th>
-                                                        <th >Counter</th>
-                                                        <th>Pasajero</th>
-                                                        <th>Aerolinea</th>
-                                                        <th>Moneda</th>
-                                                        <th>Total</th>
-                                                        <th>Pago S/</th>
-                                                        <th>Pago $</th>
-                                                        <th>Visa</th>
-                                                        <th>Fecha</th>
-                                                        <th>Acciones</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-if="total_reporte == -1">
-                                                        <td colspan="12" class="text-center text-danger" >-- REGISTROS NO ENCONTRADOS --</td>
-                                                    </tr>
-                                                    <tr v-else-if="total_reporte == 0">
-                                                        <td colspan="12" class="text-center text-danger" >--DATOS NO SELECCIONADOS --</td>
-                                                    </tr>
-                                                    <tr v-else v-for="(repo,index) in reporte" :key="repo.id">
-                                                        <td><input type="checkbox" v-model="pasajesEliminar" :value="repo.id"></td>
-                                                        <td>@{{index+1}}</td>
-                                                        <td>@{{repo.counter}}</td>
-                                                        <td>@{{repo.pasajero}}</td>
-                                                        <td>@{{repo.aero}}</td>
-                                                        <td>
-                                                            <span v-if="repo.moneda=='PEN' ">Soles(S/)</span>
-                                                            <span v-else>Dolares(U$)</span>
-                                                        </td>
-                                                        <td>@{{repo.total}}</td>
-                                                        <td>
-                                                            @{{repo.pago_soles.toFixed(2)}}
-                                                        </td>
-                                                        <td>
-                                                            @{{repo.pago_dolares.toFixed(2)}}
-                                                        </td>
-                                                        <!--<td>
-                                                            <span v-if="repo.moneda=='OD'">@{{(repo.total*repo.cambio).toFixed(2)}}</span>
-                                                            <span v-else>@{{repo.total}}</span>
-                                                        </td>
-                                                        <td>
-                                                             <span v-if="repo.moneda=='PEN'">@{{(repo.total/repo.cambio).toFixed(2)}}</span>
-                                                            <span v-else>@{{repo.total}}</span>
-                                                        </td>-->
-                                                        <td>@{{repo.pago_visa}}</td>
-                                                        <td>@{{repo.created_at}}</td>
-                                                        <td>
-                                                            <!--<button type="button" class="btn btn-info btn-xs"
-                                                                title="Ver Adicionales" @click="verAdicionales(repo.id)">
-                                                                <i class="fas fa-cart-plus"></i>
+                                        <table class="table table-sm table-hover table-bordered">
+
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox" v-model="seleccionarTodo" @click="seleccionar_todo"></th>
+                                                    <th>Nº</th>
+                                                    <th >Counter</th>
+                                                    <th>Pasajero</th>
+                                                    <th>Aerolinea</th>
+                                                    <th>Total</th>
+                                                    <th>Pago S/</th>
+                                                    <th>Pago $</th>
+                                                    <th>Visa</th>
+                                                    <th>Fecha</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="total_reporte == -1">
+                                                    <td colspan="12" class="text-center text-danger" >-- REGISTROS NO ENCONTRADOS --</td>
+                                                </tr>
+                                                <tr v-else-if="total_reporte == 0">
+                                                    <td colspan="12" class="text-center text-danger" >--DATOS NO SELECCIONADOS --</td>
+                                                </tr>
+                                                <tr v-else v-for="(repo,index) in reporte" :key="repo.id" :class="{ 'table-danger' : repo.deleted_at }">
+                                                    <td><input type="checkbox" v-model="pasajesEliminar" :value="repo.id"></td>
+                                                    <td>@{{index+1}}</td>
+                                                    <td>@{{repo.counter}}</td>
+                                                    <td>@{{repo.pasajero}}</td>
+                                                    <td>@{{repo.aero}}</td>
+                                                    <td>@{{repo.total}}</td>
+                                                    <td>
+                                                        @{{repo.pago_soles.toFixed(2)}}
+                                                    </td>
+                                                    <td>
+                                                        @{{repo.pago_dolares.toFixed(2)}}
+                                                    </td>
+                                                    <td>@{{repo.pago_visa}}</td>
+                                                    <td>@{{repo.created_at}}</td>
+                                                    <td>
+                                                        <span v-if="repo.deleted_at=='' || repo.deleted_at==null">
+                                                           <!-- <button type="button" class="btn btn-warning btn-xs" title="Editar Pasaje"
+                                                                @click=editarPasaje(repo.id)>
+                                                                <i class="fas fa-edit"></i>
                                                             </button>-->
-                                                            <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"  title="Mostrar Empresa"
-                                                                target="_blank">
+                                                            <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"
+                                                                target="_blank" title="Imprimir Pasaje">
                                                                 <i class="fas fa-print"></i>
                                                             </a>
                                                             <button type="button" class="btn btn-danger btn-xs"
-                                                                title="Eliminar Empresa" @click="eliminar(repo.id)">
+                                                                title="Eliminar Pasaje" @click="eliminar(repo.id)">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                        </span>
+                                                        <span v-else>
+                                                            <button type="button" class="btn btn-danger btn-xs"
+                                                                title="Restaurar Pasaje" @click="restaurar(repo.id)">
+                                                                <i class="fas fa-trash-restore"></i>
+                                                            </button>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                     <!-- Pagination -->
                                     <!--<nav>
@@ -212,49 +232,17 @@
             </div>
         </div>
     </section>
-    <div class="modal" tabindex="-1" role="dialog" id="adicional-modal">
-        <div class="modal-dialog" role="document">
+    <div class="modal" tabindex="-1" role="dialog" id="editar-pasaje">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Registros Adicionales</h5>
+                    <h5 class="modal-title">Editar Pasaje</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Descripci&oacute;n</th>
-                                            <th>Monto</th>
-                                            <th>Service Fee</th>
-                                            <th>Importe</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-if="total_adicionales==0">
-                                            <td  colspan="4" class="text-center text-danger">-- Adicionales No Registrados --</td>
-                                        </tr>
-                                        <tr v-else v-for="adic in adicionales">
-                                            <td>@{{adic.descripcion}}</td>
-                                            <td>@{{adic.monto.toFixed(2)}}</td>
-                                            <td>@{{adic.tuaa.toFixed(2)}}</td>
-                                            <td>@{{adic.total.toFixed(2)}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th colspan="3" class="text-right"> Total</th>
-                                            <td>@{{suma_adicionales }}</td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-                            </div>
-
-                        </div>
-                    </div>
+                <div class="modal-body" v-if="pasaje">
+                    @include('pasaje.editar')
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
