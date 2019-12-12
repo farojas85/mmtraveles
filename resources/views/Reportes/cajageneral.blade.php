@@ -128,7 +128,7 @@
                                     <p class="text-primary">Seleccione los Datos y haz clic en Buscar</p>
                                     <p class="text-danger"><span class="text-secondary">En esta &aacute;rea se mostrar&aacute;</span> El Listado de Reporte Caja General</p>
                                 </div>
-                                <div class="col-md-12" v-else>
+                                <div class="col-12" v-else>
                                     @include('Reportes.cajageneraltabla')
                                 </div>
                             </div>

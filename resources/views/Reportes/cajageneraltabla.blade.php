@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-sm table-hover table-bordered">
+    <table class="table table-sm table-hover table-bordered nowrap">
         <thead class="bg-navy">
             <tr>
                 <th>Nº</th>
@@ -16,6 +16,8 @@
                 <th>Visa</th>
                 <th>Dep. S/</th>
                 <th>Dep. $</th>
+                <th>Deuda Detalle</th>
+                <th>Deuda Monto</th>
                 <th>Fecha</th>
             </tr>
         </thead>
@@ -23,8 +25,7 @@
             <tr v-if="total_reporte == 0">
                 <td colspan="12">-- DATOS NO REGISTRADOS --</td>
             </tr>
-            <tr v-else v-for="(repo,index) in reporte" :key="repo.id"
-                style="font-size:11pt">
+            <tr v-else v-for="(repo,index) in reporte" :key="repo.id">
                 <td>@{{index+1}}</td>
                 <td>@{{repo.counter}}</td>
                 <td>@{{repo.viajecode}}</td>
@@ -39,6 +40,8 @@
                 <td>@{{repo.pago_visa}}</td>
                 <td>@{{repo.deposito_soles}}</td>
                 <td>@{{repo.deposito_dolares}}</td>
+                <td></td>
+                <td></td>
                 <td>@{{repo.created_at}}</td>
             </tr>
         </tbody>

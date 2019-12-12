@@ -8,10 +8,10 @@ var app = new Vue({
        counters:[],
        total_lugares:'',
        busqueda:{
-            lugar:'',
-            local:'',
-            counter:'',
-            aerolinea:'',
+            lugar:'%',
+            local:'%',
+            counter:'%',
+            aerolinea:'%',
             fecha_ini:'',
             fecha_fin:''
        },
@@ -43,10 +43,10 @@ var app = new Vue({
                 this.locales=[]
                 this.counters=[]
                 this.aerolineas=[]
-                this.busqueda.lugar=''
-                this.busqueda.local=''
-                this.busqueda.counter=''
-                this.busqueda.aerolinea=''
+                this.busqueda.lugar='%'
+                this.busqueda.local='%'
+                this.busqueda.counter='%'
+                this.busqueda.aerolinea='%'
             })
         },
         listarLocales(e) {
@@ -55,9 +55,9 @@ var app = new Vue({
                 this.locales = response.data
                 this.counters = []
                 this.aerolineas=[]
-                this.busqueda.local = ''
-                this.busqueda.counter = ''
-                this.busqueda.aerolinea=''
+                this.busqueda.local = '%'
+                this.busqueda.counter = '%'
+                this.busqueda.aerolinea='%'
             });
         },
         listarCounters(e) {
@@ -69,8 +69,8 @@ var app = new Vue({
             .then(response => {
                 this.counters = response.data
                 this.aerolineas=[]
-                this.busqueda.counter = ''
-                this.busqueda.aerolinea=''
+                this.busqueda.counter = '%'
+                this.busqueda.aerolinea='%'
             });
         },
         buscar(){
@@ -101,6 +101,7 @@ var app = new Vue({
             })
             .then((response) => {
                 this.aerolineas = response.data
+                this.busqueda.aerolinea='%'
                 this.total_aerolineas = this.aerolineas.length
             })
         }
