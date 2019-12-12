@@ -54,7 +54,7 @@
                                     <div class="col-md-6">
                                         <div class="card card-primary">
                                             <div class="card-header">
-                                                <h3 class="card-title">Datos de PAX</h3>
+                                                <h3 class="card-title">Datos de Pax</h3>
                                             <!-- /.card-tools -->
                                             </div>
                                             <!-- /.card-header -->
@@ -159,14 +159,14 @@
 
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <div class="form-group row">
+                                                        <!--<div class="form-group row">
                                                             <label for="ticket_number" class="col-md-4 col-form-label">Nro. de Boleto</label>
                                                             <div class="col-md-8">
                                                                 <input type="text" name="ticket_number" id="ticket_number" v-model="pasaje.ticket_number"
                                                                         class="form-control" placeholder="Número Ticket">
                                                                 <small class="text-danger" v-for="error in errores.ticket_number">@{{ error }}</small>
                                                             </div>
-                                                        </div>
+                                                        </div>-->
                                                         <div class="form-group row">
                                                             <label for="inputEmail1" class="col-md-4 col-form-label">CODIGO RESERVA</label>
                                                             <div class="col-md-8">
@@ -261,6 +261,54 @@
                                                                 <input type="text" name="vuelo" class="form-control" v-model="pasaje.vuelo_vuelta"
                                                                         id="cl" placeholder="Vuelo Retorno">
                                                                 <small class="text-danger" v-for="error in errores.vuelo_vuelta">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group row">
+                                                            <label for="ruta" class="col-md-1 col-form-label">CL IDA</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" name="cl" class="form-control" v-model="pasaje.cl"
+                                                                        id="cl" placeholder="CL: R">
+                                                                <small class="text-danger" v-for="error in errores.cl">@{{ error }}</small>
+                                                            </div>
+                                                            <!--<label for="fecha_vuelo" class="col-md-1 col-form-label">ST</label>
+                                                            <div class="col-md-2" title="Estado Vuelo">
+                                                                <input type="text" name="st" class="form-control" v-model="pasaje.st"
+                                                                        id="st" placeholder="ST: OK">
+                                                                <small class="text-danger" v-for="error in errores.st">@{{ error }}</small>
+                                                            </div>-->
+                                                            <label for="equipaje" class="col-md-1 col-form-label">Equipaje</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" name="equipaje" class="form-control" v-model="pasaje.equipaje"
+                                                                        id="equipaje" placeholder="EQ:10K" title="Equipaje Ida">
+                                                                <small class="text-danger" v-for="error in errores.equipaje">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                 <div class="row" v-if="hora_regreso">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group row">
+                                                            <label for="cl_vuelta" class="col-md-1 col-form-label">CL Ret.</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" name="cl_vuelta" class="form-control" v-model="pasaje.cl_vuelta"
+                                                                        id="cl_vuelta" placeholder="CL: N">
+                                                                <small class="text-danger" v-for="error in errores.cl_vuelta">@{{ error }}</small>
+                                                            </div>
+                                                            <!--<label for="st_vuelta" class="col-md-1 col-form-label">ST Ret.</label>
+                                                            <div class="col-md-2" title="Estado Vuelo">
+                                                                <input type="text" name="st_vuelta" class="form-control" v-model="pasaje.st_vuelta"
+                                                                        id="st_vuelta" placeholder="ST: OK">
+                                                                <small class="text-danger" v-for="error in errores.st_vuelta">@{{ error }}</small>
+                                                            </div>-->
+                                                            <label for="equipaje_vuelta" class="col-md-1 col-form-label">EQU Ret.</label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" name="equipaje_vuelta" class="form-control" v-model="pasaje.equipaje_vuelta"
+                                                                        id="equipaje_vuelta" placeholder="EQ:10K" title="Equipaje Vuelta">
+                                                                <small class="text-danger" v-for="error in errores.equipaje_vuelta">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                     </div>

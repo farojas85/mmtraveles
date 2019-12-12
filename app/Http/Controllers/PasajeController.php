@@ -90,16 +90,22 @@ class PasajeController extends Controller
         $pasaje->ruc = $request->ruc;
         $pasaje->viajecode = $request->codigo;
         $pasaje->ruta = $request->ruta;
+        $pasaje->ruta_vuelta =  ($request->ruta_vuelta== '') ?null : $request->ruta_vuelta;
         $pasaje->tipo_viaje = $request->tipo_viaje;
         $pasaje->fecha_vuelo = $request->fecha_vuelo;
-        $pasaje->fecha_retorno =  ($request->fecha_retorno== '') ?null : $request->hora_vuelta;
+        $pasaje->fecha_retorno =  ($request->fecha_retorno== '') ?null : $request->fecha_retorno;
         $pasaje->hora_vuelo = $request->hora_vuelo;
         $pasaje->hora_vuelta = ($request->hora_vuelta== '') ? null : $request->hora_vuelta;
         $pasaje->vuelo = $request->vuelo;
+        $pasaje->vuelo_vuelta = ($request->vuelo_vuelta== '') ? null : $request->vuelo_vuelta;
         $pasaje->cl = $request->cl;
-        $pasaje->st = $request->st;
+        $pasaje->cl_vuelta = ($request->cl_vuelta== '') ? null : $request->cl_vuelta;
+        $pasaje->st = 'OK';
+        if($pasaje->tipo_viaje == 2){
+            $pasaje->st_vuelta = 'OK';
+        }
         $pasaje->equipaje = $request->equipaje;
-
+        $pasaje->equipaje_vuelta = ($request->equipaje_vuelta== '') ? null : $request->equipaje_vuelta;
         $pasaje->monto_neto = $request->monto_neto;
 
         $pasaje->moneda = $request->moneda;
@@ -137,20 +143,6 @@ class PasajeController extends Controller
         $pasaje->save();
 
 
-
-        /*foreach($request->adicionales as $adic)
-        {
-            $pasaje_adicional = new PasajeAdicional();
-            $pasaje_adicional->pasaje_id = $pasaje->id;
-            $pasaje_adicional->descripcion = $adic['detalle'];
-            $pasaje_adicional->monto = $adic['monto'];
-            $pasaje_adicional->tuaa = $adic['service_fee'];
-            $pasaje_adicional->total = $adic['importe'];
-
-            //return $pasaje_adicional;
-           $pasaje_adicional->save();
-        }*/
-
         Session::put('pasaje_id',$pasaje->id);
 
         return response()->json([
@@ -158,7 +150,7 @@ class PasajeController extends Controller
             'mensaje' => "Datos Guardados Satisfactoriamente"]);
     }
 
-    public function listaPorUsuario()
+    public function listaPorUsuario(Request $request)
     {
         $date = Carbon::now();
 
@@ -174,9 +166,28 @@ class PasajeController extends Controller
         if($role_name == 'Gerente' || $role_name == 'Administrador'){
             $condicion = '%';
 
-            $pasaje =  Pasaje::with(['user','aerolinea'])
-                            ->orderBy('created_at','DESC')
-                            ->get();
+            $pasaje = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                        ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->join('locals as lo','lo.id','=','u.local_id')
+                        ->join('category as lu','lu.id','=','lo.lugar_id')
+                        ->select('pasaje.id',
+                                DB::Raw("CONCAT(u.name,' ',u.lastname) as counter"),
+                                'viajecode','ae.name as aero',
+                                'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
+                                'ruta','pasaje.total','pago_soles','pago_dolares',
+                                'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at',
+                                'pasaje.created_at_venta','pasaje.deleted_at')
+                        ->where('lu.id','like',$request->lugar)
+                        ->where('lo.id','like',$request->local)
+                        ->where('u.id','like',$request->counter)
+                        ->where('ae.id','like',$request->aerolinea)
+                        ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                        ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                        ->get();
+            // $pasaje =  Pasaje::with(['user','aerolinea'])
+            //                 ->where('')
+            //                 ->orderBy('created_at','DESC')
+            //                 ->get();
         }
         else if($role_name == 'Responsable' )
         {
@@ -193,7 +204,25 @@ class PasajeController extends Controller
                             ->where('category_id',$usercat->category_id)
                             ->count();
 
-            if(Auth::user()->id == 8){
+            $pasaje = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                            ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+                            ->join('locals as lo','lo.id','=','u.local_id')
+                            ->join('category as lu','lu.id','=','lo.lugar_id')
+                            ->select('pasaje.id',
+                                    DB::Raw("CONCAT(u.name,' ',u.lastname) as counter"),
+                                    'viajecode','ae.name as aero',
+                                    'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
+                                    'ruta','pasaje.total','pago_soles','pago_dolares',
+                                    'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at',
+                                    'pasaje.created_at_venta','pasaje.deleted_at')
+                            ->where('lu.id','like',$request->lugar)
+                            ->where('lo.id','like',$request->local)
+                            ->where('u.id','like',$request->counter)
+                            ->where('ae.id','like',$request->aerolinea)
+                            ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                            ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                            ->get();
+            /*if(Auth::user()->id == 8){
                 $pasaje =  Pasaje::with(['user','aerolinea'])
                             ->orderBy('created_at','DESC')
                             ->get();
@@ -211,15 +240,30 @@ class PasajeController extends Controller
                             ->whereIn('counter_id',$useres)
                             ->orderBy('created_at','DESC')
                             ->get();
-            }
+            }*/
 
         }
         else {
+
             $condicion2 = Auth::user()->id;
-            $pasaje= Pasaje::with(['user','aerolinea'])
-                        ->where('counter_id', Auth::user()->id)
-                        ->orderBy('created_at','DESC')
-                        ->get();
+            $pasaje = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                            ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+                            ->join('locals as lo','lo.id','=','u.local_id')
+                            ->join('category as lu','lu.id','=','lo.lugar_id')
+                            ->select('pasaje.id',
+                                    DB::Raw("CONCAT(u.name,' ',u.lastname) as counter"),
+                                    'viajecode','ae.name as aero',
+                                    'pasaje.pasajero','pasaje.moneda','pasaje.cambio',
+                                    'ruta','pasaje.total','pago_soles','pago_dolares',
+                                    'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at',
+                                    'pasaje.created_at_venta','pasaje.deleted_at')
+                            ->where('pasaje.counter_id',Auth::user()->id)
+                            ->where('lu.id','like',$request->lugar)
+                            ->where('lo.id','like',$request->local)
+                            ->where('ae.id','like',$request->aerolinea)
+                            ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                            ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                            ->get();
         }
         return $pasaje;
 

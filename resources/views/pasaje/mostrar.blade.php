@@ -34,6 +34,93 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
+                                <div class="col-md-3">
+                                    <div class="input-group input-group-sm" title="Local">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Lugar:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.lugar" @change="listarLocales">
+                                            <option value="">-LUGAR-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="lugar in lugares" :key='lugar.id' :value="lugar.id">
+                                                @{{lugar.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.lugar">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group input-group-sm" title="Local">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Local:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.local" @change="listarCounters">
+                                            <option value="">-LOCAL-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="local in locales" :key='local.id' :value="local.id">
+                                                @{{local.nombre}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.local">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="input-group input-group-sm" title="Counter">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Counter:</span>
+                                        </div>
+                                        <select class="form-control" v-model="busqueda.counter" @change="listarAerolineas">
+                                            <option value="">-COUNTER-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="counter in counters" :key='counter.id' :value="counter.id">
+                                                @{{counter.name}} @{{counter.lastname}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.counter">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-3 noimpre">
+                                    <div class="input-group input-group-sm" title="Counter">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Aerol&iacute;nea:</span>
+                                        </div>
+                                        <select name="aerolinea_id" class="form-control" v-model="busqueda.aerolinea" >
+                                            <option value>-AEROLÍNEA-</option>
+                                            <option value="%">TODOS</option>
+                                            <option v-for="aero in aerolineas" :key="aero.id" :value="aero.id">
+                                                @{{ aero.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.aerolinea">@{{ error }}</small>
+                                </div>
+                            </div>
+                            <div class="row mt-2 ">
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm" title="Fecha Inicio">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">Fecha Inicio:</span>
+                                        </div>
+                                        <input type="date" name="fecha_ini" class="form-control" v-model="busqueda.fecha_ini">
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.fecha_ini">@{{ error }}</small>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm" title="Fecha Inicio">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text ">Fecha Final:</span>
+                                        </div>
+                                        <input type="date" name="fecha_fin" class="form-control" v-model="busqueda.fecha_fin">
+                                    </div>
+                                    <small class="text-danger" v-for="error in errores.fecha_fin">@{{ error }}</small>
+                                </div>
+                                    <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary btn-sm" @click="listaPasaje">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
                                 <div class="col-md-12">
                                     <div class="table-responsive">
                                         <table class="table table-sm table-hover table-bordered">
@@ -56,25 +143,24 @@
                                             </thead>
                                             <tbody>
                                                 <tr v-if="total_pasajes == 0">
-                                                    <td colspan="12">-- DATOS NO REGISTRADOS --</td>
+                                                    <td colspan="13" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
                                                 </tr>
                                                 <tr v-else v-for="(repo,index) in pasajes" :key="repo.id">
 
                                                     <td>@{{index+1}}</td>
                                                     <td>
-                                                        <span v-if="repo.counter_id==null">--</span>
-                                                        <span v-else>@{{repo.user.name}}</span>
+                                                        @{{repo.counter}}
                                                     </td>
                                                     <td>@{{repo.viajecode}}</td>
                                                     <td>@{{repo.pasajero}}</td>
-                                                    <td>@{{repo.aerolinea.name }}</td>
+                                                    <td>@{{repo.aero }}</td>
                                                     <td>@{{repo.total}}</td>
                                                     <td>@{{repo.pago_soles}}</td>
                                                     <td>@{{repo.pago_dolares}}</td>
                                                     <td>@{{repo.pago_visa}}</td>
                                                     <td>@{{repo.deposito_soles}}</td>
                                                     <td>@{{repo.deposito_dolares}}</td>
-                                                    <td>@{{repo.created_at}}</td>
+                                                    <td>@{{repo.created_at_venta}}</td>
                                                     <td>
                                                         <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"  title="Mostrar Empresa"
                                                             target="_blank">

@@ -22,7 +22,7 @@ var app = new Vue({
             axios.get('/opcional/show',{params:{id : id}})
             .then((response) => {
                 $('#modal-adicionales-title').html('Adicionales Descripción');
-                $('#modal-adicionales-body').html(response.data); 
+                $('#modal-adicionales-body').html(response.data);
                 $('#modal-adicionales').modal('show');
             })
         }
