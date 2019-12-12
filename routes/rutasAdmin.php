@@ -28,6 +28,7 @@ Route::group(['prefix' => 'user', 'middleware' => 'auth'], function(){
     Route::get('show','UserController@show');
     Route::put('update','UserController@update');
     Route::post('destroy','UserController@destroy');
+    Route::get('search','UserController@search');
 });
 
 Route::get('pasajeCreate','PasajeController@create')->name('pasajes.create');

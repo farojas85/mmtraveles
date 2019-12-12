@@ -22,7 +22,7 @@ class UserController extends Controller
     }
 
     public function lista(){
-        return User::with('roles')->latest()->paginate(10);
+        return User::with('roles')->paginate(10);
     }
 
     public function store(Request $request)
@@ -45,7 +45,7 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->username = $request->username;
         $user->password = Hash::make($request->password);
-        $user->pasasword2 = $request->password;
+        $user->password2 = $request->password;
         $user->local_id = $request->local_id;
         $user->tipo = $role->name;
         $user->created_at = Carbon::now();
@@ -64,6 +64,14 @@ class UserController extends Controller
      * @param  \App\USer  $uSer
      * @return \Illuminate\Http\Response
      */
+     
+    public function search(Request $request)
+    {
+        return User::with(['roles','local'])
+                ->where('name','like','%'.$request->texto.'%')
+                ->paginate(10);
+    }
+    
     public function show(Request $request)
     {
         return User::with(['roles','local'])->where('id',$request->id)->first();

@@ -20,6 +20,7 @@ var app = new Vue({
        errores:[],
        mostrar_password:false,
        offset:4,
+       desde:0,
     },
     computed:{
         isActived() {
@@ -59,19 +60,22 @@ var app = new Vue({
         listar() {
             axios.get('/user/lista').then(({ data }) => (
                 this.users = data,
-                this.total_users = this.users.total
+                this.total_users = this.users.total,
+                this.desde =  this.users.from
              ))
         },
         getResults(page=1) {
             axios.get('/user/lista?page=' + page)
             .then(response => {
                 this.users = response.data
+                this.desde =  this.users.from
                 this.total_users = this.users.total
             });
 
         },
         changePage(page) {
             this.users.current_page = page
+            this.desde = this.users.from
             this.getResults(page)
         },
         limpiar(){
@@ -104,7 +108,7 @@ var app = new Vue({
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
-                            $('#USER-create').modal('hide')
+                             $('#user-create').modal('hide')
                             this.listar()
                             this.getResults()
                         }
@@ -169,6 +173,13 @@ var app = new Vue({
                         console.clear()
                     }
                 })
+        },
+        buscar(e){
+            axios.get('user/search',{ params: {texto: e.target.value}})
+            .then((response) => {
+                this.users = response.data,
+                this.total_users = this.users.total
+          })
         },
         eliminar(id){
             swal.fire({

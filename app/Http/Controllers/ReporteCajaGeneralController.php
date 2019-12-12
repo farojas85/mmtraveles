@@ -56,8 +56,8 @@ class ReporteCajaGeneralController extends Controller
         $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
                         ->leftJoin('locals as l','u.local_id','=','l.id')
                         ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
-                        ->where('pasaje.created_at','>=',$request->fecha_ini)
-                        ->where('pasaje.created_at','<=',$request->fecha_fin)
+                        ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                        ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
                         ->where('l.lugar_id','LIKE',$request->lugar_id)
                         ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea_id)
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',

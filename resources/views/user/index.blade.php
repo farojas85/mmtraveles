@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control"  placeholder="Buscar..." @change="">
+                                        <input type="text" class="form-control"  placeholder="Buscar..." @change="buscar">
                                         <div class="input-group-append">
                                             <button type="button" class="btn btn-info">
                                                 <i class="fas fa-search"></i>
@@ -64,8 +64,8 @@
                                                 <tr v-if="total_users==0">
                                                     <td colspan="6" class="text-center text-danger">--Datos No Registrados --</td>
                                                 </tr>
-                                                <tr v-else v-for="user in users.data" :key="user.id">
-                                                    <td class="text-center">@{{user.id }}</td>
+                                                <tr v-else v-for="(user,index) in users.data" :key="user.id">
+                                                    <td class="text-center">@{{parseInt(desde)+ parseInt(index) }}</td>
                                                     <td>@{{user.name}} @{{user.lastname}}</td>
                                                     <td>@{{user.username}}</td>
                                                     <td>@{{user.email}}</td>
