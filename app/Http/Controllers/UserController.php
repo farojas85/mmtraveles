@@ -22,7 +22,7 @@ class UserController extends Controller
     }
 
     public function lista(){
-        return User::with('roles')->paginate(10);
+        return User::with(['roles','local'])->paginate(10);
     }
 
     public function store(Request $request)
@@ -64,14 +64,14 @@ class UserController extends Controller
      * @param  \App\USer  $uSer
      * @return \Illuminate\Http\Response
      */
-     
+
     public function search(Request $request)
     {
         return User::with(['roles','local'])
                 ->where('name','like','%'.$request->texto.'%')
                 ->paginate(10);
     }
-    
+
     public function show(Request $request)
     {
         return User::with(['roles','local'])->where('id',$request->id)->first();

@@ -3,6 +3,12 @@ var app = new Vue({
     data:{
        reporte:[],
        total_reporte:'',
+       deudas:[],
+       total_deudas:0,
+       suma_deudas:0,
+       adicionales:[],
+       total_adicionales:0,
+       suma_adicionales:0,
        lugares:[],
        locales:[],
        counters:[],
@@ -76,11 +82,25 @@ var app = new Vue({
         buscar(){
             axios.get('/reporte-caja-general/tabla',{params:this.busqueda })
             .then((response) => {
-                this.reporte = response.data
+                this.reporte = response.data.pasajes
                 this.total_reporte = this.reporte.length
                 this.suma_reporte =0
                 this.reporte.forEach(element => {
-                    this.suma_reporte += element.tarifa
+                    this.suma_reporte += parseFloat(element.total)
+                })
+
+                this.deudas = response.data.deudas
+                this.total_deudas = this.deudas.length
+                this.suma_deudas = 0
+                this.deudas.forEach(element => {
+                    this.suma_deudas += parseFloat(element.deuda_monto)
+                })
+
+                this.adicionales = response.data.adicionales
+                this.total_adicionales = this.adicionales.length
+                this.suma_adicionales = 0;
+                this.adicionales.forEach(element => {
+                    this.suma_adicionales += parseFloat(element.importe)
                 })
                 this.errores=[]
             })
@@ -104,9 +124,17 @@ var app = new Vue({
                 this.busqueda.aerolinea='%'
                 this.total_aerolineas = this.aerolineas.length
             })
+        },
+        listarUsuarios() {
+            axios.get('/reporte-caja-general/lista-usuarios')
+            .then(response => {
+                this.counters = response.data
+                this.busqueda.counter = '%'
+            });
         }
     },
     created() {
         this.listarLugares()
+        this.listarUsuarios()
     }
 })

@@ -124,12 +124,12 @@
                                 </div>
                             </div>
                             <div class="row " id="detalle-tabla">
-                                <div class="col-md-12 text-center" v-if="total_reporte == 0">
+                                <div class="col-12" v-if="total_reporte >0 || total_deudas >0 || total_adicionales >0">
+                                    @include('Reportes.cajageneraltabla')
+                                </div>
+                                <div class="col-md-12 text-center" v-if="total_reporte ==0 || total_deudas ==0 || total_adicionales ==0">
                                     <p class="text-primary">Seleccione los Datos y haz clic en Buscar</p>
                                     <p class="text-danger"><span class="text-secondary">En esta &aacute;rea se mostrar&aacute;</span> El Listado de Reporte Caja General</p>
-                                </div>
-                                <div class="col-12" v-else>
-                                    @include('Reportes.cajageneraltabla')
                                 </div>
                             </div>
                         </div>

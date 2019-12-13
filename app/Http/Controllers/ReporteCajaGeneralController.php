@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Session;
 use App\Lugar;
 use App\Pasaje;
+use App\Opcional;
+use App\OpcionalDetalle;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use DB;
@@ -27,6 +29,14 @@ class ReporteCajaGeneralController extends Controller
                     ->where('lo.id','LIKE',$request->local)
                     ->where('u.id','LIKE',$request->counter)
                     ->groupBy('ae.id','ae.name')
+                    ->get();
+    }
+
+    public function listarUsuarios()
+    {
+        return Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                    ->select('u.id','u.name','u.lastname')
+                    ->groupBy('u.id','u.name','u.lastname')
                     ->get();
     }
 
@@ -53,20 +63,43 @@ class ReporteCajaGeneralController extends Controller
             case '20': $condicion = '%HUU%';break;
         }
         //return $request;
-        $pasaje = Pasaje::leftJoin('user as u','pasaje.counter_id','=','u.id')
-                        ->leftJoin('locals as l','u.local_id','=','l.id')
-                        ->leftJoin('product as ae','pasaje.aerolinea_id','=','ae.id')
+        $pasajes = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                        ->join('locals as l','u.local_id','=','l.id')
+                        ->join('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->where('l.lugar_id','LIKE',$request->lugar)
+                        ->where('l.id','LIKE',$request->local)
+                        ->where('u.id','LIKE',$request->counter)
+                        ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea)
                         ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
                         ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
-                        ->where('l.lugar_id','LIKE',$request->lugar_id)
-                        ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea_id)
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                     'pasaje.pasajero','pasaje.tax','pasaje.service_fee','pasaje.ticket_number',
                                     'pasaje.total','pasaje.deposito_soles','pasaje.deposito_dolares',
                                     'ruta','pasaje.tarifa','pago_soles','pago_dolares',
-                                    'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at')
+                                    'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at_venta')
                         ->orderBy('pasaje.created_at','DESC')
                         ->get();
+
+        $deudas = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                        ->join('locals as l','u.local_id','=','l.id')
+                        ->join('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->where('l.lugar_id','LIKE',$request->lugar)
+                        ->where('l.id','LIKE',$request->local)
+                        ->where('pasaje.counter_id','LIKE',$request->counter)
+                        ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea)
+                        ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                        ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                        ->where('pasaje.deuda_monto','>',0)
+                        ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
+                                    'pasaje.deuda_detalle','pasaje.deuda_monto',
+                                    'pasaje.pasajero','pasaje.ticket_number','pasaje.created_at_venta')
+                        ->orderBy('pasaje.created_at','DESC')
+                        ->get();
+
+        $adicionales = Opcional::join('user as u','opcionals.counter_id','=','u.id')
+                            ->join('opcional_detalles as op','opcionals.id','=','op.opcional_id')
+                            ->where('opcionals.counter_id','like',$request->counter)
+                            ->get();
         $asuma = 0;
         $sumatuaa=0;
         $s2= 0;
@@ -77,7 +110,7 @@ class ReporteCajaGeneralController extends Controller
         $s7=0;
         $s8=0;
         $pasa = array();
-        foreach($pasaje as $pa)
+        foreach($pasajes as $pa)
         {
             $tempo = array(
                 'id' => $pa->id,
@@ -132,6 +165,11 @@ class ReporteCajaGeneralController extends Controller
 
         array_push($pasa,$tempo);
         Session::put('pasajes',$pasa);
-        return $pasaje;
+
+        return response()->json([
+                'pasajes' => $pasajes,
+                'deudas' => $deudas,
+                'adicionales' => $adicionales
+        ]);
     }
 }

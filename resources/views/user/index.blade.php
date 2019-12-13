@@ -56,6 +56,7 @@
                                                     <th>Nombres y Apellidos</th>
                                                     <th class="text-center">Usuario</th>
                                                     <th class="text-center">Correo</th>
+                                                    <th>Local</th>
                                                     <th class="text-center">Rol</th>
                                                     <th >Acciones</th>
                                                 </tr>
@@ -69,6 +70,7 @@
                                                     <td>@{{user.name}} @{{user.lastname}}</td>
                                                     <td>@{{user.username}}</td>
                                                     <td>@{{user.email}}</td>
+                                                    <td>@{{user.local.nombre}}</td>
                                                     <td v-for="role in user.roles" :key='role.id'>
                                                         <span v-show="role.name=='Gerente'" class="badge badge-success">@{{role.name}}</span>
                                                         <span v-show="role.name=='Administrador'" class="badge badge-primary">@{{role.name}}</span>

@@ -125,6 +125,7 @@ Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], funct
     Route::get('/', 'ReporteCajaGeneralController@index')->name('reportecajageneral.index');
     Route::get('/tabla','ReporteCajaGeneralController@tabla')->name('reportecajageneral.tabla');
     Route::get('listarAerolineas','ReporteCajaGeneralController@listarAerolineas');
+    Route::get('lista-usuarios','ReporteCajaGeneralController@listarUsuarios');
 });
 
 Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function(){
