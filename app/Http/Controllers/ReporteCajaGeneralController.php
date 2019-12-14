@@ -78,7 +78,8 @@ class ReporteCajaGeneralController extends Controller
                                     'pasaje.pasajero','pasaje.tax','pasaje.service_fee','pasaje.ticket_number',
                                     'pasaje.total','pasaje.deposito_soles','pasaje.deposito_dolares',
                                     'ruta','pasaje.tarifa','pago_soles','pago_dolares',
-                                    'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at_venta')
+                                    'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at_venta',
+                                    'pasaje.deleted_at')
                         ->orderBy('pasaje.created_at','DESC')
                         ->get();
 
@@ -94,7 +95,8 @@ class ReporteCajaGeneralController extends Controller
                         ->where('pasaje.deuda_monto','>',0)
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                     'pasaje.deuda_detalle','pasaje.deuda_monto',
-                                    'pasaje.pasajero','pasaje.ticket_number','pasaje.created_at_venta')
+                                    'pasaje.pasajero','pasaje.ticket_number','pasaje.created_at_venta',
+                                    'pasaje.deleted_at')
                         ->orderBy('pasaje.created_at','DESC')
                         ->get();
 

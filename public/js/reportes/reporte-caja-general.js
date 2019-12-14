@@ -131,7 +131,117 @@ var app = new Vue({
                 this.counters = response.data
                 this.busqueda.counter = '%'
             });
-        }
+        },
+        eliminar(id) {
+            swal.fire({
+                title:"¿Está Seguro de Eliminar?",
+                text:'Pasaje Emitidos',
+                type:"question",
+                showCancelButton: true,
+                confirmButtonText:"<i class='fas fa-trash-alt'></i> A Papelera",
+                confirmButtonColor:"#6610f2",
+                cancelButtonText:"<i class='fas fa-eraser'></i> Permanentemente",
+                cancelButtonColor:"#e3342f"
+            }).then( (response) => {
+                if(response.value) {
+                    this.eliminarTemporal(id)
+                }
+                else if( response.dismiss === swal.DismissReason.cancel) {
+                   this.eliminarPermanente(id)
+                }
+            }).catch(error => {
+                swal.showValidationError(
+                    `Ocurrió un Error: ${error.response.status}`
+                )
+            })
+        },
+        eliminarTemporal(id) {
+            axios.post('/pasaje-emitidos/eliminar-temporal',{id:id})
+            .then((response) => (
+                swal.fire({
+                    type : 'success',
+                    title : 'Pasajes Emitidos',
+                    text : response.data.mensaje,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                }).then(respuesta => {
+                    if(respuesta.value) {
+                       this.buscar()
+                    }
+                })
+            ))
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                }
+            })
+        },
+        eliminarPermanente(id) {
+            axios.post('/pasaje-emitidos/eliminar-permanente',{id:id})
+            .then((response) => (
+                swal.fire({
+                    type : 'success',
+                    title : 'Pasajes Emitidos',
+                    text : response.data.mensaje,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor:"#1abc9c",
+                }).then(respuesta => {
+                    if(respuesta.value) {
+                       this.buscar()
+                    }
+                })
+            ))
+            .catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                }
+            })
+        },
+        restaurar(id) {
+            swal.fire({
+                title:"¿Está Seguro de Restaurar?",
+                text:'Pasajes Emitidos',
+                type:"question",
+                showCancelButton: true,
+                confirmButtonText:"Si",
+                confirmButtonColor:"#28a745",
+                cancelButtonText:"No",
+                cancelButtonColor:"#dc3545"
+            }).then( (response) => {
+                if(response.value) {
+                    axios.post('/pasaje-emitidos/restaurar',{id:id})
+                    .then((response) => (
+                        swal.fire({
+                            type : 'success',
+                            title : 'Pasajes Emitidos',
+                            text : response.data.mensaje,
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor:"#1abc9c",
+                        }).then(respuesta => {
+                            if(respuesta.value) {
+                            this.listarActivos()
+                            }
+                        })
+                    ))
+                    .catch((errors) => {
+                        if(response = errors.response) {
+                            this.errores = response.data.errors
+                        }
+                    })
+                }
+            }).catch((errors) => {
+                if(response = errors.response) {
+                    this.errores = response.data.errors
+                    swal.fire({
+                        type : 'error',
+                        title : 'Módulos',
+                        text : this.errores,
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor:"#1abc9c",
+                    })
+                }
+            })
+        },
     },
     created() {
         //this.listarLugares()

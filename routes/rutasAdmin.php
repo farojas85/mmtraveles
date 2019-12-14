@@ -153,13 +153,14 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $aerolinea='';
     switch($pasaje->aerolinea_id)
     {
-        case 612 : $aerolinea='images/aerolineas/latam.jpg';break;
-        case 614 : $aerolinea='images/aerolineas/avianca.png';break;
-        case 622 : $aerolinea='images/aerolineas/atsa.jpeg';break;
-        case 613 : $aerolinea='images/aerolineas/costamar.png';break;
         case 611 : $aerolinea='images/aerolineas/peruvian.png';break;
+        case 612 : $aerolinea='images/aerolineas/latam.jpg';break;
+        case 613 : $aerolinea='images/aerolineas/costamar.png';break;
+        case 614 : $aerolinea='images/aerolineas/avianca.png';break;
         case 615 : $aerolinea='images/aerolineas/starperu.jpg';break;
         case 616 : $aerolinea='images/aerolineas/viva_air.png';break;
+        case 621 : $aerolinea='images/aerolineas/startup.png';break;
+        case 622 : $aerolinea='images/aerolineas/atsa.jpeg';break;
         case 623 : $aerolinea='images/aerolineas/aero_mexico.jpg';break;
         case 628 : $aerolinea='images/aerolineas/sky_Airline.png';break;
 
@@ -550,13 +551,14 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $aerolinea='';
     switch($pasaje->aerolinea_id)
     {
-        case 612 : $aerolinea='images/aerolineas/latam.jpg';break;
-        case 614 : $aerolinea='images/aerolineas/avianca.png';break;
-        case 622 : $aerolinea='images/aerolineas/atsa.jpeg';break;
-        case 613 : $aerolinea='images/aerolineas/costamar.png';break;
         case 611 : $aerolinea='images/aerolineas/peruvian.png';break;
+        case 612 : $aerolinea='images/aerolineas/latam.jpg';break;
+        case 613 : $aerolinea='images/aerolineas/costamar.png';break;
+        case 614 : $aerolinea='images/aerolineas/avianca.png';break;
         case 615 : $aerolinea='images/aerolineas/starperu.jpg';break;
         case 616 : $aerolinea='images/aerolineas/viva_air.png';break;
+        case 621 : $aerolinea='images/aerolineas/startup.png';break;
+        case 622 : $aerolinea='images/aerolineas/atsa.jpeg';break;
         case 623 : $aerolinea='images/aerolineas/aero_mexico.jpg';break;
         case 628 : $aerolinea='images/aerolineas/sky_Airline.png';break;
     }

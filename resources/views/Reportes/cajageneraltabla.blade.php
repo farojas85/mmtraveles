@@ -19,6 +19,8 @@
                 <th>Dep. S/</th>
                 <th>Dep. $</th>
                 <th>Fecha</th>
+                <th>Acciones</th>
+
             </tr>
         </thead>
         <tbody>
@@ -41,6 +43,18 @@
                 <td>@{{repo.deposito_soles}}</td>
                 <td>@{{repo.deposito_dolares}}</td>
                 <td>@{{repo.created_at_venta}}</td>
+                <td>
+                    <a :href=" 'imprimirPasaje/'+repo.id" class="btn btn-success btn-xs"
+                        target="_blank" title="Imprimir Pasaje">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <span v-if="repo.deleted_at=='' || repo.deleted_at==null">
+                        <button type="button" class="btn btn-danger btn-xs"
+                            title="Eliminar Pasaje" @click="eliminar(repo.id)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </span>
+                </td>
             </tr>
         </tbody>
         <tfoot>
@@ -66,6 +80,7 @@
                 <th>Deuda Detalle</th>
                 <th>Deuda Monto</th>
                 <th>Fecha</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -80,6 +95,18 @@
                 <td>@{{deuda.deuda_detalle}}</td>
                 <td>@{{deuda.deuda_monto}}</td>
                 <td>@{{deuda.created_at_venta}}</td>
+                <td>
+                    <a :href=" 'imprimirPasaje/'+deuda.id" class="btn btn-success btn-xs"
+                        target="_blank" title="Imprimir Pasaje">
+                        <i class="fas fa-print"></i>
+                    </a>
+                    <span v-if="deuda.deleted_at=='' || deuda.deleted_at==null">
+                        <button type="button" class="btn btn-danger btn-xs"
+                            title="Eliminar Pasaje" @click="eliminar(deuda.id)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </span>
+                </td>
             </tr>
         </tbody>
         <tfoot>
@@ -143,6 +170,6 @@
 </div>
 <h6>Total Adicionales: <b>$ @{{ parseFloat(suma_adicionales).toFixed(2)}}</b>&nbsp;  Cantidad Adicionales: <b>@{{total_adicionales}}</b></h6>
 <hr>
-<h5>RESUMEN TOTAL: <b>$ @{{ (parseFloat(suma_reporte) + parseFloat(suma_deudas) + parseFloat(suma_adicionales) ).toFixed(2)}}</b>&nbsp;  
+<h5>RESUMEN TOTAL: <b>$ @{{ (parseFloat(suma_reporte) + parseFloat(suma_deudas) + parseFloat(suma_adicionales) ).toFixed(2)}}</b>&nbsp;
     Cantidad Resumen: <b>@{{ parseInt(total_reporte) + parseInt(total_deudas) + parseInt(total_adicionales)}}</b></h5>
 <hr>
