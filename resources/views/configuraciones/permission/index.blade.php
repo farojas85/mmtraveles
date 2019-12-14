@@ -1,14 +1,14 @@
 <div class="row">
     <div class="col-md-6">
         @can('roles.create')
-        <button type="button" class="btn btn-primary btn-sm btn-rounded" @click="nuevoRole">
-            <i class="fas fa-plus"></i> Nuevo Rol
+        <button type="button" class="btn btn-primary btn-sm btn-rounded" @click="nuevoPermiso">
+            <i class="fas fa-plus"></i> Nuevo Permiso
         </button>
         @endcan
     </div>
     <div class="col-md-6 text-right">
         <div class="input-group input-group-sm">
-            <input type="text" class="form-control"  placeholder="Buscar..." @change="">
+            <input type="text" class="form-control"  placeholder="Buscar..." @change="buscarPermiso">
             <div class="input-group-append">
                 <button type="button" class="btn btn-info">
                     <i class="fas fa-search"></i>
@@ -30,32 +30,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="total_roles == 0">
+                    <tr v-if="total_permissions == 0">
                         <td class="text-center" colspan="4">-- Datos No Registrados - Tabla Vac&iacute;a --</td>
                     </tr>
-                    <tr v-else v-for="role in roles.data" :key="role.id">
-                            <td class="text-center">@{{ role.id}}</td>
-                            <td>@{{ role.name }}</td>
-                            <td>@{{ role.guard_name }}</td>
+                    <tr v-else v-for="(permiso,index) in permissions.data" :key="permiso.id">
+                            <td class="text-center">@{{ parseInt(desde_permission) + parseInt(index)}}</td>
+                            <td>@{{ permiso.name }}</td>
+                            <td>@{{ permiso.guard_name }}</td>
                             <td>
-                                @can('roles.show')
                                 <button type="button" class="btn btn-info btn-xs"
-                                    title="Mostrar Rol" @click="">
+                                    title="Mostrar Permiso" @click="mostrarPermiso(permiso.id)">
                                     <i class="fas fa-eye"></i>
                                 </button>
-                                @endcan
-                                @can('roles.edit')
                                 <button type="button" class="btn btn-warning btn-xs"
-                                    title="Editar Rol" @click="" >
+                                    title="Editar Permiso" @click="editarPermiso(permiso.id)" >
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                @endcan
-                                @can('roles.destroy')
                                 <button type="button" class="btn btn-danger btn-xs"
-                                    title="Eliminar Rol" @click="">
+                                    title="Eliminar Permiso" @click="eliminarPermiso(permiso.id)">
                                     <i class="fas fa-trash"></i>
                                 </button>
-                                @endcan
                             </td>
                         </tr>
                 </tbody>
@@ -64,19 +58,19 @@
         <!-- Pagination -->
         <nav>
             <ul class="pagination">
-                <li v-if="roles.current_page > 1" class="page-item">
+                <li v-if="permissions.current_page > 1" class="page-item">
                     <a href="#" aria-label="Previous" class="page-link">
                         <span><i class="fas fa-fast-backward"></i></span>
                     </a>
                 </li>
-                <li v-for="page in pagesNumberRole" class="page-item"
-                    v-bind:class="[ page == isActivedRole ? 'active' : '']">
+                <li v-for="page in pagesNumberPermission" class="page-item"
+                    v-bind:class="[ page == isActivedPermission ? 'active' : '']">
                     <a href="#" class="page-link"
-                        @click.prevent="changePageRoles(page)">@{{ page }}</a>
+                        @click.prevent="changePagePermission(page)">@{{ page }}</a>
                 </li>
-                <li v-if="roles.current_page < roles.last_page" class="page-item">
+                <li v-if="permissions.current_page < permissions.last_page" class="page-item">
                     <a href="#" aria-label="Next" class="page-link"
-                        @click.prevent="changePageRoles(roles.current_page + 1)">
+                        @click.prevent="changePagePermission(permissions.current_page + 1)">
                         <span aria-hidden="true"><i class="fas fa-fast-forward"></i></span>
                     </a>
                 </li>
@@ -84,7 +78,6 @@
         </nav>
     </div>
 </div>
-
-@include('configuraciones.role.create')
-@include('configuraciones.role.show')
-@include('configuraciones.role.edit')
+@include('configuraciones.permission.create')
+@include('configuraciones.permission.show')
+@include('configuraciones.permission.edit')

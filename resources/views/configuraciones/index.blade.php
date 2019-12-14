@@ -33,17 +33,17 @@
                                 <div class="card-header p-0 pt-1 border-bottom-0">
                                     <ul class="nav nav-tabs navtab-bg nav-justified">
                                         <li class="nav-item">
-                                            <a href="#habilidades" data-toggle="tab" aria-expanded="false" class="nav-link show active">
+                                            <a href="#tab-roles" data-toggle="tab" aria-expanded="false" class="nav-link show active">
                                                 Roles
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="#estilos" data-toggle="tab" aria-expanded="true" class="nav-link" >
+                                            <a href="#tab-permisos" data-toggle="tab" aria-expanded="true" class="nav-link" >
                                                 Permisos
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="#areas" data-toggle="tab" aria-expanded="false" class="nav-link"  >
+                                            <a href="#tab-permiso-role" data-toggle="tab" aria-expanded="false" class="nav-link"  >
                                                 Permisos / Roles
                                             </a>
                                         </li>
@@ -51,8 +51,14 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="tab-content">
-                                        <div class="tab-pane active" id="roles">
+                                        <div class="tab-pane active" id="tab-roles">
                                             @include('configuraciones.role.index')
+                                        </div>
+                                        <div class="tab-pane" id="tab-permisos">
+                                            @include('configuraciones.permission.index')
+                                        </div>
+                                        <div class="tab-pane" id="tab-permiso-role">
+                                            @include('configuraciones.permission_role.index')
                                         </div>
                                     </div>
                                 </div>

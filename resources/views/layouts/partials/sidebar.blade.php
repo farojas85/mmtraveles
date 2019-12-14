@@ -125,15 +125,17 @@
                             </a>
                         </li>
                         @endcan
-                        
-                       @if($role_name=='Gerente' || $role_name=='Administrador' || $role_name=='Responsable')
+
+                       {{-- @if($role_name=='Gerente' || $role_name=='Administrador' || $role_name=='Responsable') --}}
+                       @can('pasajes.comisiones')
                         <li class="nav-item">
                             <a href="pasaje-emitidos" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pasajes Emitidos</p>
                             </a>
                         </li>
-                        @endif
+                        @endcan
+                        {{-- @endif --}}
                         @can('pasajes.depositos')
                         <li class="nav-item">
                             <a href="opcionalesListado" class="nav-link">
