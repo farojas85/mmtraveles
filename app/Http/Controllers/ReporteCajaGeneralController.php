@@ -72,6 +72,8 @@ class ReporteCajaGeneralController extends Controller
                         ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea)
                         ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
                         ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                        ->whereNull('pasaje.deuda_monto')
+                        ->orWhere('pasaje.deuda_monto','=',0)
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                     'pasaje.pasajero','pasaje.tax','pasaje.service_fee','pasaje.ticket_number',
                                     'pasaje.total','pasaje.deposito_soles','pasaje.deposito_dolares',
@@ -98,7 +100,15 @@ class ReporteCajaGeneralController extends Controller
 
         $adicionales = Opcional::join('user as u','opcionals.counter_id','=','u.id')
                             ->join('opcional_detalles as op','opcionals.id','=','op.opcional_id')
+                            ->select(
+                                'opcionals.id','u.name as counter','opcionals.pasajero',
+                                'op.detalle_otro','op.monto','op.service_fee','op.importe','pago_soles',
+                                'pago_dolares','pago_visa','deposito_soles','deposito_dolares',
+                                'opcionals.created_at','opcionals.fecha'
+                            )
                             ->where('opcionals.counter_id','like',$request->counter)
+                            ->where('opcionals.fecha','>=',$request->fecha_ini)
+                            ->where('opcionals.fecha','<=',$request->fecha_fin)
                             ->get();
         $asuma = 0;
         $sumatuaa=0;

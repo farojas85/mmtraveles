@@ -1,3 +1,4 @@
+
 <aside class="main-sidebar sidebar-light-info elevation-4">
     <!-- Brand Logo -->
     <a href="/home" class="brand-link">
@@ -124,14 +125,15 @@
                             </a>
                         </li>
                         @endcan
-                        @can('pasajes.comisiones')
+                        
+                       @if($role_name=='Gerente' || $role_name=='Administrador' || $role_name=='Responsable')
                         <li class="nav-item">
                             <a href="pasaje-emitidos" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pasajes Emitidos</p>
                             </a>
                         </li>
-                        @endcan
+                        @endif
                         @can('pasajes.depositos')
                         <li class="nav-item">
                             <a href="opcionalesListado" class="nav-link">

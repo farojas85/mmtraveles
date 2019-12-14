@@ -2,7 +2,7 @@ var app = new Vue({
     el:'#wrapper',
     data:{
        reporte:[],
-       total_reporte:'',
+       total_reporte:0,
        deudas:[],
        total_deudas:0,
        suma_deudas:0,
@@ -134,7 +134,7 @@ var app = new Vue({
         }
     },
     created() {
-        this.listarLugares()
+        //this.listarLugares()
         this.listarUsuarios()
     }
 })

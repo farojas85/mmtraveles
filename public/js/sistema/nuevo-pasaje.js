@@ -133,8 +133,8 @@ var app = new Vue({
         calcularTotal()
         {
 
-            this.pasaje.sub_total = parseFloat(this.pasaje.tarifa) + parseFloat(this.pasaje.tax) + parseFloat(this.pasaje.service_fee);
-            this.pasaje.total = parseFloat(this.pasaje.sub_total) + parseFloat(this.pasaje.igv)
+            this.pasaje.sub_total = ( parseFloat(this.pasaje.tarifa) + parseFloat(this.pasaje.tax) + parseFloat(this.pasaje.service_fee) ).toFixed(2);
+            this.pasaje.total = (parseFloat(this.pasaje.sub_total) + parseFloat(this.pasaje.igv)).toFixed(2);
         },
         cambiarHorario(e) {
             this.hora_regreso = (e.target.value == 2) ? true : false

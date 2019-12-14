@@ -22,7 +22,7 @@ class UserController extends Controller
     }
 
     public function lista(){
-        return User::with(['roles','local'])->paginate(10);
+        return User::with(['roles','local'])->orderBy('username','ASC')->paginate(10);
     }
 
     public function store(Request $request)

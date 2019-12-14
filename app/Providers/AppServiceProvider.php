@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Aerolinea;
 use App\Lugar;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +32,16 @@ class AppServiceProvider extends ServiceProvider
 
         View()->composer('home',function($view){
             $view->with('aerolinea_count',Aerolinea::count('id'));
+        });
+        
+        View()->composer('layouts.partials.sidebar',function($view){
+            $user = User::with('roles')->where('id',Auth::user()->id)->first();
+            $role_name ='';
+            foreach($user->roles as $role)
+            {
+                $role_name = $role->name;
+            }
+            $view->with('role_name',$role_name);
         });
     }
 }

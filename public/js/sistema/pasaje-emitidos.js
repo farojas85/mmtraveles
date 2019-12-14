@@ -157,6 +157,13 @@ var app = new Vue({
                 this.busqueda.aerolinea = '%'
             })
         },
+        listarUsuarios() {
+            axios.get('/reporte-caja-general/lista-usuarios')
+            .then(response => {
+                this.counters = response.data
+                this.busqueda.counter = '%'
+            });
+        },
         seleccionar_todo() {
             this.pasajesEliminar = []
             if(!this.seleccionarTodo){
@@ -366,7 +373,8 @@ var app = new Vue({
         }
     },
     created() {
-        this.listarLugares()
+        this.listarUsuarios()
+        //this.listarLugares()
         //this.listarEmitidos();
         //this.getResults();
     },

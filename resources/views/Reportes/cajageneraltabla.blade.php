@@ -1,7 +1,7 @@
 <hr>
-<h4 class="text-primary">Pasajes Vendidos</h4>
+<h4 class="text-primary">Pasajes Vendidos Pagados</h4>
 <div class="table-responsive ">
-    <table class="table table-sm table-hover table-bordered nowrap">
+    <table class="table table-sm table-hover table-bordered nowrap" style="font-size:11pt">
         <thead class="bg-navy">
             <tr>
                 <th>Nº</th>
@@ -21,9 +21,9 @@
                 <th>Fecha</th>
             </tr>
         </thead>
-        <tbody >
+        <tbody>
             <tr v-if="total_reporte == 0">
-                <td colspan="12">-- DATOS NO REGISTRADOS --</td>
+                <td colspan="15" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
             <tr v-else v-for="(repo,index) in reporte" :key="repo.id">
                 <td>@{{index+1}}</td>
@@ -52,11 +52,11 @@
         </tfoot>
     </table>
 </div>
-<h6>TOTAL Vendido: <b>$ @{{ parseFloat(suma_reporte).toFixed(2)}}</b>&nbsp;  Cantidad Pasajes: <b>@{{total_reporte}}<b></h6>
+<h6>TOTAL Pagados: <b>$ @{{ parseFloat(suma_reporte).toFixed(2)}}</b>&nbsp;  Cantidad Pasajes: <b>@{{ parseInt(total_reporte)}}</b></h6>
 <hr>
 <h4 class="text-danger">Deudas</h4>
 <div class="table-responsive">
-    <table class="table table-sm table-hover table-bordered nowrap">
+    <table class="table table-sm table-hover table-bordered nowrap" style="font-size:11pt">
         <thead class="bg-navy">
             <tr>
                 <th>Nº</th>
@@ -70,7 +70,7 @@
         </thead>
         <tbody>
             <tr v-if="total_deudas == 0">
-                <td colspan="7">-- DATOS NO REGISTRADOS --</td>
+                <td colspan="7" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
             <tr v-else v-for="(deuda,index) in deudas" :key="deuda.id">
                 <td>@{{index+1}}</td>
@@ -90,11 +90,11 @@
         </tfoot>
     </table>
 </div>
-<h6>TOTAL Deuda: <b>$ @{{ parseFloat(suma_deudas).toFixed(2)}}</b>&nbsp;  Cantidad Deudas: <b>@{{total_deudas}}<b></h6>
+<h6>TOTAL Deuda: <b>$ @{{ parseFloat(suma_deudas).toFixed(2)}}</b>&nbsp;  Cantidad Deudas: <b>@{{total_deudas}}</b></h6>
 <hr>
 <h4 class="text-success">Adicionales</h4>
 <div class="table-responsive">
-    <table class="table table-sm table-hover table-bordered nowrap">
+    <table class="table table-sm table-hover table-bordered nowrap" style="font-size:11pt">
         <thead class="bg-navy">
             <tr>
                 <th>Nº</th>
@@ -114,12 +114,22 @@
         </thead>
         <tbody>
             <tr v-if="total_adicionales == 0">
-                <td colspan="13">-- DATOS NO REGISTRADOS --</td>
+                <td colspan="13" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
             <tr v-else v-for="(adicional,index) in adicionales" :key="adicionales.id">
                 <td>@{{index+1}}</td>
-                <td></td>
+                <td>@{{adicional.counter}}</td>
+                <td>@{{adicional.pasajero}}</td>
                 <td>@{{adicional.detalle_otro}}</td>
+                <td>@{{adicional.monto}}</td>
+                <td>@{{adicional.service_fee}}</td>
+                <td>@{{adicional.importe}}</td>
+                <td>@{{adicional.pago_soles}}</td>
+                <td>@{{adicional.pago_dolares}}</td>
+                <td>@{{adicional.pago_visa}}</td>
+                <td>@{{adicional.deposito_soles}}</td>
+                <td>@{{adicional.deposito_dolares}}</td>
+                <td>@{{adicional.fecha}}</td>
             </tr>
         </tbody>
         <tfoot>
@@ -131,3 +141,8 @@
         </tfoot>
     </table>
 </div>
+<h6>Total Adicionales: <b>$ @{{ parseFloat(suma_adicionales).toFixed(2)}}</b>&nbsp;  Cantidad Adicionales: <b>@{{total_adicionales}}</b></h6>
+<hr>
+<h5>RESUMEN TOTAL: <b>$ @{{ (parseFloat(suma_reporte) + parseFloat(suma_deudas) + parseFloat(suma_adicionales) ).toFixed(2)}}</b>&nbsp;  
+    Cantidad Resumen: <b>@{{ parseInt(total_reporte) + parseInt(total_deudas) + parseInt(total_adicionales)}}</b></h5>
+<hr>
