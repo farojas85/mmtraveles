@@ -44,7 +44,12 @@ var app = new Vue({
             adicionales:[],
             deuda:'',
             deuda_detalle:'',
-            deuda_monto:''
+            deuda_monto:'',
+            deuda_soles:'',
+            deuda_dolares:'',
+            deuda_visa:'',
+            deuda_depo_soles:'',
+            deuda_depo_dolares:''
         },
         aerolineas:[],
         aerolinea:{

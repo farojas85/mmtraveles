@@ -139,7 +139,11 @@ class PasajeController extends Controller
 
         $pasaje->deuda_detalle=$request->deuda_detalle;
         $pasaje->deuda_monto=$request->deuda_monto;
-
+        $pasaje->deuda_soles = ($request->deuda_soles=='') ? 0 : $request->deuda_soles;
+        $pasaje->deuda_dolares = ($request->deuda_dolares=='') ? 0 : $request->deuda_dolares;
+        $pasaje->deuda_visa = ($request->deuda_visa=='') ? 0 : $request->deuda_visa;
+        $pasaje->deuda_depo_soles = ($request->deuda_depo_soles=='') ? 0 : $request->deuda_depo_soles;
+        $pasaje->deuda_depo_dolares = ($request->deuda_depo_dolares=='') ? 0 : $request->deuda_depo_dolares;
         $pasaje->save();
 
 

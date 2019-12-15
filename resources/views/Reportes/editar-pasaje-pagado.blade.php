@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header bg-info">
-                <h4 class="modal-title">Editar Pasaje Pagado</h4>
+                <h4 class="modal-title" id="pasaje-pagado-edit">Editar Pasaje</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -318,26 +318,6 @@
                                                         <small class="text-danger" v-for="error in errores.deposito_dolares">@{{ error }}</small>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="moneda" class="col-md-3 col-form-label">Deuda</label>
-                                                    <div class="col-md-4">
-                                                        <select name="moneda" class="form-control" v-model="pasaje.deuda" @change="seleccionarDeuda">
-                                                            <option value="">-Deuda-</option>
-                                                            <option value="essalud">Es-Salud</option>
-                                                            <option value="otro">Otros</option>
-                                                        </select>
-                                                        <input type="text" class="form-control form-control-sm"
-                                                                v-model="pasaje.deuda_detalle" id="detalle" title="Detalle Otros"
-                                                                placeholder="Descripción deuda">
-                                                        <small class="text-danger" v-for="error in errores.deuda_detalle">@{{ error }}</small>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <input type="text" class="form-control form-control-sm"
-                                                                v-model="pasaje.deuda_monto" id="detalle" title="Detalle Otros"
-                                                                placeholder="Monto Deuda">
-                                                                <small class="text-danger" v-for="error in errores.deuda_monto">@{{ error }}</small>
-                                                    </div>
-                                                </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group row">
@@ -386,6 +366,71 @@
                                                         <input type="text" name="total" id="total" v-model="pasaje.total"
                                                             class="form-control" placeholder="TOTAL" readonly>
                                                         <small class="text-danger" v-for="error in errores.total">@{{ error }}</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group row">
+                                                    <label for="moneda" class="col-md-1 col-form-label">Deuda</label>
+                                                    <div class="col-md-2">
+                                                        <select name="moneda" class="form-control" v-model="pasaje.deuda" @change="seleccionarDeuda">
+                                                            <option value="">-Deuda-</option>
+                                                            <option value="essalud">Es-Salud</option>
+                                                            <option value="otro">Otros</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_detalle" id="detalle" title="Detalle Otros"
+                                                                placeholder="Descripción deuda">
+                                                        <small class="text-danger" v-for="error in errores.deuda_detalle">@{{ error }}</small>
+                                                    </div>
+                                                    <label for="moneda" class="col-md-1 col-form-label text-right">Monto $</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_monto" title="Monto Dolares"
+                                                                placeholder="Monto Deuda">
+                                                        <small class="text-danger" v-for="error in errores.deuda_monto">@{{ error }}</small>
+                                                    </div>
+                                                    <label for="moneda" class="col-md-1 col-form-label text-right">Pago S/</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_soles" title="Pago Soles"
+                                                                placeholder="Pago S/">
+                                                        <small class="text-danger" v-for="error in errores.deuda_soles">@{{ error }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="moneda" class="col-md-1 col-form-label text-right">Pago US$</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_dolares" title="Pago Dolares"
+                                                                placeholder="Pago US$">
+                                                        <small class="text-danger" v-for="error in errores.deuda_dolares">@{{ error }}</small>
+                                                    </div>
+                                                    <label for="moneda" class="col-md-1 col-form-label text-right">Pago Visa</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_visa" title="Pago Visa"
+                                                                placeholder="Pago US$">
+                                                        <small class="text-danger" v-for="error in errores.deuda_visa">@{{ error }}</small>
+                                                    </div>
+                                                    <label for="moneda" class="col-md-1 col-form-label text-right">Depo S/</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_depo_soles" title="Deuda Depósito Soles"
+                                                                placeholder="Depo S/">
+                                                        <small class="text-danger" v-for="error in errores.deuda_depo_soles">@{{ error }}</small>
+                                                    </div>
+                                                    <label for="moneda" class="col-md-1 col-form-label text-right">Depo US$</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="pasaje.deuda_depo_dolares" title="Deuda Depóstio Dolares"
+                                                                placeholder="Depo US$">
+                                                        <small class="text-danger" v-for="error in errores.deuda_depo_dolares">@{{ error }}</small>
                                                     </div>
                                                 </div>
                                             </div>
