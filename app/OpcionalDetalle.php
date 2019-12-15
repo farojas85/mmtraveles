@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OpcionalDetalle extends Model
 {
+
     public function Opcional()
     {
         return $this->belongsTo(Opcional::class);

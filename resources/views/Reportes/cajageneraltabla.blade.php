@@ -9,10 +9,10 @@
                 <th>Codigo</th>
                 <th>Pasajero</th>
                 <th>Aerolinea</th>
-                <th>Tarifa</th>
-                <th>Tax/TUUA</th>
-                <th>Service Fee</th>
-                <th>Total</th>
+                <th>Tarifa $</th>
+                <th>Tax/TUUA $</th>
+                <th>Service Fee $</th>
+                <th>Total $</th>
                 <th>Pago S/</th>
                 <th>Pago $</th>
                 <th>Visa</th>
@@ -48,6 +48,10 @@
                         target="_blank" title="Imprimir Pasaje">
                         <i class="fas fa-print"></i>
                     </a>
+                    <button type="button" class="btn btn-warning btn-xs"
+                        title="Editar Pasajes Pagados" @click="editarPasajePagado(repo.id)">
+                        <i class="fas fa-edit"></i>
+                    </button>
                     <span v-if="repo.deleted_at=='' || repo.deleted_at==null">
                         <button type="button" class="btn btn-danger btn-xs"
                             title="Eliminar Pasaje" @click="eliminar(repo.id)">
@@ -59,9 +63,9 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="8" class="text-right">TOTAL</th>
+                <th colspan="8" class="text-right">TOTAL US$</th>
                 <th>@{{parseFloat(suma_reporte).toFixed(2)}}</th>
-                <th colspan="6"></th>
+                <th colspan="7"></th>
             </tr>
         </tfoot>
     </table>
@@ -100,6 +104,10 @@
                         target="_blank" title="Imprimir Pasaje">
                         <i class="fas fa-print"></i>
                     </a>
+                    <button type="button" class="btn btn-warning btn-xs"
+                        title="Editar Deudas" @click="editarPasajePagado(deuda.id)">
+                        <i class="fas fa-edit"></i>
+                    </button>
                     <span v-if="deuda.deleted_at=='' || deuda.deleted_at==null">
                         <button type="button" class="btn btn-danger btn-xs"
                             title="Eliminar Pasaje" @click="eliminar(deuda.id)">
@@ -113,6 +121,7 @@
             <tr>
                 <th colspan="5" class="text-right">TOTAL</th>
                 <th>@{{parseFloat(suma_deudas).toFixed(2)}}</th>
+                <th colspan="2"></th>
             </tr>
         </tfoot>
     </table>
@@ -128,20 +137,21 @@
                 <th>Counter</th>
                 <th>Pasajero</th>
                 <th>Detalle</th>
-                <th>Monto</th>
-                <th>Service Fee</th>
-                <th>Importe</th>
+                <th>Monto $</th>
+                <th>Service Fee $</th>
+                <th>Importe $</th>
                 <th>Pago S/</th>
                 <th>Pago $</th>
                 <th>Visa</th>
                 <th>Dep. S/</th>
                 <th>Dep. $</th>
                 <th>Fecha</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr v-if="total_adicionales == 0">
-                <td colspan="13" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
+                <td colspan="14" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
             <tr v-else v-for="(adicional,index) in adicionales" :key="adicionales.id">
                 <td>@{{index+1}}</td>
@@ -157,13 +167,25 @@
                 <td>@{{adicional.deposito_soles}}</td>
                 <td>@{{adicional.deposito_dolares}}</td>
                 <td>@{{adicional.fecha}}</td>
+                <td>
+                    <button type="button" class="btn btn-warning btn-xs"
+                        title="Editar Adiconal" @click="editarAdicional(adicional.id)">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <span v-if="adicional.deleted_at=='' || adicional.deleted_at==null">
+                        <button type="button" class="btn btn-danger btn-xs"
+                            title="Eliminar Adiconal" @click="eliminarAdicional(adicional.id)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </span>
+                </td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6" class="text-right">TOTAL</th>
+                <th colspan="6" class="text-right">TOTAL US$</th>
                 <th>@{{parseFloat(suma_adicionales).toFixed(2)}}</th>
-                <th colspan="6" class="text-right"></th>
+                <th colspan="7" class="text-right"></th>
             </tr>
         </tfoot>
     </table>

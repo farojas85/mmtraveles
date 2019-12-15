@@ -53,9 +53,9 @@ class OpcionalController extends Controller
             //'max' => 'Pago Dolares no debe exceder de TOTAL'
             //'same' => 'Pago Dolares debe ser Igual a Total'
         ];
-        
+
         $this->validate($request,$rules,$mensaje);
-        
+
         $opcional = new Opcional();
         $opcional->counter_id = Auth::user()->id;
         $opcional->pasajero = $request->pasajero;
@@ -63,26 +63,26 @@ class OpcionalController extends Controller
         $opcional->numero_documento = $request->numero_documento;
 
         $date = Carbon::now();
-        
+
         $opcional->fecha =  (is_null($request->fecha_venta) || $request->fecha_venta == "" ) ?  $date->format('Y-m-d') : $request->fecha_venta;
-        
+
         $opcional->monto_pagar = $request->monto_pagar;
-        
+
         $opcional->moneda = $request->moneda;
         $opcional->cambio = $request->cambio;
-        
+
         $opcional->pago_soles = ($request->pago_soles=='') ? 0 : $request->pago_soles;
         $opcional->pago_dolares =  ($request->pago_dolares=='') ? 0 : $request->pago_dolares;
         $opcional->pago_visa =  ($request->pago_visa=='') ? 0 : $request->pago_visa;
         $opcional->deposito_soles =  ($request->deposito_soles=='') ? 0 : $request->deposito_soles;
         $opcional->deposito_dolares =  ($request->deposito_dolares=='') ? 0 : $request->deposito_dolares;
-        
+
         $opcional->sub_total =$request->sub_total;
         $opcional->igv = ($request->igv == 0) ? 0 : $request->igv;
         $opcional->total = $request->total;
-        
+
         $suma_pago = $opcional->pago_soles + $opcional->pago_dolares*$opcional->cambio;
-        
+
         if($suma_pago > $opcional->total*$request->cambio)
         {
             $opcional->redondeo = $suma_pago - ($opcional->total*$request->cambio) ;
@@ -92,7 +92,7 @@ class OpcionalController extends Controller
         }
 
         $opcional->save();
-        
+
         foreach($request->adicionales as $adic)
         {
             $opcional_adicional = new OpcionalDetalle();
@@ -102,11 +102,11 @@ class OpcionalController extends Controller
             $opcional_adicional->monto = $adic['monto'];
             $opcional_adicional->service_fee = $adic['service_fee'];
             $opcional_adicional->importe = $adic['importe'];
-            
+
             //return $opcional_adicional;
            $opcional_adicional->save();
         }
-        
+
         Session::put('opcional_id',$opcional->id);
 
         return response()->json([
@@ -114,13 +114,13 @@ class OpcionalController extends Controller
             'mensaje' => "Datos Guardados Satisfactoriamente"]);
     }
 
-    
+
     public function mostrar()
     {
-        return View('pasaje.mostrarAdicionales');    
+        return View('pasaje.mostrarAdicionales');
     }
-    
-    
+
+
      public function listaPorUsuario()
     {
         $date = Carbon::now();

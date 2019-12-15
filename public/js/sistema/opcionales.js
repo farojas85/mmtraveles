@@ -165,7 +165,7 @@ var app = new Vue({
                     this.opcional.sub_total = this.total_importe
                     this.opcional.igv = 0
                     this.opcional.total =(parseFloat(this.opcional.sub_total) + parseFloat(this.opcional.igv)).toFixed(2)
-                    
+
                     this.adicional.adicional_id=''
                     this.adicional.detalle = ''
                     this.adicional.monto = ''
@@ -175,9 +175,9 @@ var app = new Vue({
             }
         },
         eliminarAdicional(ind) {
-            
+
             this.opcional.adicionales.splice(ind,1)
-            
+
             if(this.opcional.adicionales.length===0)
             {
                 this.opcional.total = 0;
@@ -186,7 +186,7 @@ var app = new Vue({
                 this.opcional.igv=0;
             }
             else {
-                
+
                 let suma = 0;
                 for(let i=0;i<this.opcional.adicionales.length;i++) {
                     suma = parseFloat(suma) + parseFloat(this.opcional.adicionales[i].importe)
@@ -197,7 +197,7 @@ var app = new Vue({
                 this.opcional.igv = 0
                 this.opcional.total =(parseFloat(this.opcional.sub_total) + parseFloat(this.opcional.igv)).toFixed(2)
             }
-            
+
         }
     },
     created() {

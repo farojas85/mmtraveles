@@ -8,6 +8,7 @@ use App\Pasaje;
 use App\Opcional;
 use App\OpcionalDetalle;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 
@@ -106,7 +107,7 @@ class ReporteCajaGeneralController extends Controller
                                 'opcionals.id','u.name as counter','opcionals.pasajero',
                                 'op.detalle_otro','op.monto','op.service_fee','op.importe','pago_soles',
                                 'pago_dolares','pago_visa','deposito_soles','deposito_dolares',
-                                'opcionals.created_at','opcionals.fecha'
+                                'opcionals.created_at','opcionals.fecha','opcionals.deleted_at'
                             )
                             ->where('opcionals.counter_id','like',$request->counter)
                             ->where('opcionals.fecha','>=',$request->fecha_ini)
@@ -182,6 +183,221 @@ class ReporteCajaGeneralController extends Controller
                 'pasajes' => $pasajes,
                 'deudas' => $deudas,
                 'adicionales' => $adicionales
+        ]);
+    }
+
+    public function editarAdicional() {
+        return view('Reportes.editar-adicional');
+    }
+
+    public function obtenerAdicional(Request $request)
+    {
+        $opcional = Opcional::join('user as u','u.id','=','opcionals.counter_id')
+                            ->select('opcionals.*',
+                                    DB::Raw("CONCAT(u.name,' ',u.lastname) as counter"))
+                            ->where('opcionals.id',$request->id)->first();
+
+        $opcional_detalle = OpcionalDetalle::select(
+                                'adicional_id','detalle_otro as detalle',
+                                'monto','service_fee','importe')
+                            ->where('opcional_id',$request->id)->get();
+
+        return response()->json([
+            'adicional' => $opcional,
+            'adicional_detalle' => $opcional_detalle
+        ]);
+    }
+
+    public function actualizarAdicional(Request $request)
+    {
+        //Actualizamos Adicional Datos
+        $adicional = Opcional::findOrFail($request->id);
+
+        $adicional->counter_id=$request->counter_id;
+        $adicional->pasajero = $request->pasajero;
+        $adicional->tipo_documento_id = $request->tipo_documento_id;
+        $adicional->numero_documento = $request->numero_documento;
+        $adicional->fecha = $request->fecha;
+        $adicional->monto_pagar = $request->monto_pagar;
+        $adicional->sub_total = $request->sub_total;
+        $adicional->igv = $request->igv;
+        $adicional->total = $request->total;
+        $adicional->pago_dolares = $request->pago_dolares;
+        $adicional->pago_soles = $request->pago_soles;
+        $adicional->pago_visa = $request->pago_visa;
+        $adicional->deposito_soles = $request->deposito_soles;
+        $adicional->deposito_dolares = $request->deposito_dolares;
+        $adicional->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+        $adicional->save();
+
+        //Acualizamos
+        foreach($request->adicional_detalle as $ad)
+        {
+            $opcional_detalle_count = OpcionalDetalle::where('opcional_id','=',$request->id)
+                                                ->where('adicional_id',$ad['adicional_id'])
+                                                ->count();
+            if($opcional_detalle_count >0)
+            {
+                $opcional_detalle = OpcionalDetalle::where('opcional_id','=',$request->id)
+                                            ->where('adicional_id',$ad['adicional_id'])
+                                            ->first();
+                $opcional_detalle->detalle_otro = $ad['detalle'];
+                $opcional_detalle->monto = $ad['monto'];
+                $opcional_detalle->service_fee = $ad['service_fee'];
+                $opcional_detalle->importe = $ad['importe'];
+                $opcional_detalle->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+                $opcional_detalle->save();
+            }
+            else {
+                $opcional_detalle = new OpcionalDetalle();
+
+                $opcional_detalle->opcional_id = $request->id;
+                $opcional_detalle->adicional_id = $ad['adicional_id'];
+                $opcional_detalle->detalle_otro = $ad['detalle'];
+                $opcional_detalle->monto = $ad['monto'];
+                $opcional_detalle->service_fee = $ad['service_fee'];
+                $opcional_detalle->importe = $ad['importe'];
+                $opcional_detalle->save();
+            }
+        }
+
+        return response()->json([
+            'mensaje' => 'Adicionales Modificados Satisfactoriamente'
+        ]);
+    }
+
+    public function eliminarAdicionalTemporal(Request $request)
+    {
+        $adicional = Opcional::withTrashed()
+                        ->where('id',$request->id)->first()->Delete();
+
+        return response()->json([
+            'adicional' =>$adicional,
+            'mensaje' => 'el Adicional ha sido enviado a Papelera de Reciclaje'
+        ]);
+    }
+
+    public function eliminarAdicionalPermanente(Request $request)
+    {
+        $adicional = Opcional::withTrashed()
+                        ->where('id',$request->id)->first()->forceDelete();
+
+        return response()->json([
+            'adicional' =>$adicional,
+            'mensaje' => 'el Adicional ha sido eliminado Satisfactoriamente'
+        ]);
+    }
+
+    public function showPasajePagado(Request $request)
+    {
+        return Pasaje::where('id',$request->id)->first();
+    }
+
+    public function guardarPasajePagado(Request $request)
+    {
+        $rules =[
+            'pasajero' => 'required',
+            'tipo_documento_id' => 'required',
+            'numero_documento' => 'required',
+            'created_at_venta' => 'required',
+            'ticket_number' => 'required',
+            'aerolinea_id' => 'required',
+            'ruta' => 'required',
+            'tipo_viaje' => 'required',
+            'fecha_vuelo' => 'required',
+            'hora_vuelo' => 'required',
+            'vuelo' => 'required',
+            'moneda' => 'required',
+            'tarifa' => 'required',
+            'tax' => 'required',
+            'service_fee' => 'required',
+            'sub_total' => 'required',
+            'total' => 'required',
+            'monto_neto' => 'required'
+        ];
+
+        $mensaje= [
+            'required' => 'Campo Obligatorio'
+        ];
+
+        $this->validate($request,$rules,$mensaje);
+
+        $pasaje =Pasaje::where('id',$request->id)->first();
+
+        $pasaje->counter_id = $request->counter_id;
+        $pasaje->pasajero = $request->pasajero;
+        $pasaje->tipo_documento_id = $request->tipo_documento_id;
+        $pasaje->numero_documento = $request->numero_documento;
+        $pasaje->dni = null;
+
+        $date = Carbon::now();
+        if(is_null($request->created_at_venta) || $request->created_at_venta == "" )
+        {
+            $pasaje->created_at_venta =  $date->format('Y-m-d H:i:s');
+        }
+        else{
+            $pasaje->created_at_venta =  Carbon::parse($request->created_at_venta)->format('Y-m-d H:i:s');
+        }
+        $pasaje->ticket_number = $request->ticket_number;
+        $pasaje->aerolinea_id=$request->aerolinea_id;
+        $pasaje->direccion= $request->direccion;
+        $pasaje->ruc = $request->ruc;
+        $pasaje->viajecode = $request->viajecode;
+        $pasaje->ruta = $request->ruta;
+        $pasaje->ruta_vuelta =  ($request->ruta_vuelta== '') ?null : $request->ruta_vuelta;
+        $pasaje->tipo_viaje = $request->tipo_viaje;
+        $pasaje->fecha_vuelo = $request->fecha_vuelo;
+        $pasaje->fecha_retorno =  ($request->fecha_retorno== '') ?null : $request->fecha_retorno;
+        $pasaje->hora_vuelo = $request->hora_vuelo;
+        $pasaje->hora_vuelta = ($request->hora_vuelta== '') ? null : $request->hora_vuelta;
+        $pasaje->vuelo = $request->vuelo;
+        $pasaje->vuelo_vuelta = ($request->vuelo_vuelta== '') ? null : $request->vuelo_vuelta;
+        $pasaje->cl = $request->cl;
+        $pasaje->cl_vuelta = ($request->cl_vuelta== '') ? null : $request->cl_vuelta;
+        $pasaje->st = 'OK';
+        if($pasaje->tipo_viaje == 2){
+            $pasaje->st_vuelta = 'OK';
+        }
+        $pasaje->equipaje = $request->equipaje;
+        $pasaje->equipaje_vuelta = ($request->equipaje_vuelta== '') ? null : $request->equipaje_vuelta;
+        $pasaje->monto_neto = $request->monto_neto;
+
+        $pasaje->moneda = $request->moneda;
+
+        $pasaje->cambio = $request->cambio;
+        $pasaje->pago_soles = ($request->pago_soles=='') ? 0 : $request->pago_soles;
+        $pasaje->pago_dolares =  ($request->pago_dolares=='') ? 0 : $request->pago_dolares;
+        $pasaje->pago_visa =  ($request->pago_visa=='') ? 0 : $request->pago_visa;
+        $pasaje->deposito_soles =  ($request->deposito_soles=='') ? 0 : $request->deposito_soles;
+        $pasaje->deposito_dolares =  ($request->deposito_dolares=='') ? 0 : $request->deposito_dolares;
+
+        $pasaje->tarifa = $request->tarifa;
+        $pasaje->tax = $request->tax;
+        $pasaje->service_fee = $request->service_fee;
+        $pasaje->sub_total = $pasaje->tarifa + $pasaje->tax + $pasaje->service_fee;
+        $pasaje->not_igv = $request->not_igv;
+
+        $pasaje->igv = ($request->igv == 0) ? 0 : $request->igv;
+
+        $pasaje->total = $request->total;
+
+        $suma_pago = $pasaje->pago_soles + $pasaje->pago_dolares*$pasaje->cambio;
+
+        if($suma_pago > $pasaje->total*$request->cambio)
+        {
+            $pasaje->redondeo = $suma_pago - ($pasaje->total*$request->cambio) ;
+        }
+        else{
+            $pasaje->redondeo = 0;
+        }
+
+        $pasaje->deuda_detalle=$request->deuda_detalle;
+        $pasaje->deuda_monto=$request->deuda_monto;
+
+        $pasaje->save();
+
+        return response()->json([
+            'mensaje' => 'Pasaje Modificado Satisfactoriamente'
         ]);
     }
 }

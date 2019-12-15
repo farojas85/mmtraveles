@@ -138,6 +138,14 @@ Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], funct
     Route::get('/tabla','ReporteCajaGeneralController@tabla')->name('reportecajageneral.tabla');
     Route::get('listarAerolineas','ReporteCajaGeneralController@listarAerolineas');
     Route::get('lista-usuarios','ReporteCajaGeneralController@listarUsuarios');
+    Route::get('editar-adicional','ReporteCajaGeneralController@editarAdicional');
+    Route::get('lista-adicional','ReporteCajaGeneralController@obtenerAdicional');
+    Route::get('show-pasaje','ReporteCajaGeneralController@showPasajePagado');
+    Route::post('guardar-pasaje','ReporteCajaGeneralController@guardarPasajePagado');
+    Route::post('actualizar-adicional','ReporteCajaGeneralController@actualizarAdicional');
+    Route::post('eliminar-adicional-temporal','ReporteCajaGeneralController@eliminarAdicionalTemporal');
+    Route::post('eliminar-adicional-permanente','ReporteCajaGeneralController@eliminarAdicionalPermanente');
+
 });
 
 Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function(){

@@ -138,6 +138,8 @@
             </div>
         </div>
     </section>
+    @include('Reportes.editar-adicional')
+    @include('Reportes.editar-pasaje-pagado');
 @endsection
 
 @section('scripties')

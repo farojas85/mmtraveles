@@ -26,7 +26,11 @@
                         <div class="card-header">
                             <h3 class="card-title" >
                                <font style="font-size:20pt;font-weight:900">Registro Adicionales</font>
-                               <a class="btn btn-primary no-print"
+                               <a class="btn btn-info no-print"
+                                    href="opcionalesListado">
+                                    Ver Adicionales
+                                </a>
+                               <a class="btn btn-info no-print"
                                     href="pasajeCreate">
                                     Registrar Pasaje
                                 </a>
@@ -82,7 +86,7 @@
                                             <!-- /.card-header -->
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label for="created_at_venta" class="col-md-3 col-form-label">FECHA VENTA</label>
+                                                    <label for="created_at_venta" class="col-md-3 col-form-label">FECHA</label>
                                                     <div class="col-md-6">
                                                         <input type="date" name="created_at_venta" v-model="opcional.fecha_venta"
                                                                 class="form-control" id="created_at_venta">
@@ -111,10 +115,11 @@
                                                                 @{{adic.descripcion}}
                                                             </option>
                                                         </select>
-                                                        <small class="text-danger" v-for="error in errores.tipo_documento_id">@{{ error }}</small>
+                                                        <small class="text-danger" v-for="error in errores.adicional_id">@{{ error }}</small>
                                                         <input type="text" class="form-control form-control-sm"
                                                                 v-model="adicional.detalle" id="detalle" title="Detalle Otros"
-                                                                placeholder="Otra descripción">
+                                                                placeholder="Detalle Descripción">
+                                                        <small class="text-danger" v-for="error in errores.detalle">@{{ error }}</small>
                                                     </div>
                                                     <div class="col-md-2"><input type="text" class="form-control form-control-sm" placeholder="Monto" v-model="adicional.monto" id="montod" title="Monto Del Detalle"></div>
                                                     <div class="col-md-2"><input type="text" class="form-control form-control-sm" placeholder="Service FEE" v-model="adicional.service_fee" id="fee" title="Ingrese Service Fee"></div>
@@ -139,7 +144,7 @@
                                                                         <td colspan="5" class="text-danger text-center">--Datos No Añadidos--</td>
                                                                     </tr>
                                                                     <tr v-else v-for="(adic,index) in opcional.adicionales">
-                                                                        <td><button type="button" class="btn btn-danger btn-sm" @click="eliminar(index)"><i class="fas fa-trash"></i></button></td>
+                                                                        <td><button type="button" class="btn btn-danger btn-sm" @click="eliminarAdicional(index)"><i class="fas fa-trash"></i></button></td>
                                                                         <td>@{{adic.adicional_id}}</td>
                                                                         <td>@{{adic.detalle }}</td>
                                                                         <td>@{{adic.monto.toFixed(2)}}</td>
@@ -171,8 +176,8 @@
                                                                         <div class="form-group row">
                                                                             <label for="moneda" class="col-md-3 col-form-label">Monto</label>
                                                                             <div class="col-md-6">
-                                                                                <input type="text" name="monto_neto" id="monto_neto" v-model="total_importe"
-                                                                                    class="form-control" placeholder="Monto" value='0.00'>
+                                                                                <input type="text" name="monto_pagar" id="monto_pagar" v-model="opcional.monto_pagar"
+                                                                                    class="form-control" placeholder="Monto" value='0.00' @change="calcularTotal" readonly >
                                                                             </div>
                                                                             <div class="col-md-3">
                                                                                 <select name="moneda" class="form-control" v-model="opcional.moneda">
@@ -234,7 +239,7 @@
                                                                             <label for="sub_total" class="col-md-3 col-form-label">Sub Total</label>
                                                                             <div class="col-md-6">
                                                                                 <input type="text" name="sub_total" id="sub_total" v-model="opcional.sub_total"
-                                                                                    class="form-control" placeholder="Sub Total" readonly >
+                                                                                    class="form-control" placeholder="Sub Total" readonly  >
                                                                                 <small class="text-danger" v-for="error in errores.sub_total">@{{ error }}</small>
                                                                             </div>
                                                                         </div>
@@ -264,7 +269,21 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                                <div class="row no-print">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="col-lg-offset-2 col-lg-10">
+                                                <button type="button" class="btn btn-success" @click="guardar">
+                                                    <i class="fa fa-save"></i> Registrar</button>
+                                                <span v-if="impresion==true">
+                                                    <a href="pasajePdf" target="_blank" class="btn btn-primary">
+                                                        <i class="fas fa-print"></i> Imprimir</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
