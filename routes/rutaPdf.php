@@ -794,3 +794,143 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
 
     $fpdf->Output();
 });
+
+Route::get('imprimirAdicional/{adicional_id}',function ($adicional_id){
+
+    $fpdf = new Fpdf();
+
+    $adicional_id = $adicional_id;
+
+    $adicional = App\Opcional::with(['OpcionalDetalles','user'])->where('id',$adicional_id)->first();
+
+
+    /*$local = App\Local::join('local_user as lu','locals.id','=','lu.local_id')
+                            ->where('lu.user_id',$pasaje->counter_id)
+                            ->first();*/
+    $local = App\Local::where('id',$adicional->user->local_id)->first();
+
+    $empresa = App\Empresa::where('id','=',$local->empresa->id)->first();
+
+    $fpdf->AddPage();
+
+    switch($empresa->id)
+    {
+        case 1 : $ancho = 40;break;
+        case 2 : $ancho = 60;break;
+        case 3 : $ancho = 50;break;
+        case 4 ; $ancho = 50;break;
+    }
+    $fpdf->Image($empresa->foto,5,10,$ancho);
+
+    $fpdf->SetFont('Courier', 'B', 14);
+    $fpdf->setXY(30,25);
+    $fpdf->Cell(150,5, 'PASAJE ADICIONALES',0,0,'C',0);
+
+    //detalles empresa
+    $fpdf->SetFont('Courier', 'B', 12);
+    $fpdf->setXY(20,44);
+    $fpdf->Cell(60,4, trim($empresa->razon_social),0,0,'C',0);
+	$fpdf->SetFont('Courier', '', 12);
+    $fpdf->setXY(20,48);
+    $fpdf->Cell(60,4, $local->nombre,0,0,'L',0);
+    $fpdf->SetFont('Courier', '', 12);
+    $fpdf->setXY(20,52);
+    $fpdf->Cell(60,4,(explode("//",$empresa->direccion))[1],0,0,'L',0);
+    $fpdf->SetFont('Courier', '', 12);
+    $fpdf->setXY(20,56);
+    $fpdf->Cell(60,4,"TELEPHONE/TELEFONO:",0,0,'L',0);
+    $fpdf->SetFont('Courier', '', 12);
+    $fpdf->setXY(20,60);
+    $fpdf->Cell(60,4,"EMAIL/CORREO:",0,0,'L',0);
+
+    //cabecera pasaje
+    $fpdf->SetFont('Courier', 'B', 12);
+    $fpdf->setXY(110,44);
+    $fpdf->Cell(40,4, utf8_decode('FECHA DE EMISIÓN:'),0,0,'R',0);
+    $fpdf->SetFont('Courier', '', 12);
+    $fpdf->setXY(150,44);
+    $fpdf->Cell(30,4, explode(" ",$adicional->fecha)[0],0,0,'L',0);
+
+    $fpdf->SetFont('Courier', 'B', 12);
+    $fpdf->setXY(105,52);
+    $fpdf->Cell(30,4, utf8_decode('FOID/DNI:'),0,0,'R',0);
+
+    $fpdf->SetFont('Courier', '', 12);
+    $fpdf->setXY(134,52);
+    $fpdf->Cell(40,4,$adicional->numero_documento,0,0,'L',0);
+
+    $fpdf->SetFont('Courier', 'B', 12);
+    $fpdf->setXY(105,60);
+    $fpdf->Cell(30,4, utf8_decode('NAME/NOMBRE:'),0,0,'R',0);
+
+    $fpdf->SetFont('Courier', '', 10);
+    $fpdf->setXY(134,60);
+    $fpdf->Cell(50,4, $adicional->pasajero,0,0,'L',0);
+
+    $det_y=80; $det_x=20;
+
+    $fpdf->setXY($det_x,$det_y);
+    $fpdf->SetFont('Courier', 'B', 12);
+    $fpdf->SetFillColor(210,210,210);
+    $fpdf->Cell(12,6, utf8_decode('CANT'),1,0,'C',1);
+    $fpdf->setXY($det_x+12,$det_y);
+    $fpdf->Cell(80,6, utf8_decode('DETALLE'),1,0,'C',1);
+    $fpdf->setXY($det_x+92,$det_y);
+    $fpdf->Cell(25,6, utf8_decode('MONTO'),1,0,'C',1);
+    $fpdf->setXY($det_x+117,$det_y);
+    $fpdf->Cell(25,6, utf8_decode('Serv. Fee'),1,0,'C',1);
+    $fpdf->setXY($det_x+142,$det_y);
+    $fpdf->Cell(25,6, utf8_decode('IMPORTE'),1,0,'C',1);
+
+    $det_y +=6;
+    $fpdf->SetFont('Courier', 'B', 9);
+    $fpdf->SetFillColor(255,255,255);
+
+    foreach($adicional->OpcionalDetalles as $detalle)
+    {
+        //cantidad
+        $fpdf->setXY($det_x,$det_y);
+        $fpdf->Cell(12,10, utf8_decode('1'),1,0,'C',1);
+        //descripción
+        $fpdf->setXY($det_x+12,$det_y);
+        $fpdf->Cell(80,10, utf8_decode($detalle->detalle_otro),1,0,'C',1);
+        //MOntp
+        $fpdf->setXY($det_x+92,$det_y);
+        $fpdf->Cell(25,10, utf8_decode($detalle->monto),1,0,'C',1);
+        //Service Fee
+        $fpdf->setXY($det_x+117,$det_y);
+        $fpdf->Cell(25,10, utf8_decode($detalle->service_fee),1,0,'C',1);
+        //Importe
+        $fpdf->setXY($det_x+142,$det_y);
+        $fpdf->Cell(25,10, utf8_decode($detalle->importe),1,0,'C',1);
+
+        $det_y+=10;
+    }
+
+    $fpdf->SetFont('Courier', 'B', 9);
+    $fpdf->SetFillColor(210,210,210);
+    $fpdf->setXY(137,$det_y);
+    $fpdf->Cell(25,8, utf8_decode('SUBTOTAL US$'),1,0,'CR',1);
+    $fpdf->setXY(137,$det_y+8);
+    $fpdf->Cell(25,8, utf8_decode('I.G.V US$'),1,0,'R',1);
+    $fpdf->setXY(137,$det_y+16);
+    $fpdf->Cell(25,8, utf8_decode('TOTAL US$'),1,0,'R',1);
+    $fpdf->SetFillColor(255,255,255);
+    $fpdf->setXY(162,$det_y);
+    $fpdf->Cell(25,8, utf8_decode($adicional->sub_total),1,0,'C',0);
+    $fpdf->setXY(162,$det_y+8);
+    $fpdf->Cell(25,8, utf8_decode($adicional->igv),1,0,'C',0);
+    $fpdf->setXY(162,$det_y+16);
+    $fpdf->Cell(25,8, utf8_decode($adicional->total),1,0,'C',0);
+
+    $det_y+=40;
+
+    $fpdf->SetFillColor(210,210,210);
+    $fpdf->SetFont('Courier', 'B', 9);
+    $fpdf->setXY(20,$det_y);
+    $fpdf->Cell(165,5, utf8_decode('ESTE DOCUMENTO ES ACEPTADO TRIBUTARIAMENTE POR LA SUNAT'),1,1,'C',1);
+
+
+
+    $fpdf->Output();
+});

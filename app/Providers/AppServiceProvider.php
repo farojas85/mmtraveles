@@ -31,9 +31,11 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         View()->composer('home',function($view){
-            $view->with('aerolinea_count',Aerolinea::count('id'));
+            $user_count = User::count('id');
+            $view->with('aerolinea_count',Aerolinea::count('id'))
+                ->with('user_count',$user_count);
         });
-        
+
         View()->composer('layouts.partials.sidebar',function($view){
             $user = User::with('roles')->where('id',Auth::user()->id)->first();
             $role_name ='';

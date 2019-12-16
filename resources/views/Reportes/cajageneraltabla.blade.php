@@ -153,7 +153,7 @@
             <tr v-if="total_adicionales == 0">
                 <td colspan="14" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
-            <tr v-else v-for="(adicional,index) in adicionales" :key="adicionales.id">
+            <tr v-else v-for="(adicional,index) in adicionales" :key="adicional.id">
                 <td>@{{index+1}}</td>
                 <td>@{{adicional.counter}}</td>
                 <td>@{{adicional.pasajero}}</td>
@@ -168,6 +168,10 @@
                 <td>@{{adicional.deposito_dolares}}</td>
                 <td>@{{adicional.fecha}}</td>
                 <td>
+                    <a :href=" 'imprimirAdicional/'+adicional.id" class="btn btn-success btn-xs"
+                        target="_blank" title="Imprimir Adicional">
+                        <i class="fas fa-print"></i>
+                    </a>
                     <button type="button" class="btn btn-warning btn-xs"
                         title="Editar Adiconal" @click="editarAdicional(adicional.id)">
                         <i class="fas fa-edit"></i>

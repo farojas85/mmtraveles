@@ -49,15 +49,15 @@
                     <!-- small box -->
                     <div class="small-box bg-warning">
                         <div class="inner">
-                            <h3>44</h3>
-
-                            <p>Ciudades</p>
+                            <h3>{{$user_count}}</h3>
+                            <p>Usuarios</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-city"></i>
+                            <i class="fas fa-users"></i>
                         </div>
-                        <a href="#" class="small-box-footer">M&aacute;s Informaci&oacute;n<i
-                                class="fas fa-arrow-circle-right"></i></a>
+                        <a href="#" class="small-box-footer">
+                            <!--M&aacute;s Informaci&oacute;n-->
+                            <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
