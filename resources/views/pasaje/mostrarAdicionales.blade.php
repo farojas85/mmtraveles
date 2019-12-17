@@ -8,9 +8,9 @@
         {
             $role_name = $role->name;
         }
-        
+
     @endphp
-    
+
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
@@ -72,7 +72,7 @@
                                                     <td colspan="12">-- DATOS NO REGISTRADOS --</td>
                                                 </tr>
                                                 <tr v-else v-for="(repo,index) in opcionales" :key="repo.id">
-                                                    
+
                                                     <td>@{{index+1}}</td>
                                                     <td>
                                                         <span v-if="repo.counter_id==null">--</span>
@@ -87,6 +87,10 @@
                                                     <td>@{{repo.deposito_soles}}</td>
                                                     <td>@{{repo.deposito_dolares}}</td>
                                                     <td>
+                                                        <a :href=" 'imprimirAdicional/'+repo.id" class="btn btn-success btn-xs"
+                                                            target="_blank" title="Imprimir Adicional">
+                                                            <i class="fas fa-print"></i>
+                                                        </a>
                                                         <button class="btn btn-warning btn-xs"
                                                             title="Ver Registro Adicionales" @click="verAdicionales(repo.id)">
                                                             <i class="fas fa-eye"></i>

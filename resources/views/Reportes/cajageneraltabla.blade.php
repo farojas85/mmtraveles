@@ -136,16 +136,13 @@
                 <th>Nº</th>
                 <th>Counter</th>
                 <th>Pasajero</th>
-                <th>Detalle</th>
-                <th>Monto $</th>
-                <th>Service Fee $</th>
-                <th>Importe $</th>
+                <th>Fecha</th>
+                <th>Total</th>
                 <th>Pago S/</th>
                 <th>Pago $</th>
                 <th>Visa</th>
                 <th>Dep. S/</th>
                 <th>Dep. $</th>
-                <th>Fecha</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -155,18 +152,15 @@
             </tr>
             <tr v-else v-for="(adicional,index) in adicionales" :key="adicional.id">
                 <td>@{{index+1}}</td>
-                <td>@{{adicional.counter}}</td>
+                <td>@{{adicional.user.name}} @{{adicional.user.lastname}}</td>
                 <td>@{{adicional.pasajero}}</td>
-                <td>@{{adicional.detalle_otro}}</td>
-                <td>@{{adicional.monto}}</td>
-                <td>@{{adicional.service_fee}}</td>
-                <td>@{{adicional.importe}}</td>
+                <td>@{{adicional.fecha}}</td>
+                <td>@{{adicional.total}}</td>
                 <td>@{{adicional.pago_soles}}</td>
                 <td>@{{adicional.pago_dolares}}</td>
                 <td>@{{adicional.pago_visa}}</td>
                 <td>@{{adicional.deposito_soles}}</td>
                 <td>@{{adicional.deposito_dolares}}</td>
-                <td>@{{adicional.fecha}}</td>
                 <td>
                     <a :href=" 'imprimirAdicional/'+adicional.id" class="btn btn-success btn-xs"
                         target="_blank" title="Imprimir Adicional">

@@ -116,7 +116,7 @@ var app = new Vue({
                 this.total_adicionales = this.adicionales.length
                 this.suma_adicionales = 0;
                 this.adicionales.forEach(element => {
-                    this.suma_adicionales += parseFloat(element.importe)
+                    this.suma_adicionales += parseFloat(element.total)
                 })
                 this.errores=[]
             })

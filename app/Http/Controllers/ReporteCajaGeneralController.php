@@ -101,17 +101,11 @@ class ReporteCajaGeneralController extends Controller
                         ->orderBy('pasaje.created_at','DESC')
                         ->get();
 
-        $adicionales = Opcional::join('user as u','opcionals.counter_id','=','u.id')
-                            ->join('opcional_detalles as op','opcionals.id','=','op.opcional_id')
-                            ->select(
-                                'opcionals.id','u.name as counter','opcionals.pasajero',
-                                'op.detalle_otro','op.monto','op.service_fee','op.importe','pago_soles',
-                                'pago_dolares','pago_visa','deposito_soles','deposito_dolares',
-                                'opcionals.created_at','opcionals.fecha','opcionals.deleted_at'
-                            )
-                            ->where('opcionals.counter_id','like',$request->counter)
-                            ->where('opcionals.fecha','>=',$request->fecha_ini)
-                            ->where('opcionals.fecha','<=',$request->fecha_fin)
+        $adicionales = Opcional::with(['OpcionalDetalles','user'])
+                            ->where('counter_id','like',$request->counter)
+                            ->where('fecha','>=',$request->fecha_ini)
+                            ->where('fecha','<=',$request->fecha_fin)
+                            ->orderBy('created_at','DESC')
                             ->get();
         $asuma = 0;
         $sumatuaa=0;

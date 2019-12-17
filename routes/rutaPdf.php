@@ -803,10 +803,6 @@ Route::get('imprimirAdicional/{adicional_id}',function ($adicional_id){
 
     $adicional = App\Opcional::with(['OpcionalDetalles','user'])->where('id',$adicional_id)->first();
 
-
-    /*$local = App\Local::join('local_user as lu','locals.id','=','lu.local_id')
-                            ->where('lu.user_id',$pasaje->counter_id)
-                            ->first();*/
     $local = App\Local::where('id',$adicional->user->local_id)->first();
 
     $empresa = App\Empresa::where('id','=',$local->empresa->id)->first();
@@ -835,13 +831,18 @@ Route::get('imprimirAdicional/{adicional_id}',function ($adicional_id){
     $fpdf->Cell(60,4, $local->nombre,0,0,'L',0);
     $fpdf->SetFont('Courier', '', 12);
     $fpdf->setXY(20,52);
-    $fpdf->Cell(60,4,(explode("//",$empresa->direccion))[1],0,0,'L',0);
-    $fpdf->SetFont('Courier', '', 12);
-    $fpdf->setXY(20,56);
+    $fpdf->Cell(60,4,utf8_decode((explode("//",$empresa->direccion))[1]),0,0,'L',0);
+    $fpdf->SetFont('Courier', '', 8);
+    $fpdf->setXY(15,56);
     $fpdf->Cell(60,4,"TELEPHONE/TELEFONO:",0,0,'L',0);
-    $fpdf->SetFont('Courier', '', 12);
-    $fpdf->setXY(20,60);
+    $fpdf->SetFont('Courier', '', 8);
+    $fpdf->setXY(48,56);
+    $fpdf->Cell(60,4,$empresa->celular,0,0,'L',0);
+
+    $fpdf->setXY(15,60);
     $fpdf->Cell(60,4,"EMAIL/CORREO:",0,0,'L',0);
+    $fpdf->setXY(37,60);
+    $fpdf->Cell(60,4,$empresa->email,0,0,'L',0);
 
     //cabecera pasaje
     $fpdf->SetFont('Courier', 'B', 12);
