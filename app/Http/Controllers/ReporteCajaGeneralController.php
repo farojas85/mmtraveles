@@ -71,10 +71,13 @@ class ReporteCajaGeneralController extends Controller
                         ->where('l.id','LIKE',$request->local)
                         ->where('u.id','LIKE',$request->counter)
                         ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea)
+                        ->where('pasaje.deuda_soles','=',0)
+                        ->where('pasaje.deuda_dolares','=',0)
+                        ->where('pasaje.deuda_visa','=',0)
+                        ->where('pasaje.deuda_depo_soles','=',0)
+                        ->where('pasaje.deuda_depo_dolares','=',0)
                         ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
                         ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
-                        ->whereNull('pasaje.deuda_monto')
-                        ->orWhere('pasaje.deuda_monto','=',0)
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                     'pasaje.pasajero','pasaje.tax','pasaje.service_fee','pasaje.ticket_number',
                                     'pasaje.total','pasaje.deposito_soles','pasaje.deposito_dolares',
@@ -91,11 +94,16 @@ class ReporteCajaGeneralController extends Controller
                         ->where('l.id','LIKE',$request->local)
                         ->where('pasaje.counter_id','LIKE',$request->counter)
                         ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea)
+                        ->Where('pasaje.deuda_soles','>',0)
+                        ->orWhere('pasaje.deuda_dolares','>',0)
+                        ->orWhere('pasaje.deuda_visa','>',0)
+                        ->orWhere('pasaje.deuda_depo_soles','>',0)
+                        ->orWhere('pasaje.deuda_depo_dolares','>',0)
                         ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
                         ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
-                        ->where('pasaje.deuda_monto','>',0)
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
-                                    'pasaje.deuda_detalle','pasaje.deuda_monto',
+                                    'pasaje.deuda_detalle','pasaje.deuda_monto','pasaje.deuda_soles','pasaje.deuda_dolares',
+                                    'pasaje.deuda_visa','deuda_depo_soles','deuda_depo_dolares',
                                     'pasaje.pasajero','pasaje.ticket_number','pasaje.created_at_venta',
                                     'pasaje.deleted_at')
                         ->orderBy('pasaje.created_at','DESC')

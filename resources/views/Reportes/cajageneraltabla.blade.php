@@ -82,14 +82,19 @@
                 <th>Pasajero</th>
                 <th>Codigo</th>
                 <th>Deuda Detalle</th>
-                <th>Deuda Monto</th>
+                <th>Deuda Monto $</th>
+                <th>Pago S/</th>
+                <th>Pago US$</th>
+                <th>Deuda Visa</th>
+                <th>Depo S/</th>
+                <th>Depo US$</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <tr v-if="total_deudas == 0">
-                <td colspan="7" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
+                <td colspan="12" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
             <tr v-else v-for="(deuda,index) in deudas" :key="deuda.id">
                 <td>@{{index+1}}</td>
@@ -98,6 +103,11 @@
                 <td>@{{deuda.viajecode}}</td>
                 <td>@{{deuda.deuda_detalle}}</td>
                 <td>@{{deuda.deuda_monto}}</td>
+                <td>@{{deuda.deuda_soles}}</td>
+                <td>@{{deuda.deuda_dolares}}</td>
+                <td>@{{deuda.deuda_visa}}</td>
+                <td>@{{deuda.deuda_depo_soles}}</td>
+                <td>@{{deuda.deuda_depo_dolares}}</td>
                 <td>@{{deuda.created_at_venta}}</td>
                 <td>
                     <a :href=" 'imprimirPasaje/'+deuda.id" class="btn btn-success btn-xs"
@@ -119,8 +129,13 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="5" class="text-right">TOTAL</th>
-                <th>@{{parseFloat(suma_deudas).toFixed(2)}}</th>
+                <th colspan="6" class="text-right">TOTAL</th>
+
+                <th>@{{parseFloat(suma_deuda_soles).toFixed(2)}}</th>
+                <th>@{{parseFloat(suma_deuda_dolares).toFixed(2)}}</th>
+                <th>@{{parseFloat(suma_deuda_visa).toFixed(2)}}</th>
+                <th>@{{parseFloat(suma_deuda_depo_soles).toFixed(2)}}</th>
+                <th>@{{parseFloat(suma_deuda_depo_dolares).toFixed(2)}}</th>
                 <th colspan="2"></th>
             </tr>
         </tfoot>
