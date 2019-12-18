@@ -6,8 +6,6 @@
 <script>
     $.widget.bridge('uibutton', $.ui.button)
 </script>
-<!-- JQVMap -->
-<link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
 <!-- overlayScrollbars -->
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- Bootstrap 4 -->

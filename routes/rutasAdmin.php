@@ -148,6 +148,11 @@ Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], funct
 
 });
 
+Route::group(['prefix' => 'graficas', 'middleware' => 'auth'], function(){
+    Route::get('local-pagados', 'PasajeController@pagadoLocal');
+
+});
+
 Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function(){
     Route::get('/', 'ReportePlantillaController@index')->name('reporteplantilla.index');
     Route::get('/tabla','ReportePlantillaController@tabla')->name('reporteplantilla.tabla');

@@ -1,33 +1,26 @@
 @extends('layouts.master')
 
 @section('estilos')
-<!-- JQVMap -->
-<link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
 @endsection
 
 @section('contenido')
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0 text-dark">Bienvenidos al Sistema M & M Travel</h1>
-                </div><!-- /.col -->
+                </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
                         <li class="breadcrumb-item active">Inicio</li>
                     </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
             <div class="row">
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
@@ -61,9 +54,32 @@
                     </div>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card caard-default">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                Pasajes Pagados x Local
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="date" class="form-control" v-model="pie_fecha_local_pagados">
+                            <div class="chartjs-size-monitor">
+                                <div class="chartjs-size-monitor-expand">
+                                    <div class=""></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink">
+                                    <div class=""></div>
+                                </div>
+                            </div>
+                            <canvas id="pieChart" style="height: 230px; min-height: 230px; display: block; width: 488px;" width="488" height="230" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+        </div>
     </section>
-    <!-- /.content -->
 @endsection
 @section('content')
 <div class="container">
@@ -89,24 +105,5 @@
 
 <!-- ChartJS -->
 <script src="plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
-<script src="plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
-<script src="plugins/moment/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
-
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="dist/js/pages/dashboard.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
-
+<script src="js/sistema/home.js"></script>
 @endsection

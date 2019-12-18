@@ -533,4 +533,23 @@ class PasajeController extends Controller
     {
         return Pasaje::findOrFail($request->id);
     }
+
+    public function pagadoLocal(Request $request)
+    {
+        if($request->fecha == '' || $request->fecha == null)
+        {
+            $request->fecha =  Carbon::now()->format('Y-m-d');
+        }
+        return  Pasaje::join('user as u','u.id','=','pasaje.counter_id')
+                       ->join('locals as l','l.id','=','u.local_id')
+                       ->select('l.id','l.nombre',
+                            DB::Raw("COUNT(pasaje.id) as cantidad"))
+                        ->where('pasaje.created_at_venta',$request->fecha)
+                        ->where('deuda_soles',0)
+                        ->where('deuda_dolares',0)
+                        ->where('deuda_visa',0)
+                        ->where('deuda_depo_soles',0)
+                        ->where('deuda_depo_dolares',0)
+                        ->get();
+    }
 }
