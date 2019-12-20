@@ -63,7 +63,7 @@
                             </h3>
                         </div>
                         <div class="card-body">
-                            <input type="date" class="form-control" v-model="pie_fecha_local_pagados">
+                            <input type="date" class="form-control" v-model="pie_fecha_local_pagados" @change="piePagadosLocal">
                             <div class="chartjs-size-monitor">
                                 <div class="chartjs-size-monitor-expand">
                                     <div class=""></div>

@@ -550,6 +550,7 @@ class PasajeController extends Controller
                         ->where('deuda_visa',0)
                         ->where('deuda_depo_soles',0)
                         ->where('deuda_depo_dolares',0)
+                        ->groupBy('l.id','l.nombre')
                         ->get();
     }
 }
