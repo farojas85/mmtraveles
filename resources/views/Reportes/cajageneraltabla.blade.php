@@ -2,7 +2,7 @@
 <h4 class="text-primary">Pasajes Vendidos Pagados</h4>
 <div class="table-responsive ">
     <table class="table table-sm table-hover table-bordered nowrap" style="font-size:11pt">
-        <thead class="bg-navy">
+        <thead class="bg-primary">
             <tr>
                 <th>Nº</th>
                 <th >Counter</th>
@@ -63,19 +63,43 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="8" class="text-right">TOTAL US$</th>
-                <th>@{{parseFloat(suma_reporte).toFixed(2)}}</th>
-                <th colspan="7"></th>
+                <th colspan="8" class="text-right">TOTALES</th>
+                <th>US$ @{{parseFloat(suma_reporte).toFixed(2)}}</th>
+                <th>S/ @{{parseFloat(repo_soles).toFixed(2)}}</th>
+                <th>$ @{{parseFloat(repo_dolares).toFixed(2)}}</th>
+                <th> @{{parseFloat(repo_visa).toFixed(2)}}</th>
+                <th>S/ @{{parseFloat(repo_depo_soles).toFixed(2)}}</th>
+                <th>$ @{{parseFloat(repo_depo_dolares).toFixed(2)}}</th>
+                <th colspan="2"></th>
             </tr>
         </tfoot>
     </table>
 </div>
-<h6>TOTAL Pagados: <b>$ @{{ parseFloat(suma_reporte).toFixed(2)}}</b>&nbsp;  Cantidad Pasajes: <b>@{{ parseInt(total_reporte)}}</b></h6>
+<div class="row">
+    <div class="col-md-3">
+        Cantidad Pagados: <b>@{{ parseInt(total_reporte)}}</b>
+    </div>
+    <div class="col-md-3">
+        Pago Soles: <b>S/ @{{ parseFloat(repo_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Pago Dolares: <b>$ @{{ parseFloat(repo_dolares).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Pago Visa: <b>@{{ parseFloat(repo_visa).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Dep&oacute;sito Soles: <b>S/ @{{ parseFloat(repo_depo_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Dep&oacute;sito Dolares: <b>$ @{{ parseFloat(repo_depo_dolares).toFixed(2)}}</b>
+    </div>
+</div>
 <hr>
 <h4 class="text-danger">Deudas</h4>
 <div class="table-responsive">
     <table class="table table-sm table-hover table-bordered nowrap" style="font-size:11pt">
-        <thead class="bg-navy">
+        <thead class="bg-danger">
             <tr>
                 <th>Nº</th>
                 <th>Counter</th>
@@ -141,12 +165,31 @@
         </tfoot>
     </table>
 </div>
-<h6>TOTAL Deuda: <b>$ @{{ parseFloat(suma_deudas).toFixed(2)}}</b>&nbsp;  Cantidad Deudas: <b>@{{total_deudas}}</b></h6>
+<div class="row">
+    <div class="col-md-3">
+        Cantidad Deuda: <b>@{{ parseInt(total_deudas)}}</b>
+    </div>
+    <div class="col-md-3">
+        Deuda Soles: <b>S/ @{{ parseFloat(suma_deuda_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Deuda Dolares: <b>$ @{{ parseFloat(suma_deuda_dolares).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Deuda Visa: <b>@{{ parseFloat(suma_deuda_visa).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Deuda Dep&oacute;sito Soles: <b>S/ @{{ parseFloat(suma_deuda_depo_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Deuda Dep&oacute;sito Dolares: <b>$ @{{ parseFloat(suma_deuda_depo_dolares).toFixed(2)}}</b>
+    </div>
+</div>
 <hr>
 <h4 class="text-success">Adicionales</h4>
 <div class="table-responsive">
     <table class="table table-sm table-hover table-bordered nowrap" style="font-size:11pt">
-        <thead class="bg-navy">
+        <thead class="bg-success">
             <tr>
                 <th>Nº</th>
                 <th>Counter</th>
@@ -196,15 +239,48 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6" class="text-right">TOTAL US$</th>
-                <th>@{{parseFloat(suma_adicionales).toFixed(2)}}</th>
-                <th colspan="7" class="text-right"></th>
+                <th colspan="4" class="text-right">TOTALES</th>
+                <th>$ @{{parseFloat(suma_adicionales).toFixed(2)}}</th>
+                <th>S/ @{{parseFloat(adic_soles).toFixed(2)}}</th>
+                <th>$ @{{parseFloat(adic_dolares).toFixed(2)}}</th>
+                <th>@{{parseFloat(adic_visa).toFixed(2)}}</th>
+                <th>S/ @{{parseFloat(adic_depo_soles).toFixed(2)}}</th>
+                <th>$ @{{parseFloat(adic_depo_dolares).toFixed(2)}}</th>
+                <th colspan="2" class="text-right"></th>
             </tr>
         </tfoot>
     </table>
 </div>
-<h6>Total Adicionales: <b>$ @{{ parseFloat(suma_adicionales).toFixed(2)}}</b>&nbsp;  Cantidad Adicionales: <b>@{{total_adicionales}}</b></h6>
+<div class="row">
+    <div class="col-md-3">
+        Cantidad Adicionales: <b>@{{ parseInt(total_adicionales)}}</b>
+    </div>
+    <div class="col-md-3">
+        Adicional Soles: <b>S/ @{{ parseFloat(adic_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Adicional Dolares: <b>$ @{{ parseFloat(adic_dolares).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Adicional Visa: <b>@{{ parseFloat(adic_visa).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Adicional Dep&oacute;sito Soles: <b>S/ @{{ parseFloat(adic_depo_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Adicional Dep&oacute;sito Dolares: <b>$ @{{ parseFloat(adic_depo_dolares).toFixed(2)}}</b>
+    </div>
+</div>
 <hr>
-<h5>RESUMEN TOTAL: <b>$ @{{ (parseFloat(suma_reporte) + parseFloat(suma_deudas) + parseFloat(suma_adicionales) ).toFixed(2)}}</b>&nbsp;
-    Cantidad Resumen: <b>@{{ parseInt(total_reporte) + parseInt(total_deudas) + parseInt(total_adicionales)}}</b></h5>
-<hr>
+<h5 class="text-primary">Resumen General</h5>
+<div class="row">
+    <div class="col-md-3">
+        Cantidad Pagados: <b>@{{ parseInt(total_reporte)}}</b>
+    </div>
+    <div class="col-md-3">
+        Cantidad Deuda: <b>@{{ parseInt(total_deudas)}}</b>
+    </div>
+    <div class="col-md-3">
+        Cantidad Adicionales: <b>@{{ parseInt(total_adicionales)}}</b>
+    </div>
+</div>

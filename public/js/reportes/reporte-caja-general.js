@@ -6,9 +6,15 @@ var app = new Vue({
         reporte:[],
         pasaje:{},
         total_reporte:0,
+        suma_reporte:0,
+        repo_soles:0,
+        repo_dolares:0,
+        repo_visa:0,
+        repo_depo_soles:0,
+        repo_depo_dolares:0,
         deudas:[],
         total_deudas:0,
-        suna_deudas:0,
+        suma_deudas:0,
         suma_deuda_soles:0,
         suma_deuda_dolares:0,
         suma_deuda_visa:0,
@@ -30,6 +36,11 @@ var app = new Vue({
         },
         total_adicionales:0,
         suma_adicionales:0,
+        adic_soles:0,
+        adic_dolares:0,
+        adic_visa:0,
+        adic_depo_soles:0,
+        adic_depo_dolares:0,
         lugares:[],
         locales:[],
         counters:[],
@@ -44,7 +55,6 @@ var app = new Vue({
         },
         lugar:'',
         lugar_detalle:'',
-        suma_reporte:0,
         aerolineas:[],
         total_aerolineas:0,
         errores:[]
@@ -106,8 +116,18 @@ var app = new Vue({
                 this.reporte = response.data.pasajes
                 this.total_reporte = this.reporte.length
                 this.suma_reporte =0
+                this.repo_soles = 0;
+                this.repo_depo_dolares = 0;
+                this.repo_dolares=0;
+                this.repo_visa = 0;
+                this.repo_depo_soles=0;
                 this.reporte.forEach(element => {
-                    this.suma_reporte += parseFloat(element.total)
+                    this.suma_reporte =  parseFloat(this.suma_reporte) + parseFloat(element.total)
+                    this.repo_soles =  parseFloat(this.repo_soles) + parseFloat(element.pago_soles)
+                    this.repo_dolares =  parseFloat(this.repo_dolares) + parseFloat(element.pago_dolares)
+                    this.repo_visa =  parseFloat(this.repo_visa) + parseFloat(element.pago_visa)
+                    this.repo_depo_soles =  parseFloat(this.repo_depo_soles) + parseFloat(element.deposito_soles)
+                    this.repo_depo_dolares =  parseFloat(this.repo_depo_dolares) + parseFloat(element.deposito_dolares)
                 })
 
                 this.deudas = response.data.deudas
@@ -136,8 +156,18 @@ var app = new Vue({
                 this.adicionales = response.data.adicionales
                 this.total_adicionales = this.adicionales.length
                 this.suma_adicionales = 0;
+                this.adic_soles = 0
+                this.adic_dolares = 0
+                this.adic_visa = 0
+                this.adic_depo_soles = 0
+                this.adic_depo_dolares = 0
                 this.adicionales.forEach(element => {
                     this.suma_adicionales += parseFloat(element.total)
+                    this.adic_soles = parseFloat(this.adic_soles) + parseFloat(element.pago_soles)
+                    this.adic_dolares = parseFloat(this.adic_dolares) + parseFloat(element.pago_dolares)
+                    this.adic_visa = parseFloat(this.adic_visa) + parseFloat(element.pago_visa)
+                    this.adic_depo_soles = parseFloat(this.adic_depo_soles) + parseFloat(element.deposito_soles)
+                    this.adic_depo_dolares = parseFloat(this.adic_depo_dolares) + parseFloat(element.deposito_dolares)
                 })
                 this.errores=[]
             })
