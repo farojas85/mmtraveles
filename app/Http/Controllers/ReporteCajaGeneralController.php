@@ -67,6 +67,7 @@ class ReporteCajaGeneralController extends Controller
         $pasajes = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
                         ->join('locals as l','u.local_id','=','l.id')
                         ->join('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->leftJoin('etapa_persona as ep','pasaje.etapa_persona_id','=','ep.id')
                         ->where('l.lugar_id','LIKE',$request->lugar)
                         ->where('l.id','LIKE',$request->local)
                         ->where('u.id','LIKE',$request->counter)
@@ -79,13 +80,14 @@ class ReporteCajaGeneralController extends Controller
                                     'pasaje.total','pasaje.deposito_soles','pasaje.deposito_dolares',
                                     'ruta','pasaje.tarifa','pago_soles','pago_dolares',
                                     'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at_venta',
-                                    'pasaje.deleted_at')
+                                    'pasaje.deleted_at','ep.nombre as etapa_persona','ep.abreviatura as etapa_mini')
                         ->orderBy('pasaje.created_at','DESC')
                         ->get();
 
         $deudas = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
                         ->join('locals as l','u.local_id','=','l.id')
                         ->join('product as ae','pasaje.aerolinea_id','=','ae.id')
+                        ->leftJoin('etapa_persona as ep','pasaje.etapa_persona_id','=','ep.id')
                         ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
                         ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
                         ->where('l.lugar_id','LIKE',$request->lugar)
@@ -97,7 +99,7 @@ class ReporteCajaGeneralController extends Controller
                                     'pasaje.deuda_detalle','pasaje.deuda_monto','pasaje.deuda_soles','pasaje.deuda_dolares',
                                     'pasaje.deuda_visa','deuda_depo_soles','deuda_depo_dolares',
                                     'pasaje.pasajero','pasaje.ticket_number','pasaje.created_at_venta',
-                                    'pasaje.deleted_at')
+                                    'pasaje.deleted_at','ep.nombre as etapa_persona','ep.abreviatura as etapa_mini')
                         ->orderBy('pasaje.created_at','DESC')
                         ->get();
 

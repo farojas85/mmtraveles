@@ -7,6 +7,7 @@ var app = new Vue({
         pasaje:{},
         total_reporte:0,
         suma_reporte:0,
+        repo_service_fee:0,
         repo_soles:0,
         repo_dolares:0,
         repo_visa:0,
@@ -36,6 +37,7 @@ var app = new Vue({
         },
         total_adicionales:0,
         suma_adicionales:0,
+        adic_service_fee:0,
         adic_soles:0,
         adic_dolares:0,
         adic_visa:0,
@@ -57,7 +59,13 @@ var app = new Vue({
         lugar_detalle:'',
         aerolineas:[],
         total_aerolineas:0,
-        errores:[]
+        errores:[],
+        total_pago_soles:0,
+        total_pago_dolares:0,
+        total_visa:0,
+        total_deposito_soles:0,
+        total_deposito_dolares:0,
+        total_service_fee:0,
     },
     methods: {
         listarLugares() {
@@ -121,9 +129,11 @@ var app = new Vue({
                 this.repo_dolares=0;
                 this.repo_visa = 0;
                 this.repo_depo_soles=0;
+                this.repo_service_fee=0;
                 this.reporte.forEach(element => {
                     this.suma_reporte =  parseFloat(this.suma_reporte) + parseFloat(element.total)
                     this.repo_soles =  parseFloat(this.repo_soles) + parseFloat(element.pago_soles)
+                    this.repo_service_fee =  parseFloat(this.repo_service_fee) + parseFloat(element.service_fee)
                     this.repo_dolares =  parseFloat(this.repo_dolares) + parseFloat(element.pago_dolares)
                     this.repo_visa =  parseFloat(this.repo_visa) + parseFloat(element.pago_visa)
                     this.repo_depo_soles =  parseFloat(this.repo_depo_soles) + parseFloat(element.deposito_soles)
@@ -161,14 +171,19 @@ var app = new Vue({
                 this.adic_visa = 0
                 this.adic_depo_soles = 0
                 this.adic_depo_dolares = 0
+                this.adic_service_fee = 0
                 this.adicionales.forEach(element => {
                     this.suma_adicionales += parseFloat(element.total)
+                    this.adic_service_fee =  parseFloat(this.adic_service_fee) + parseFloat(element.service_fee)
                     this.adic_soles = parseFloat(this.adic_soles) + parseFloat(element.pago_soles)
                     this.adic_dolares = parseFloat(this.adic_dolares) + parseFloat(element.pago_dolares)
                     this.adic_visa = parseFloat(this.adic_visa) + parseFloat(element.pago_visa)
                     this.adic_depo_soles = parseFloat(this.adic_depo_soles) + parseFloat(element.deposito_soles)
                     this.adic_depo_dolares = parseFloat(this.adic_depo_dolares) + parseFloat(element.deposito_dolares)
                 })
+
+                this.calcularResumen()
+
                 this.errores=[]
             })
             .catch((errors) => {
@@ -233,6 +248,14 @@ var app = new Vue({
         {
             this.pasaje.sub_total = ( parseFloat(this.pasaje.tarifa) + parseFloat(this.pasaje.tax) + parseFloat(this.pasaje.service_fee) ).toFixed(2);
             this.pasaje.total = (parseFloat(this.pasaje.sub_total) + parseFloat(this.pasaje.igv)).toFixed(2);
+        },
+        calcularResumen() {
+            this.total_pago_soles = parseFloat(this.repo_soles) + parseFloat(this.adic_soles)
+                this.total_pago_dolares = parseFloat(this.repo_dolares) + parseFloat(this.adic_dolares)
+                this.total_visa = parseFloat(this.repo_visa) + parseFloat(this.adic_visa)
+                this.total_deposito_soles = parseFloat(this.repo_depo_soles) + parseFloat(this.adic_depo_soles)
+                this.total_deposito_dolares = parseFloat(this.repo_depo_dolares) + parseFloat(this.adic_depo_dolares)
+                this.total_service_fee = parseFloat(this.repo_service_fee) + parseFloat(this.adic_service_fee)
         },
         mostrarPasajePagado(id) {
             axios.get('reporte-caja-general/show-pasaje',{params:{id:id}})
@@ -564,6 +587,7 @@ var app = new Vue({
                 }
             })
         },
+
     },
     created() {
         //this.listarLugares()

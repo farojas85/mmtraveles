@@ -8,6 +8,7 @@
                 <th >Counter</th>
                 <th>Codigo</th>
                 <th>Pasajero</th>
+                <th>Tipo Pax</th>
                 <th>Aerolinea</th>
                 <th>Tarifa $</th>
                 <th>Tax/TUUA $</th>
@@ -32,6 +33,7 @@
                 <td>@{{repo.counter}}</td>
                 <td>@{{repo.viajecode}}</td>
                 <td>@{{repo.pasajero}}</td>
+                <td>@{{repo.etapa_mini }}</td>
                 <td>@{{repo.aero}}</td>
                 <td>@{{repo.tarifa.toFixed(2)}}</td>
                 <td>@{{repo.tax}}</td>
@@ -64,6 +66,7 @@
         <tfoot>
             <tr>
                 <th colspan="8" class="text-right">TOTALES</th>
+                <th>US$ @{{parseFloat(repo_service_fee).toFixed(2)}}</th>
                 <th>US$ @{{parseFloat(suma_reporte).toFixed(2)}}</th>
                 <th>S/ @{{parseFloat(repo_soles).toFixed(2)}}</th>
                 <th>$ @{{parseFloat(repo_dolares).toFixed(2)}}</th>
@@ -75,7 +78,7 @@
         </tfoot>
     </table>
 </div>
-<div class="row">
+<!--<div class="row">
     <div class="col-md-3">
         Cantidad Pagados: <b>@{{ parseInt(total_reporte)}}</b>
     </div>
@@ -94,7 +97,7 @@
     <div class="col-md-3">
         Dep&oacute;sito Dolares: <b>$ @{{ parseFloat(repo_depo_dolares).toFixed(2)}}</b>
     </div>
-</div>
+</div>-->
 <hr>
 <h4 class="text-danger">Deudas</h4>
 <div class="table-responsive">
@@ -104,6 +107,7 @@
                 <th>Nº</th>
                 <th>Counter</th>
                 <th>Pasajero</th>
+                <th>Tipo Pax</th>
                 <th>Codigo</th>
                 <th>Deuda Detalle</th>
                 <th>Deuda Monto $</th>
@@ -118,12 +122,13 @@
         </thead>
         <tbody>
             <tr v-if="total_deudas == 0">
-                <td colspan="12" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
+                <td colspan="15" class="text-center text-danger">-- DATOS NO REGISTRADOS --</td>
             </tr>
             <tr v-else v-for="(deuda,index) in deudas" :key="deuda.id">
                 <td>@{{index+1}}</td>
                 <td>@{{deuda.counter}}</td>
                 <td>@{{deuda.pasajero}}</td>
+                <td>@{{deuda.etapa_mini }}</td>
                 <td>@{{deuda.viajecode}}</td>
                 <td>@{{deuda.deuda_detalle}}</td>
                 <td>@{{deuda.deuda_monto}}</td>
@@ -153,8 +158,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6" class="text-right">TOTAL</th>
-
+                <th colspan="7" class="text-right">TOTAL</th>
                 <th>@{{parseFloat(suma_deuda_soles).toFixed(2)}}</th>
                 <th>@{{parseFloat(suma_deuda_dolares).toFixed(2)}}</th>
                 <th>@{{parseFloat(suma_deuda_visa).toFixed(2)}}</th>
@@ -165,7 +169,7 @@
         </tfoot>
     </table>
 </div>
-<div class="row">
+<!--<div class="row">
     <div class="col-md-3">
         Cantidad Deuda: <b>@{{ parseInt(total_deudas)}}</b>
     </div>
@@ -184,7 +188,7 @@
     <div class="col-md-3">
         Deuda Dep&oacute;sito Dolares: <b>$ @{{ parseFloat(suma_deuda_depo_dolares).toFixed(2)}}</b>
     </div>
-</div>
+</div>-->
 <hr>
 <h4 class="text-success">Adicionales</h4>
 <div class="table-responsive">
@@ -251,7 +255,7 @@
         </tfoot>
     </table>
 </div>
-<div class="row">
+<!--<div class="row">
     <div class="col-md-3">
         Cantidad Adicionales: <b>@{{ parseInt(total_adicionales)}}</b>
     </div>
@@ -270,7 +274,7 @@
     <div class="col-md-3">
         Adicional Dep&oacute;sito Dolares: <b>$ @{{ parseFloat(adic_depo_dolares).toFixed(2)}}</b>
     </div>
-</div>
+</div>-->
 <hr>
 <h5 class="text-primary">Resumen General</h5>
 <div class="row">
@@ -282,5 +286,27 @@
     </div>
     <div class="col-md-3">
         Cantidad Adicionales: <b>@{{ parseInt(total_adicionales)}}</b>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        Total Soles: S/ <b>@{{ parseFloat(total_pago_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Total D&oacute;lares: $ <b>@{{ parseFloat(total_pago_dolares).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Total Visa: US$ <b>@{{ parseFloat(total_visa).toFixed(2)}}</b>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        Total Depo Soles: S/ <b>@{{ parseFloat(total_deposito_soles).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Total Depo D&oacute;lares: $ <b>@{{ parseFloat(total_deposito_dolares).toFixed(2)}}</b>
+    </div>
+    <div class="col-md-3">
+        Total SERVICE FEE: US$ <b>@{{ parseFloat(total_service_fee).toFixed(2)}}</b>
     </div>
 </div>

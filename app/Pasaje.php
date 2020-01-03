@@ -34,4 +34,9 @@ class Pasaje extends Model
     {
         return $this->belongsTo(Local::class);
     }
+
+    public function etapa_persona()
+    {
+        return $this->belongsTo(EtapaPersona::class);
+    }
 }

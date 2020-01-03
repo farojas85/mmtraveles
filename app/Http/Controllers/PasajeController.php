@@ -112,6 +112,7 @@ class PasajeController extends Controller
         $pasaje->equipaje = $request->equipaje;
         $pasaje->equipaje_vuelta = ($request->equipaje_vuelta== '') ? null : $request->equipaje_vuelta;
         $pasaje->monto_neto = $request->monto_neto;
+        $pasaje->ticket_anterior='-';
 
         $pasaje->moneda = $request->moneda;
 

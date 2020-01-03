@@ -178,7 +178,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row" v-if="hora_regreso">
+                                        <div class="row" v-if="pasaje.hora_vuelta">
                                             <div class="col-md-12">
                                                 <div class="form-group row">
                                                     <label for="ruta_vuelta" class="col-md-1 col-form-label">Ruta Ret.</label>
@@ -226,7 +226,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row" v-if="hora_regreso">
+                                        <div class="row" v-if="pasaje.hora_vuelta">
                                             <div class="col-md-12">
                                                 <div class="form-group row">
                                                     <label for="cl_vuelta" class="col-md-1 col-form-label">CL Ret.</label>
