@@ -132,6 +132,9 @@ Route::group(['prefix' => 'tipo-documentos', 'middleware' => 'auth'], function()
     Route::get('/lista', 'TipoDocumento@listas')->name('tipo-documentos.lista');
     Route::get('filtro','TipoDocumentoController@filtro');
 });
+Route::group(['prefix' => 'etapa-persona', 'middleware' => 'auth'], function(){
+    Route::get('filtro','EtapaPersonaController@filtro');
+});
 
 Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], function(){
     Route::get('/', 'ReporteCajaGeneralController@index')->name('reportecajageneral.index');

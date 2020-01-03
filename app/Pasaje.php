@@ -29,4 +29,9 @@ class Pasaje extends Model
     {
         return $this->belongsTo(Aerolinea::class, 'aerolinea_id');
     }
+
+    public function local()
+    {
+        return $this->belongsTo(Local::class);
+    }
 }

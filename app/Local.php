@@ -20,4 +20,9 @@ class Local extends Model
     {
         return $this->belongsTo(Lugar::class);
     }
+
+    public function pasaje()
+    {
+        return $this->hasMany(Pasaje::class);
+    }
 }

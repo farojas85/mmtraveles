@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             ReporteCajaGeneralTableSeeder::class,
             EmpresaUserTableSeeder::class,
             TipoDocumentosTableSeeder::class,
-            AdicionalsTableSeeder::class
+            AdicionalsTableSeeder::class,
+            EtapaPersonasTableSeeder::class,
         ]);
     }
 }

@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Pasaje;
 use App\PasajeAdicional;
+use App\Opcional;
+use App\OpcionalDetalle;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Codedge\Fpdf\Facades\Fpdf;
 use Illuminate\Http\Request;
 use Session;
+
 use DB;
 
 class PasajeController extends Controller
@@ -52,24 +55,26 @@ class PasajeController extends Controller
             'tarifa' => 'required',
             'tax' => 'required',
             'service_fee' => 'required',
-            'sub_total' => 'required',
+            'monto_neto' => 'required',
             'total' => 'required',
-            'monto_neto' => 'required'
+            'local_id' => 'required',
+            'etapa_persona_id' => 'required',
         ];
 
         $mensaje= [
             'required' => 'Campo Obligatorio',
-            //'max' => 'Pago Dolares no debe exceder de TOTAL'
-            //'same' => 'Pago Dolares debe ser Igual a Total'
         ];
 
         $this->validate($request,$rules,$mensaje);
 
         $pasaje = new Pasaje();
+        $pasaje->tipo_pasaje == $request->tipo_pasaje;
         $pasaje->counter_id = Auth::user()->id;
         $pasaje->pasajero = $request->pasajero;
         $pasaje->tipo_documento_id = $request->tipo_documento_id;
         $pasaje->numero_documento = $request->numero_documento;
+        $pasaje->etapa_persona_id = $request->etapa_persona_id;
+        $pasaje->local_id = $request->local_id;
         $pasaje->dni = null;
 
         $date = Carbon::now();
@@ -147,6 +152,60 @@ class PasajeController extends Controller
         $pasaje->save();
 
 
+        if($request->tipo_pasaje == 'Adicional')
+        {
+            $opcional = new Opcional();
+            $opcional->counter_id = Auth::user()->id;
+            $opcional->pasajero = $request->pasajero;
+            $opcional->tipo_documento_id = $request->tipo_documento_id;
+            $opcional->numero_documento = $request->numero_documento;
+
+            $date = Carbon::now();
+
+            $opcional->fecha =  (is_null($request->fecha_venta) || $request->fecha_venta == "" ) ?  $date->format('Y-m-d') : $request->fecha_venta;
+
+            $opcional->monto_pagar = $request->opcional['monto_pagar'];
+
+            $opcional->moneda = $request->moneda;
+            $opcional->cambio = $request->cambio;
+
+            $opcional->pago_soles = ($request->opcional['pago_soles']=='') ? 0 : $request->opcional['pago_soles'];
+            $opcional->pago_dolares =  ($request->opcional['pago_dolares']=='') ? 0 : $request->opcional['pago_dolares'];
+            $opcional->pago_visa =  ($request->opcional['pago_visa']=='') ? 0 : $request->opcional['pago_visa'];
+            $opcional->deposito_soles =  ($request->opcional['deposito_soles']=='') ? 0 : $request->opcional['deposito_soles'];
+            $opcional->deposito_dolares =  ($request->opcional['deposito_dolares']=='') ? 0 : $request->opcional['deposito_dolares'];
+
+            $opcional->sub_total =$request->opcional['sub_total'];
+            $opcional->igv = ($request->opcional['igv'] == 0) ? 0 : $request->opcional['igv'];
+            $opcional->total = $request->opcional['total'];
+
+            $suma_pago = $opcional->pago_soles + $opcional->pago_dolares*$opcional->cambio;
+
+            if($suma_pago > $opcional->total*$opcional->cambio)
+            {
+                $opcional->redondeo = $suma_pago - ($opcional->total*$opcional->cambio) ;
+            }
+            else{
+                $opcional->redondeo = 0;
+            }
+
+            $opcional->save();
+
+
+            foreach($request->opcional['adicionales'] as $adic)
+            {
+                $opcional_adicional = new OpcionalDetalle();
+                $opcional_adicional->opcional_id = $opcional->id;
+                $opcional_adicional->adicional_id = $adic['adicional_id'];
+                $opcional_adicional->detalle_otro = $adic['detalle'];
+                $opcional_adicional->monto = $adic['monto'];
+                $opcional_adicional->service_fee = $adic['service_fee'];
+                $opcional_adicional->importe = $adic['importe'];
+
+                $opcional_adicional->save();
+            }
+
+        }
         Session::put('pasaje_id',$pasaje->id);
 
         return response()->json([

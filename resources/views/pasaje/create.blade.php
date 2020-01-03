@@ -51,7 +51,62 @@
                             <form  class="form-horizontal" role="form">
                                 @csrf
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
+                                        <div class="card card-success">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Fecha Venta</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label for="created_at_venta" class="col-md-2 col-form-label">FECHA VENTA</label>
+                                                    <div class="col-md-3">
+                                                        <input type="date" name="created_at_venta" v-model="pasaje.fecha_venta"
+                                                                class="form-control" id="created_at_venta">
+                                                        <small class="text-danger" v-for="error in errores.fecha_venta">@{{ error }}</small>
+                                                    </div>
+                                                    <label class="col-form-label col-md-2 text-right">Tipo Pasaje:</label>
+                                                    <div class="col-md-2">
+                                                        <select v-model="pasaje.tipo_pasaje" class="form-control">
+                                                            <option v-for="tipopa in tipoPasaje" :key="tipopa" :value="tipopa">
+                                                                @{{tipopa}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <label class="col-form-label col-md-2 text-right" v-if="pasaje.tipo_pasaje=='Adicional'">Ticket Anterior:</label>
+                                                    <div class="col-md-2">
+                                                        <input type="text" class="form-control" v-model="pasaje.ticket_anterior"
+                                                                v-if="pasaje.tipo_pasaje=='Adicional'" @change="">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="ticker_number" class="col-md-2 col-form-label">Nro. Ticket</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="ticket_number" id="ticket_number" v-model="pasaje.ticket_number"
+                                                                class="form-control" placeholder="Número Ticket">
+                                                        <small class="text-danger" v-for="error in errores.ticket_number">@{{ error }}</small>
+                                                    </div>
+                                                    <label class="col-form-label col-md-2 text-right">LOCAL:</label>
+                                                    <div class="col-md-3">
+                                                        <select v-model="pasaje.local_id" class="form-control">
+                                                            <option value="">-LOCAL-</option>
+                                                            <option v-for="local in locales" :key="local.id" :value="local.id">
+                                                                @{{local.nombre}}
+                                                            </option>
+                                                        </select>
+                                                        <small class="text-danger" v-for="error in errores.local_id">@{{ error }}</small>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <!-- /.card-body -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-12">
                                         <div class="card card-primary">
                                             <div class="card-header">
                                                 <h3 class="card-title">Datos de Pax</h3>
@@ -60,16 +115,8 @@
                                             <!-- /.card-header -->
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label for="inputEmail1" class="col-md-3 col-form-label">PASAJERO</label>
-                                                    <div class="col-md-9">
-                                                        <input type="text" name="pasajero" class="form-control" id="pasajero"
-                                                                v-model="pasaje.pasajero" placeholder="Nombre pasajero: (RAMIREZ/HECTOR) ">
-                                                        <small class="text-danger" v-for="error in errores.pasajero">@{{ error }}</small>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="tipo_documento_id" class="col-md-3 col-form-label">FOID/DNI</label>
-                                                    <div class="col-md-4">
+                                                    <label for="tipo_documento_id" class="col-md-1 col-form-label">FOID/DNI</label>
+                                                    <div class="col-md-2">
                                                         <select class="form-control" v-model="pasaje.tipo_documento_id" name="tipo_documento_id">
                                                             <option value="">-Tipo Doc.-</option>
                                                             <option v-for="tipo in tipoDocumentos" :key="tipo.id" :value="tipo.id">
@@ -78,42 +125,37 @@
                                                         </select>
                                                         <small class="text-danger" v-for="error in errores.tipo_documento_id">@{{ error }}</small>
                                                     </div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-2">
                                                         <input type="text" name="numero_documento" class="form-control" id="numero_documento"
                                                                 v-model="pasaje.numero_documento" placeholder="Número Documento ">
                                                         <small class="text-danger" v-for="error in errores.numero_documento">@{{ error }}</small>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        <!-- /.card-body -->
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card card-success">
-                                            <div class="card-header">
-                                                <h3 class="card-title">Fecha Venta</h3>
-                                            <!-- /.card-tools -->
-                                            </div>
-                                            <!-- /.card-header -->
-                                            <div class="card-body">
-                                                <div class="form-group row">
-                                                    <label for="created_at_venta" class="col-md-3 col-form-label">FECHA VENTA</label>
-                                                    <div class="col-md-6">
-                                                        <input type="date" name="created_at_venta" v-model="pasaje.fecha_venta"
-                                                                class="form-control" id="created_at_venta">
-                                                        <small class="text-danger" v-for="error in errores.fecha_venta">@{{ error }}</small>
+                                                    <label for="etapa_persona_id" class="col-md-1 col-form-label">TIPO</label>
+                                                    <div class="col-md-3">
+                                                        <select class="form-control" v-model="pasaje.etapa_persona_id" name="etapa_persona_id">
+                                                            <option value="">-TIPO PASAJERO-</option>
+                                                            <option v-for="etapa in etapas" :key="etapa.id" :value="etapa.id">
+                                                                @{{etapa.abreviatura}} - @{{etapa.nombre}}
+                                                            </option>
+                                                        </select>
+                                                        <small class="text-danger" v-for="error in errores.etapa_persona_id">@{{ error }}</small>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
-                                                    <label for="ticker_number" class="col-md-3 col-form-label">Nro. Ticket</label>
-                                                    <div class="col-md-6">
-                                                        <input type="text" name="ticket_number" id="ticket_number" v-model="pasaje.ticket_number"
-                                                                class="form-control" placeholder="Número Ticket">
-                                                        <small class="text-danger" v-for="error in errores.ticket_number">@{{ error }}</small>
+                                                    <label for="inputEmail1" class="col-md-1 col-form-label">Pasajero</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="pasajero" class="form-control" id="pasajero"
+                                                                v-model="pasaje.pasajero" placeholder="Nombre pasajero: (RAMIREZ/HECTOR) ">
+                                                        <small class="text-danger" v-for="error in errores.pasajero">@{{ error }}</small>
                                                     </div>
+                                                    {{-- <label for="telefono_pasajero" class="col-md-1 col-form-label">Tel&eacute;fono</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text"  class="form-control"
+                                                                v-model="pasaje.telefono_pasajero" placeholder="Telefono">
+                                                        <small class="text-danger" v-for="error in errores.telefono_pasajero">@{{ error }}</small>
+                                                    </div> --}}
                                                 </div>
                                             </div>
-                                        <!-- /.card-body -->
                                         </div>
                                     </div>
                                 </div>
@@ -309,10 +351,10 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group row">
-                                                            <label for="moneda" class="col-md-3 col-form-label">Monto</label>
+                                                            <label for="moneda" class="col-md-3 col-form-label">Monto Neto</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="monto_neto" id="monto_neto" v-model="pasaje.monto_neto"
-                                                                    class="form-control" placeholder="Monto">
+                                                                    class="form-control" placeholder="Monto" @change="">
                                                                 <small class="text-danger" v-for="error in errores.monto_neto">@{{ error }}</small>
                                                             </div>
                                                             <div class="col-md-3">
@@ -329,16 +371,6 @@
                                                                     class="form-control" placeholder="Tipo cambio: 3.56" value='0.00'>
                                                             </div>
                                                         </div>
-                                                        <!--<div class="form-group row">
-                                                            <label for="inputEmail1" class="col-md-4 col-form-label">Exonerado del IGV</label>
-                                                            <div class="col-md-6">
-                                                                <div class="checkbox">
-                                                                    <label>
-                                                                        <input type="checkbox" name="not_igv" v-model="pasaje.not_igv" checked @change="calcularIgv">
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                        </div>-->
                                                         <div class="form-group row">
                                                             <label for="pago_soles" class="col-md-3 col-form-label">Pago Soles S/ </label>
                                                             <div class="col-md-6">
@@ -393,36 +425,36 @@
                                                             <label for="tax" class="col-md-3 col-form-label">Tax/TUAA</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="tax" id="tax" v-model="pasaje.tax"
-                                                                    class="form-control" placeholder="Tax / Impuestos" @change="">
+                                                                    class="form-control" placeholder="Tax / TUAA" @change="">
                                                                 <small class="text-danger" v-for="error in errores.tax">@{{ error }}</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="service_fee" class="col-md-3 col-form-label">Service FEE</label>
-                                                            <div class="col-md-6">
-                                                                <input type="text" name="service_fee" id="service_fee" v-model="pasaje.service_fee"
-                                                                    class="form-control" placeholder="Service FEE" @change="calcularTotal">
-                                                                <small class="text-danger" v-for="error in errores.service_fee">@{{ error }}</small>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label for="sub_total" class="col-md-3 col-form-label">Sub Total</label>
-                                                            <div class="col-md-6">
-                                                                <input type="text" name="sub_total" id="sub_total" v-model="pasaje.sub_total"
-                                                                    class="form-control" placeholder="Sub Total" readonly >
-                                                                <small class="text-danger" v-for="error in errores.sub_total">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label for="igv" class="col-md-3 col-form-label">I.G.V.:</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="igv" id="igv" v-model="pasaje.igv"
-                                                                    class="form-control" placeholder="0.00"  @change="calcularTotal" >
+                                                                    class="form-control" placeholder="Impuesto / IGV"  @change="calcularTotal" >
                                                                 <small class="text-danger" v-for="error in errores.igv">@{{ error }}</small>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label for="total" class="col-md-3 col-form-label">TOTAL</label>
+                                                            <label for="service_fee" class="col-md-3 col-form-label">Service FEE</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="service_fee" id="service_fee" v-model="pasaje.service_fee"
+                                                                    class="form-control" placeholder="Service FEE" disabled>
+                                                                <small class="text-danger" v-for="error in errores.service_fee">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                        <!--<div class="form-group row">
+                                                            <label for="sub_total" class="col-md-3 col-form-label">Sub Total</label>
+                                                            <div class="col-md-6">
+                                                                <input type="text" name="sub_total" id="sub_total" v-model="pasaje.sub_total"
+                                                                    class="form-control" placeholder="Sub Total" readonly >
+                                                                <small class="text-danger" v-for="error in errores.sub_total">@{{ error }}</small>
+                                                            </div>
+                                                        </div>-->
+                                                        <div class="form-group row">
+                                                            <label for="total" class="col-md-3 col-form-label">TOTAL PAGO</label>
                                                             <div class="col-md-6">
                                                                 <input type="text" name="total" id="total" v-model="pasaje.total"
                                                                     class="form-control" placeholder="TOTAL" readonly>
@@ -431,7 +463,17 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" v-if="pasaje.tipo_pasaje == 'Deuda'">
+                                    <div class="col-md-12">
+                                        <div class="card card-primary">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Detalle Deudas</h3>
+                                            </div>
+                                            <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group row">
@@ -492,6 +534,177 @@
                                                                         v-model="pasaje.deuda_depo_dolares" title="Deuda Depóstio Dolares"
                                                                         placeholder="Depo US$">
                                                                 <small class="text-danger" v-for="error in errores.deuda_depo_dolares">@{{ error }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                 <div class="row"  v-if="pasaje.tipo_pasaje == 'Adicional'">
+                                    <div class="col-md-12">
+                                        <div class="card card-success">
+                                            <div class="card-header">
+                                                <h3 class="card-title">Datos Adicionales</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <label class="col-md-1 col-form-label col-form-label-sm" >Adicional</label>
+                                                    <div class="col-md-4">
+                                                        <select class="form-control" v-model="adicional.adicional_id" name="adicional_name" id="adicional_name"
+                                                            @change="filtroPorIdAdicional">
+                                                            <option value="">-Adicionales.-</option>
+                                                            <option v-for="adic in adicionales" :key="adic.id" :value="adic.id">
+                                                                @{{adic.descripcion}}
+                                                            </option>
+                                                        </select>
+                                                        <small class="text-danger" v-for="error in errores.adicional_id">@{{ error }}</small>
+                                                        <input type="text" class="form-control form-control-sm"
+                                                                v-model="adicional.detalle" id="detalle" title="Detalle Otros"
+                                                                placeholder="Detalle Descripción">
+                                                        <small class="text-danger" v-for="error in errores.detalle">@{{ error }}</small>
+                                                    </div>
+                                                    <div class="col-md-2"><input type="text" class="form-control form-control-sm" placeholder="Monto" v-model="adicional.monto" id="montod" title="Monto Del Detalle"></div>
+                                                    <div class="col-md-2"><input type="text" class="form-control form-control-sm" placeholder="Service FEE" v-model="adicional.service_fee" id="fee" title="Ingrese Service Fee"></div>
+                                                    <div class="col-md-2"><button type="button" class="btn btn-danger btn-sm" @click="agregarAdicional">A&ntildeadir</button></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-sm table-bordered">
+                                                                <thead class="bg-dark">
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Id</th>
+                                                                        <th>Detalle</th>
+                                                                        <th>Monto</th>
+                                                                        <th>Service FEE</th>
+                                                                        <th>Importe</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr v-if="pasaje.opcional.adicionales.length==0">
+                                                                        <td colspan="5" class="text-danger text-center">--Datos No Añadidos--</td>
+                                                                    </tr>
+                                                                    <tr v-else v-for="(adic,index) in pasaje.opcional.adicionales">
+                                                                        <td><button type="button" class="btn btn-danger btn-sm" @click="eliminarAdicional(index)"><i class="fas fa-trash"></i></button></td>
+                                                                        <td>@{{adic.adicional_id}}</td>
+                                                                        <td>@{{adic.detalle }}</td>
+                                                                        <td>@{{adic.monto.toFixed(2)}}</td>
+                                                                        <td>@{{adic.service_fee.toFixed(2)}}</td>
+                                                                        <td>@{{adic.importe.toFixed(2)}}</td>
+                                                                    </tr>
+                                                                    <tr v-if="pasaje.opcional.adicionales.length>0">
+                                                                        <td colspan="3"></td>
+                                                                        <td></td>
+                                                                        <th class="bg-dark text-right">TOTAL</th>
+                                                                        <td>@{{ total_importe }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="card card-info">
+                                                            <div class="card-header">
+                                                                <h3 class="card-title">Detalles Montos</h3>
+                                                            <!-- /.card-tools -->
+                                                            </div>
+                                                            <!-- /.card-header -->
+                                                            <div class="card-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group row">
+                                                                            <label for="moneda" class="col-md-3 col-form-label">Monto</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="monto_pagar" id="monto_pagar" v-model="pasaje.opcional.monto_pagar"
+                                                                                    class="form-control" placeholder="Monto" value='0.00' @change="calcularTotal" readonly >
+                                                                            </div>
+                                                                            <div class="col-md-3">
+                                                                                <select name="moneda" class="form-control" v-model="pasaje.opcional.moneda">
+                                                                                    <option value="USD">D&oacute;lares</option>
+                                                                                </select>
+                                                                                <small class="text-danger" v-for="error in errores.moneda">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="moneda" class="col-md-3 col-form-label">Tipo Cambio</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="cambio" id="cambio" v-model="pasaje.opcional.cambio"
+                                                                                    class="form-control" placeholder="Tipo cambio: 3.56" value='0.00'>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="pago_soles" class="col-md-4 col-form-label">Pago Soles</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="pago_soles" id="pago_soles" v-model="pasaje.opcional.pago_soles"
+                                                                                    class="form-control" placeholder="Pago Soles (S/)">
+                                                                                <small class="text-danger" v-for="error in errores.pago_soles">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="pago_dolares" class="col-md-4 col-form-label">Pago Dolares</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="pago_dolares" id="pago_dolares" v-model="pasaje.opcional.pago_dolares"
+                                                                                    class="form-control" placeholder="Pago Soles (USD$)">
+                                                                                <small class="text-danger" v-for="error in errores.pago_dolares">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="pago_visa" class="col-md-4 col-form-label">Pago Visa</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="pago_visa" id="pago_visa" v-model="pasaje.opcional.pago_visa"
+                                                                                    class="form-control" placeholder="Pago Visa">
+                                                                                <small class="text-danger" v-for="error in errores.pago_visa">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="deposito_soles" class="col-md-4 col-form-label">Dep&oacute;sito Soles</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="deposito_soles" id="deposito_soles" v-model="pasaje.opcional.deposito_soles"
+                                                                                    class="form-control" placeholder="Pago Visa">
+                                                                                <small class="text-danger" v-for="error in errores.deposito_soles">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="deposito_dolares" class="col-md-4 col-form-label">Dep&oacute;sito Dolares</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="deposito_dolares" id="deposito_dolares" v-model="pasaje.opcional.deposito_dolares"
+                                                                                    class="form-control" placeholder="Pago Visa">
+                                                                                <small class="text-danger" v-for="error in errores.deposito_dolares">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group row">
+                                                                            <label for="sub_total" class="col-md-3 col-form-label">Sub Total</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="sub_total" id="sub_total" v-model="pasaje.opcional.sub_total"
+                                                                                    class="form-control" placeholder="Sub Total" readonly  >
+                                                                                <small class="text-danger" v-for="error in errores.sub_total">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="igv" class="col-md-3 col-form-label">I.G.V.:</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="igv" id="igv" v-model="pasaje.opcional.igv"
+                                                                                    class="form-control" placeholder="0.00"  @change="calcularTotalAdicional" >
+                                                                                <small class="text-danger" v-for="error in errores.igv">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="total" class="col-md-3 col-form-label">TOTAL</label>
+                                                                            <div class="col-md-6">
+                                                                                <input type="text" name="total" id="total" v-model="pasaje.opcional.total"
+                                                                                    class="form-control" placeholder="TOTAL" readonly>
+                                                                                <small class="text-danger" v-for="error in errores.total">@{{ error }}</small>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

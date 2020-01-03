@@ -24,6 +24,11 @@ class AerolineaController extends Controller
     public function filtro() {
         return Aerolinea::select('id','name')->get();
     }
+    public function filtroByID(Request $request) {
+        return Aerolinea::where('id',$request->id)
+                        ->select('id','name','description','ruc','direccion')
+                        ->first();
+    }
     public function create()
     {
         //

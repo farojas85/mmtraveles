@@ -29,10 +29,10 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
         case 614 : $aerolinea='images/aerolineas/avianca.png';break;
         case 615 : $aerolinea='images/aerolineas/starperu.jpg';break;
         case 616 : $aerolinea='images/aerolineas/viva_air.png';break;
-        case 621 : $aerolinea='images/aerolineas/startup.png';break;
+        case 617 : case 621 : $aerolinea='images/aerolineas/starperu.jpg';break;
         case 622 : $aerolinea='images/aerolineas/atsa.jpeg';break;
         case 623 : $aerolinea='images/aerolineas/aero_mexico.jpg';break;
-        case 628 : $aerolinea='images/aerolineas/sky_Airline.png';break;
+        case 628 : $aerolinea='images/aerolineas/sky.jpg';break;
 
     }
 
@@ -427,10 +427,10 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
         case 614 : $aerolinea='images/aerolineas/avianca.png';break;
         case 615 : $aerolinea='images/aerolineas/starperu.jpg';break;
         case 616 : $aerolinea='images/aerolineas/viva_air.png';break;
-        case 621 : $aerolinea='images/aerolineas/startup.png';break;
+        case 617 : case 621 : $aerolinea='images/aerolineas/starperu.jpg';break;
         case 622 : $aerolinea='images/aerolineas/atsa.jpeg';break;
         case 623 : $aerolinea='images/aerolineas/aero_mexico.jpg';break;
-        case 628 : $aerolinea='images/aerolineas/sky_Airline.png';break;
+        case 628 : $aerolinea='images/aerolineas/sky.jpg';break;
     }
 
     $aerolin = App\Aerolinea::findOrFail($pasaje->aerolinea_id);
