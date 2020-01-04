@@ -601,16 +601,11 @@ class PasajeController extends Controller
             $request->fecha =  Carbon::now()->format('Y-m-d');
         }
         return  Pasaje::join('user as u','u.id','=','pasaje.counter_id')
-                       ->join('locals as l','l.id','=','u.local_id')
-                       ->select('l.id','l.nombre',
+                       ->select('u.id','u.name',
                             DB::Raw("COUNT(pasaje.id) as cantidad"))
                         ->where('pasaje.created_at_venta',$request->fecha)
-                        ->where('deuda_soles',0)
-                        ->where('deuda_dolares',0)
-                        ->where('deuda_visa',0)
-                        ->where('deuda_depo_soles',0)
-                        ->where('deuda_depo_dolares',0)
-                        ->groupBy('l.id','l.nombre')
+                        ->whereNull('pasaje.deuda_detalle')
+                        ->groupBy('u.id','u.name')
                         ->get();
     }
 }

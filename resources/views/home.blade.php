@@ -59,11 +59,11 @@
                     <div class="card caard-default">
                         <div class="card-header">
                             <h3 class="card-title">
-                                Pasajes Pagados x Local
+                                Pasajes Vendidos por Counter - HOY
                             </h3>
                         </div>
                         <div class="card-body">
-                            <input type="date" class="form-control" v-model="pie_fecha_local_pagados" @change="piePagadosLocal">
+                            <input type="date" class="form-control" id="fecha_dia" onchange="pagadosDia()">
                             <div class="chartjs-size-monitor">
                                 <div class="chartjs-size-monitor-expand">
                                     <div class=""></div>
@@ -72,7 +72,7 @@
                                     <div class=""></div>
                                 </div>
                             </div>
-                            <canvas id="pieChart" style="height: 230px; min-height: 230px; display: block; width: 488px;" width="488" height="230" class="chartjs-render-monitor"></canvas>
+                            <canvas id="pieChart" style="height: 300px; min-height: 230px; display: block; width: 488px;" width="488" height="300" class="chartjs-render-monitor"></canvas>
                         </div>
                     </div>
                 </div>
@@ -102,8 +102,5 @@
 @endsection
 
 @section('scripties')
-
-<!-- ChartJS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
 <script src="js/sistema/home.js"></script>
 @endsection

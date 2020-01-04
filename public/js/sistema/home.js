@@ -1,69 +1,100 @@
-var app = new Vue({
-    el:'#wrapper',
-    data:{
-        pie_fecha_local_pagados:'',
-    },
-    mounted() {
-        this.piePagadosLocal()
-    },
-    methods:{
-        fechaHoy()
-        {
-            var f= new Date();
+var pie_pagados = null
+var fecha = null
+var pagados=null
 
-            var depa =f.getFullYear() +'-'+ (f.getMonth() +1) +'-'+ f.getDate()
-            this.pie_fecha_local_pagados = depa;
-        },
-        colorAletorio(){
-            return  "#000000".replace(/0/g, () => (~~(Math.random() * 16)).toString(16))
-        },
-        piePagadosLocal()
-        {
-            axios.get('graficas/local-pagados',{params:{fecha:this.pie_fecha_local_pagados}})
-            .then((response) => {
-                let pagados = response.data;
+$(function () {
+    var f= new Date();
+    var anio = f.getFullYear();
+    var mes = (f.getMonth() +1) < 10 ? '0'+(f.getMonth() +1) : (f.getMonth() +1)
+    var dia = f.getDate() < 10 ? '0'+f.getDate() : f.getDate()
+    var fecha = anio+'-'+ mes+'-'+ dia
+    fecha=''
+    $.ajax({
+        url: 'graficas/local-pagados?fecha='+fecha,
+        type:"GET",
+        success: function (response) {
 
-                var datos = {
-                    labels :[],
-                    dataset :[]
-                }
-                var set =[]
-                var color=[]
-                pagados.forEach(item => {
-                    datos.labels.push(item.nombre)
-                    set.push(item.cantidad)
-                    color.push(this.colorAletorio())
-                })
-                datos.dataset.data = set
-                datos.dataset.color = color
+           pagados =  response
+           var datos = {
+                labels :[],
+                datasets :[]
+            }
+            var set =[]
+            var color=[]
 
-                // const ctx = document.getElementById('pieChart');
-                //     const myChart = new Chart(ctx, {
-                //     type: 'pie',
-                //     data: datos,
-                //     options: {
-                //         maintainAspectRatio : false,
-                //         responsive : true,
-                //     },
-                // });
-                // var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
-                // var pieData        = datos;
-                // var pieOptions     = {
-                //     maintainAspectRatio : false,
-                //     responsive : true,
-                // }
-
-                // var pieChart = new Chart(pieChartCanvas, {
-                //     type: 'pie',
-                //     data: pieData,
-                //     options: pieOptions
-                // })
+            pagados.forEach(item => {
+                datos.labels.push(item.name)
+                set.push(item.cantidad)
+                color.push(colorAletorio())
             })
+            datos.datasets = [
+                {
+                    data :  set,
+                    backgroundColor: color
+                }
+            ]
 
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieData        = datos;
+            var pieOptions     = {
+              //maintainAspectRatio : false,
+              responsive : true,
+            }
+
+            var pieChart = new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions
+            })
         }
-    },
-    created() {
-        this.fechaHoy()
-        this.piePagadosLocal()
-    }
-})
+    });
+
+});
+
+function colorAletorio(){
+    return  "#000000".replace(/0/g, () => (~~(Math.random() * 16)).toString(16))
+}
+
+function pagadosDia()
+{
+    fecha_dia = $('#fecha_dia').val()
+    $.ajax({
+        url: 'graficas/local-pagados?fecha='+fecha_dia,
+        type:"GET",
+        success: function (response) {
+
+           pagados =  response
+           var datos = {
+                labels :[],
+                datasets :[]
+            }
+            var set =[]
+            var color=[]
+
+            pagados.forEach(item => {
+                datos.labels.push(item.name)
+                set.push(item.cantidad)
+                color.push(colorAletorio())
+            })
+            datos.datasets = [
+                {
+                    data :  set,
+                    backgroundColor: color
+                }
+            ]
+
+            var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+            var pieData        = datos;
+            var pieOptions     = {
+              //maintainAspectRatio : false,
+              responsive : true,
+            }
+
+            var pieChart = new Chart(pieChartCanvas, {
+                type: 'pie',
+                data: pieData,
+                options: pieOptions
+            })
+        }
+    });
+}
