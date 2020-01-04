@@ -72,11 +72,11 @@
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <label class="col-form-label col-md-2 text-right" v-if="pasaje.tipo_pasaje=='Adicional'">Ticket Anterior:</label>
+                                                    <!--<label class="col-form-label col-md-2 text-right" v-if="pasaje.tipo_pasaje=='Adicional'">Ticket Anterior:</label>
                                                     <div class="col-md-2">
                                                         <input type="text" class="form-control" v-model="pasaje.ticket_anterior"
                                                                 v-if="pasaje.tipo_pasaje=='Adicional'" @change="">
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="ticker_number" class="col-md-2 col-form-label">Nro. Ticket</label>

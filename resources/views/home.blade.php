@@ -55,11 +55,12 @@
                 </div>
             </div>
             <div class="row">
+                @if($role_name =='Administrador' || $role_name == 'Gerente')
                 <div class="col-md-6">
                     <div class="card caard-default">
                         <div class="card-header">
                             <h3 class="card-title">
-                                Pasajes Vendidos por Counter - HOY
+                                Total Pasajes Por Counter
                             </h3>
                         </div>
                         <div class="card-body">
@@ -76,7 +77,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6"></div>
+                @endif
+                <div class="col-md-6">
+                    <div class="card caard-default">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                Total pasajes por Aerolinea
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <input type="date" class="form-control" id="fecha_dia_aero" onchange="aeroDia()">
+                            <div class="chartjs-size-monitor">
+                                <div class="chartjs-size-monitor-expand">
+                                    <div class=""></div>
+                                </div>
+                                <div class="chartjs-size-monitor-shrink">
+                                    <div class=""></div>
+                                </div>
+                            </div>
+                            <canvas id="pieChartAero" style="height: 300px; min-height: 230px; display: block; width: 488px;" width="488" height="300" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

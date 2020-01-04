@@ -266,10 +266,10 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->Cell(40,4, utf8_decode('TAX/TUAA :'),0,0,'R',0);
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(60,120);
-    $fpdf->Cell(30,4,$moneda." ".number_format($pasaje->tax,2)." PE",0,0,'L',0);
+    $fpdf->Cell(30,4,$moneda." ".number_format($pasaje->tax,2)." OD",0,0,'L',0);
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(90,120);
-    //$fpdf->Cell(30,4,number_format($pasaje->tax*$pasaje->cambio,2)." OD",0,0,'L',0);
+    $fpdf->Cell(30,4,number_format($pasaje->igv,2)." OD",0,0,'L',0);
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,124);
     $fpdf->Cell(40,4, utf8_decode('SERVICE FEE  :'),0,0,'R',0);
@@ -667,11 +667,11 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->Cell(40,4, utf8_decode('TAX/TUAA :'),0,0,'R',0);
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(60,120);
-    $fpdf->Cell(30,4,$moneda." ".number_format($pasaje->tax,2)." PE",0,0,'L',0);
+    $fpdf->Cell(30,4,$moneda." ".number_format($pasaje->tax,2)." OD",0,0,'L',0);
     $fpdf->SetFont('Courier', 'B', 10);
 
     $fpdf->setXY(90,120);
-    //$fpdf->Cell(30,4,number_format($pasaje->tax*$pasaje->cambio,2)." OD",0,0,'L',0);
+    $fpdf->Cell(30,4,number_format($pasaje->igv,2)." OD",0,0,'L',0);
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,124);
     $fpdf->Cell(40,4, utf8_decode('SERVICE FEE  :'),0,0,'R',0);

@@ -174,7 +174,6 @@ var app = new Vue({
                 this.adic_service_fee = 0
                 this.adicionales.forEach(element => {
                     this.suma_adicionales += parseFloat(element.total)
-                    this.adic_service_fee =  parseFloat(this.adic_service_fee) + parseFloat(element.service_fee)
                     this.adic_soles = parseFloat(this.adic_soles) + parseFloat(element.pago_soles)
                     this.adic_dolares = parseFloat(this.adic_dolares) + parseFloat(element.pago_dolares)
                     this.adic_visa = parseFloat(this.adic_visa) + parseFloat(element.pago_visa)
@@ -255,6 +254,7 @@ var app = new Vue({
                 this.total_visa = parseFloat(this.repo_visa) + parseFloat(this.adic_visa)
                 this.total_deposito_soles = parseFloat(this.repo_depo_soles) + parseFloat(this.adic_depo_soles)
                 this.total_deposito_dolares = parseFloat(this.repo_depo_dolares) + parseFloat(this.adic_depo_dolares)
+                this.adic_service_fee = (this.adic_service_fee == '' || this.adic_service_fee == null) ? 0 : this.adic_service_fee
                 this.total_service_fee = parseFloat(this.repo_service_fee) + parseFloat(this.adic_service_fee)
         },
         mostrarPasajePagado(id) {

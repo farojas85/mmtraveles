@@ -153,7 +153,7 @@ Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], funct
 
 Route::group(['prefix' => 'graficas', 'middleware' => 'auth'], function(){
     Route::get('local-pagados', 'PasajeController@pagadoLocal');
-
+    Route::get('total-aerolinea','PasajeController@pasajesAerolinea');
 });
 
 Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function(){

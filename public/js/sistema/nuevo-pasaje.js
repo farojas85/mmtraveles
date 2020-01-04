@@ -1,7 +1,7 @@
 var app = new Vue({
     el:'#wrapper',
     data:{
-        tipoPasaje:['Pagado','Deuda'],
+        tipoPasaje:['Pagado','Deuda','Adicional'],
         pasaje:{
             tipo_pasaje:'Pagado',
             etapa_persona_id:'',
@@ -210,10 +210,10 @@ var app = new Vue({
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
-
                             this.impresion=true
-                            document.getElementById("btn-guardar").disabled = true;
-                            //window.location.href="pasajeCreate"
+                            window.open('imprimirPasaje/'+this.pasaje_id,'_blank')
+                            window.location.href="pasajeCreate"
+                            //document.getElementById("btn-guardar").disabled = true;
                         }
                     })
                 })
