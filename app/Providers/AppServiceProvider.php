@@ -5,27 +5,21 @@ namespace App\Providers;
 use App\Aerolinea;
 use App\Lugar;
 use App\User;
+use App\Pasaje;
+use DB;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+
     public function register()
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
     public function boot()
     {
         Schema::defaultStringLength(191);
@@ -53,4 +47,6 @@ class AppServiceProvider extends ServiceProvider
             $view->with('role_name',$role_name);
         });
     }
+
+
 }

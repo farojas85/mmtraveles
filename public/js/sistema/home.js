@@ -3,8 +3,13 @@ var fecha = null
 var pagados=null
 
 $(function () {
-    pagadosHoy()
-    aeroHoy()
+    var role =$('#role_name_name').val()
+    if( role=='Administrado' || role== 'Gerente' || role == 'Responsable')
+    {
+        pagadosHoy()
+        aeroHoy()
+    }
+    resumenHoy()
 });
 
 function colorAletorio(){
@@ -110,6 +115,7 @@ function aeroHoy() {
     var mes = (f.getMonth() +1) < 10 ? '0'+(f.getMonth() +1) : (f.getMonth() +1)
     var dia = f.getDate() < 10 ? '0'+f.getDate() : f.getDate()
     var fecha = anio+'-'+ mes+'-'+ dia
+    var total = 0
     fecha=''
     $.ajax({
         url: 'graficas/total-aerolinea?fecha='+fecha,
@@ -122,10 +128,11 @@ function aeroHoy() {
             }
             var set =[]
             var color=[]
-
+            total = 0
             aeros.forEach(item => {
                 datos.labels.push(item.name)
                 set.push(item.cantidad)
+                total = parseInt(total) + parseInt(item.cantidad)
                 color.push(colorAletorio())
             })
             datos.datasets = [
@@ -191,4 +198,32 @@ function aeroDia() {
             })
         }
     });
+}
+
+function resumenHoy() {
+    var f= new Date();
+    var anio = f.getFullYear();
+    var mes = (f.getMonth() +1) < 10 ? '0'+(f.getMonth() +1) : (f.getMonth() +1)
+    var dia = f.getDate() < 10 ? '0'+f.getDate() : f.getDate()
+    var fecha = anio+'-'+ mes+'-'+ dia
+    var total = 0
+    fecha=''
+    $.ajax({
+        url: 'graficas/resumen-counter?fecha='+fecha,
+        type:"GET",
+        success: function (response) {
+            $("#resumen-tabla").html(response)
+        }
+    })
+}
+
+function resumenDia() {
+    fecha=$('#fecha_dia_resumen').val()
+    $.ajax({
+        url: 'graficas/resumen-counter?fecha='+fecha,
+        type:"GET",
+        success: function (response) {
+            $("#resumen-tabla").html(response)
+        }
+    })
 }

@@ -623,4 +623,59 @@ class PasajeController extends Controller
                             ->groupBy('ae.id','ae.name')
                             ->get();
     }
+
+    public function pasajeResumen(Request $request)
+    {
+        $user = User::with('roles')->where('id',Auth::user()->id)->first();
+        $role_name ='';
+        $pasaje = null;
+
+        foreach($user->roles as $role)
+        {
+            $role_name = $role->name;
+        }
+
+        if($request->fecha == '' || $request->fecha == null)
+        {
+            $request->fecha =  Carbon::now()->format('Y-m-d');
+        }
+
+        $fecha_hoy = Carbon::now()->format('Y-m-d');
+        $fecha_seven = Carbon::now()->subDays(7)->format('Y-m-d');
+
+        if($role_name == 'Administrador' || $role_name == 'Gerente' || $role_name =='Responsable')
+        {
+            $pasaje =  Pasaje::join('user as us','pasaje.counter_id','=','us.id')
+                        ->select( 'us.name','us.lastname','created_at_venta as fecha',
+                                    DB::Raw("sum(pago_soles) as pago_soles"),
+                                    DB::Raw("sum(pago_dolares) as pago_dolares"),
+                                    DB::Raw("sum(deposito_soles) as deposito_soles"),
+                                    DB::Raw("sum(deposito_dolares) as deposito_dolares"),
+                                    DB::Raw("sum(service_fee) as service_fee"))
+                        ->where('created_at_venta','=',$request->fecha)
+                        ->groupBy('us.name','us.lastname','created_at_venta')
+                        ->orderBy('us.name')
+                        ->get();
+        }
+        else {
+            $pasaje = Pasaje::select('created_at_venta as fecha',
+                                    DB::Raw("sum(pago_soles) as pago_soles"),
+                                    DB::Raw("sum(pago_dolares) as pago_dolares"),
+                                    DB::Raw("sum(deposito_soles) as deposito_soles"),
+                                    DB::Raw("sum(deposito_dolares) as deposito_dolares"),
+                                    DB::Raw("sum(service_fee) as service_fee"))
+                        ->where('created_at_venta','>=',$fecha_seven)
+                        ->where('created_at_venta','<=',$fecha_hoy)
+                        ->where('counter_id',Auth::user()->id)
+                        ->groupBy('created_at_venta')
+                        ->orderBy('created_at_venta','DESC')
+                        ->get();
+        }
+
+        return view('resumen',compact('role_name','pasaje'));
+    }
+    public function pasajesCounter()
+    {
+
+    }
 }

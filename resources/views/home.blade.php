@@ -21,6 +21,7 @@
     </div>
     <section class="content">
         <div class="container-fluid">
+            <input type="hidden" id="role_name_name" value="{{$role_name}}" >
             <div class="row">
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
@@ -54,8 +55,8 @@
                     </div>
                 </div>
             </div>
+            @if($role_name =='Administrador' || $role_name == 'Gerente' || $role_name == 'Responsable')
             <div class="row">
-                @if($role_name =='Administrador' || $role_name == 'Gerente')
                 <div class="col-md-6">
                     <div class="card caard-default">
                         <div class="card-header">
@@ -74,10 +75,13 @@
                                 </div>
                             </div>
                             <canvas id="pieChart" style="height: 300px; min-height: 230px; display: block; width: 488px;" width="488" height="300" class="chartjs-render-monitor"></canvas>
+                            <div class="row">
+                                <label for="" class="col-md-6">TOTAL</label>
+                                <input type="text" class="form-control col-md-6" id="total_counter">
+                            </div>
                         </div>
                     </div>
                 </div>
-                @endif
                 <div class="col-md-6">
                     <div class="card caard-default">
                         <div class="card-header">
@@ -100,27 +104,14 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-@endsection
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    You are logged in!
+            @endif
+            <div class="row">
+                <div class="col-md-12" id="resumen-tabla">
+
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 @endsection
 
 @section('scripties')
