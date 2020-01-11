@@ -5,7 +5,7 @@
         </li>
     </ul>
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3">
+    <!---<form class="form-inline ml-3">
         <div class="input-group input-group-sm">
             <input class="form-control form-control-navbar" type="search" placeholder="Buscar..."
                 aria-label="Search">
@@ -15,7 +15,7 @@
                 </button>
             </div>
         </div>
-    </form>
+    </form>-->
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">

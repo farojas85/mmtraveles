@@ -65,7 +65,12 @@
                             </h3>
                         </div>
                         <div class="card-body">
-                            <input type="date" class="form-control" id="fecha_dia" onchange="pagadosDia()">
+                            <div class="row">
+                                <label for="" class="col-md-3 col-form-label text-right">Fecha Inicio</label>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" id="fecha_dia" onchange="pagadosDia()">
+                                </div>
+                            </div>
                             <div class="chartjs-size-monitor">
                                 <div class="chartjs-size-monitor-expand">
                                     <div class=""></div>

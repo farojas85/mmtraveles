@@ -73,6 +73,8 @@ class PasajeController extends Controller
         $pasaje->pasajero = $request->pasajero;
         $pasaje->tipo_documento_id = $request->tipo_documento_id;
         $pasaje->numero_documento = $request->numero_documento;
+        $pasaje->telefono_pasajero = $request->telefono_pasajero;
+        $pasaje->email_pasajero = $request->email_pasajero;
         $pasaje->etapa_persona_id = $request->etapa_persona_id;
         $pasaje->local_id = $request->local_id;
         $pasaje->dni = null;
@@ -674,8 +676,9 @@ class PasajeController extends Controller
 
         return view('resumen',compact('role_name','pasaje'));
     }
-    public function pasajesCounter()
-    {
 
+    public function pasajeroInicio()
+    {
+        return View('pasaje.busquedaPasajero');
     }
 }

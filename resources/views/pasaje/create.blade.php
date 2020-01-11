@@ -148,12 +148,18 @@
                                                                 v-model="pasaje.pasajero" placeholder="Nombre pasajero: (RAMIREZ/HECTOR) ">
                                                         <small class="text-danger" v-for="error in errores.pasajero">@{{ error }}</small>
                                                     </div>
-                                                    {{-- <label for="telefono_pasajero" class="col-md-1 col-form-label">Tel&eacute;fono</label>
-                                                    <div class="col-md-3">
+                                                    <label for="telefono_pasajero" class="col-md-1 col-form-label">Tel&eacute;fono</label>
+                                                    <div class="col-md-2">
                                                         <input type="text"  class="form-control"
                                                                 v-model="pasaje.telefono_pasajero" placeholder="Telefono">
                                                         <small class="text-danger" v-for="error in errores.telefono_pasajero">@{{ error }}</small>
-                                                    </div> --}}
+                                                    </div>
+                                                    <label for="email_pasajero" class="col-md-2 col-form-label">Correo Electr&oacute;nico</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text"  class="form-control"
+                                                                v-model="pasaje.email_pasajero" placeholder="Correo Electrónico">
+                                                        <small class="text-danger" v-for="error in errores.email_pasajero">@{{ error }}</small>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

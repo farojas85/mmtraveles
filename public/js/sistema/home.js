@@ -1,10 +1,11 @@
 var pie_pagados = null
 var fecha = null
 var pagados=null
-
+var pieChart = null
+var pieChartAero = null
 $(function () {
     var role =$('#role_name_name').val()
-    if( role=='Administrado' || role== 'Gerente' || role == 'Responsable')
+    if( role=='Administrador' || role== 'Gerente' || role == 'Responsable')
     {
         pagadosHoy()
         aeroHoy()
@@ -19,6 +20,7 @@ function colorAletorio(){
 function pagadosDia()
 {
     fecha_dia = $('#fecha_dia').val()
+
     $.ajax({
         url: 'graficas/local-pagados?fecha='+fecha_dia,
         type:"GET",
@@ -51,7 +53,14 @@ function pagadosDia()
               responsive : true,
             }
 
-            var pieChart = new Chart(pieChartCanvas, {
+            if(window.pieChart)
+            {
+                window.pieChart.clear()
+                window.pieChart.destroy()
+            }
+            //pieChart.clear()
+
+            window.pieChart = new Chart(pieChartCanvas, {
                 type: 'pie',
                 data: pieData,
                 options: pieOptions
@@ -68,6 +77,9 @@ function pagadosHoy()
     var dia = f.getDate() < 10 ? '0'+f.getDate() : f.getDate()
     var fecha = anio+'-'+ mes+'-'+ dia
     fecha=''
+    var canvas = document.getElementById('pieChart')
+    $('#pieChart').get(0).getContext('2d').clearRect(0,0,canvas.width,canvas.height)
+
     $.ajax({
         url: 'graficas/local-pagados?fecha='+fecha,
         type:"GET",
@@ -100,7 +112,13 @@ function pagadosHoy()
               responsive : true,
             }
 
-            var pieChart = new Chart(pieChartCanvas, {
+            if(window.pieChart)
+            {
+                window.pieChart.clear()
+                window.pieChart.destroy()
+            }
+
+            window.pieChart = new Chart(pieChartCanvas, {
                 type: 'pie',
                 data: pieData,
                 options: pieOptions
@@ -149,7 +167,14 @@ function aeroHoy() {
               responsive : true,
             }
 
-            var pieChart = new Chart(pieChartCanvas, {
+
+            if(window.pieChartAero)
+            {
+                window.pieChart.clear()
+                window.pieChart.destroy()
+            }
+
+            window.pieChartAero = new Chart(pieChartCanvas, {
                 type: 'pie',
                 data: pieData,
                 options: pieOptions
@@ -191,7 +216,13 @@ function aeroDia() {
               responsive : true,
             }
 
-            var pieChart = new Chart(pieChartCanvas, {
+            if(window.pieChartAero)
+            {
+                window.pieChartAero.clear()
+                window.pieChartAero.destroy()
+            }
+
+            window.pieChartAero = new Chart(pieChartCanvas, {
                 type: 'pie',
                 data: pieData,
                 options: pieOptions

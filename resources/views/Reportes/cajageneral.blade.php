@@ -117,10 +117,9 @@
                                     <button type="button" class="btn btn-primary btn-sm" @click="buscar">
                                         <i class="fas fa-search"></i> Buscar
                                     </button>
-                                    <a class="btn btn-success btn-sm"
-                                        href="excelReporte" >
+                                    <button type="button" class="btn btn-success btn-sm" @click="descargar">
                                         <i class="fas fa-file-excel"></i> Exportar
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
                             <div class="row " id="detalle-tabla">

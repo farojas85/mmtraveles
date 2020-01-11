@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\PasajeController;
 use Codedge\Fpdf\Fpdf\Fpdf;
+use Carbon\Carbon;
+use App\Local;
 
 Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
 
@@ -18,7 +20,7 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
 
     $empresa = App\Empresa::where('id','=',$user->local->empresa_id)->first();
 
-    $local = App\Local::where('id',$user->local_id)->first();
+    $local = App\Local::where('id',$pasaje->local_id)->first();
 
     $aerolinea='';
     switch($pasaje->aerolinea_id)
@@ -74,9 +76,13 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(20,56);
     $fpdf->Cell(60,4,"TELEPHONE/TELEFONO:",0,0,'L',0);
+    $fpdf->setXY(60,56);
+    $fpdf->Cell(60,4,$local->telefono,0,0,'L',0);
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(20,60);
     $fpdf->Cell(60,4,"EMAIL/CORREO:",0,0,'L',0);
+    $fpdf->setXY(48,60);
+    $fpdf->Cell(60,4,$local->email,0,0,'L',0);
 
     //cabecera pasaje
     $fpdf->SetFont('Courier', 'B', 10);
@@ -84,7 +90,7 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->Cell(40,4, utf8_decode('FECHA DE EMISIÓN:'),0,0,'R',0);
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(150,44);
-    $fpdf->Cell(30,4, explode(" ",$pasaje->created_at)[0],0,0,'L',0);
+    $fpdf->Cell(30,4, Carbon::parse($pasaje->created_at_venta)->format('d-m-Y'),0,0,'L',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
 	$fpdf->setXY(110,48);
@@ -124,7 +130,7 @@ Route::get('pasajePdf', function (Codedge\Fpdf\Fpdf\Fpdf $fpdf) {
     $fpdf->setXY(20,74);
     $fpdf->Cell(78,4, utf8_decode('ADRESS/DIRECCION:'),0,0,'',0);
 
-    $fpdf->SetFont('Courier', '', 7);
+    $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(98,74);
     $fpdf->Cell(80,4,mb_substr($pasaje->direccion,0,48),0,0,'L',0);
 
@@ -413,7 +419,7 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     /*$local = App\Local::join('local_user as lu','locals.id','=','lu.local_id')
                             ->where('lu.user_id',$pasaje->counter_id)
                             ->first();*/
-    $local = App\Local::where('id',$pasaje->user->local_id)->first();
+    $local = Local::where('id',$pasaje->local_id)->first();
 
     $empresa = App\Empresa::where('id','=',$local->empresa->id)->first();
 
@@ -473,9 +479,13 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(20,56);
     $fpdf->Cell(60,4,"TELEPHONE/TELEFONO:",0,0,'L',0);
+    $fpdf->setXY(60,56);
+    $fpdf->Cell(60,4,$local->telefono,0,0,'L',0);
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(20,60);
     $fpdf->Cell(60,4,"EMAIL/CORREO:",0,0,'L',0);
+    $fpdf->setXY(48,60);
+    $fpdf->Cell(60,4,$local->email,0,0,'L',0);
 
     //cabecera pasaje
     $fpdf->SetFont('Courier', 'B', 10);
@@ -483,7 +493,7 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->Cell(40,4, utf8_decode('FECHA DE EMISIÓN:'),0,0,'R',0);
     $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(150,44);
-    $fpdf->Cell(30,4, explode(" ",$pasaje->created_at)[0],0,0,'L',0);
+    $fpdf->Cell(30,4, Carbon::parse($pasaje->created_at_venta)->format('d-m-Y'),0,0,'L',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
 	$fpdf->setXY(110,48);
@@ -523,9 +533,9 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
     $fpdf->setXY(20,74);
     $fpdf->Cell(78,4, utf8_decode('ADRESS/DIRECCION:'),0,0,'',0);
 
-    $fpdf->SetFont('Courier', '', 7);
+    $fpdf->SetFont('Courier', '', 10);
     $fpdf->setXY(98,74);
-    $fpdf->Cell(80,4,mb_substr($pasaje->direccion,0,48),0,0,'L',0);
+    $fpdf->Cell(70,4,mb_substr($pasaje->direccion,0,48),0,0,'L',0);
 
     $fpdf->SetFont('Courier', 'B', 10);
     $fpdf->setXY(20,78);
@@ -602,10 +612,10 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
         $fpdf->Cell(10,4, $pasaje->cl_vuelta,0,0,'C',0);
 
         $fpdf->setXY(110,108);
-        $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
+        $fpdf->Cell(20,4, Carbon::parse($pasaje->fecha_vuelo)->format('d-m-Y'),0,0,'C',0);
 
         $fpdf->setXY(110,112);
-        $fpdf->Cell(20,4, $pasaje->fecha_retorno,0,0,'C',0);
+        $fpdf->Cell(20,4, Carbon::parse($pasaje->fecha_retorno)->format('d-m-Y'),0,0,'C',0);
 
         $fpdf->setXY(130,108);
         $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);
@@ -637,7 +647,7 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
         $fpdf->Cell(10,4, $pasaje->cl,0,0,'C',0);
 
         $fpdf->setXY(110,108);
-        $fpdf->Cell(20,4, $pasaje->fecha_vuelo,0,0,'C',0);
+        $fpdf->Cell(20,4, Carbon::parse($pasaje->fecha_vuelo)->format('d-m-Y'),0,0,'C',0);
 
         $fpdf->setXY(130,108);
         $fpdf->Cell(20,4, $pasaje->hora_vuelo,0,0,'C',0);

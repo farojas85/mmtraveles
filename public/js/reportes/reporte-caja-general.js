@@ -587,6 +587,15 @@ var app = new Vue({
                 }
             })
         },
+        descargar() {
+            let parametros = 'lugar='+this.busqueda.lugar+
+                             '&local='+this.busqueda.local+
+                             '&counter='+this.busqueda.counter+
+                             '&aerolinea='+this.busqueda.aerolinea+
+                             '&fecha_ini='+this.busqueda.fecha_ini+
+                             '&fecha_fin='+this.busqueda.fecha_fin
+            window.location.href="reporte-caja-general/exportar?"+parametros
+        },
 
     },
     created() {

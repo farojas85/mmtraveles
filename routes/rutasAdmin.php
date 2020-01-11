@@ -47,6 +47,8 @@ Route::get('pasajeCreate','PasajeController@create')->name('pasajes.create');
 Route::get('pasajeVentas','PasajeController@mostrar')->name('pasajes.ventas');
 Route::get('opcionalesVentas','OpcionalController@index')->name('opcional.index');
 Route::get('opcionalesListado','OpcionalController@mostrar')->name('opcional.mostrar');
+Route::get('busquedaPasajeros','PasajeController@pasajeroInicio')->name('pasajes.pasajeros');
+
 //Route::get('pasajeEditar/{id}','PasajeController@editar')->name('pasaje.editar');
 
 Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
@@ -56,7 +58,13 @@ Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
     Route::get('ventas','PasajeController@listaPorUsuario')->name('pasajes.ventas');
     Route::post('destroy','PasajeController@destroy')->name('pasajes.destroy');
     Route::post('eliminarSeleccionados','PasajeController@eliminarSeleccionados')->name('pasajes.eliminarSeleccionados');
+    Route::get('busqueda-pasajeros','PasajerController@busquedaPasajeros')->name('pasajes.pasajeros');
 });
+
+Route::group(['prefix' => 'busqueda-pasajeros', 'middleware' => 'auth'], function(){
+    Route::get('inicio','PasajerController@pasajerosInicio')->name('pasajes.pasajeros');
+});
+
 
 Route::group(['prefix' => 'pasaje-emitidos', 'middleware' => 'auth'], function(){
     Route::get('/', 'PasajeController@pasajeEmitidos')->name('pasaje-emitidos.index');
@@ -144,6 +152,7 @@ Route::group(['prefix' => 'reporte-caja-general', 'middleware' => 'auth'], funct
     Route::get('editar-adicional','ReporteCajaGeneralController@editarAdicional');
     Route::get('lista-adicional','ReporteCajaGeneralController@obtenerAdicional');
     Route::get('show-pasaje','ReporteCajaGeneralController@showPasajePagado');
+    Route::get('exportar','ReporteCajaGeneralController@exportar');
     Route::post('guardar-pasaje','ReporteCajaGeneralController@guardarPasajePagado');
     Route::post('actualizar-adicional','ReporteCajaGeneralController@actualizarAdicional');
     Route::post('eliminar-adicional-temporal','ReporteCajaGeneralController@eliminarAdicionalTemporal');

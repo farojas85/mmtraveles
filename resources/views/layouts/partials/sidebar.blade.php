@@ -144,6 +144,14 @@
                             </a>
                         </li>
                         @endcan
+                        @can('pasajes.pasajeros')
+                        <li class="nav-item">
+                            <a href="busquedaPasajeros" class="nav-link">
+                                <i class="fas fa-search nav-icon"></i>
+                                <p>Busqueda Pasajeros</p>
+                            </a>
+                        </li>
+                        @endcan
                     </ul>
                 </li>
                 @endcan

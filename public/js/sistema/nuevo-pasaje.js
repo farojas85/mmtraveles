@@ -7,6 +7,8 @@ var app = new Vue({
             etapa_persona_id:'',
             local_id:'',
             pasajero:'',
+            telefono_pasajero:'',
+            email_pasajero:'',
             tipo_documento_id:'',
             numero_documento:'',
             fecha_venta:'',
@@ -210,9 +212,9 @@ var app = new Vue({
                         confirmButtonColor:"#1abc9c",
                     }).then(respuesta => {
                         if(respuesta.value) {
-                            this.impresion=true
+                            //this.impresion=true
                             window.open('imprimirPasaje/'+this.pasaje_id,'_blank')
-                            window.location.href="pasajeCreate"
+                            //window.location.href="pasajeCreate"
                             //document.getElementById("btn-guardar").disabled = true;
                         }
                     })

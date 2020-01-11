@@ -8,6 +8,8 @@ use App\Pasaje;
 use App\Opcional;
 use App\OpcionalDetalle;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\PasajesExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
@@ -92,9 +94,9 @@ class ReporteCajaGeneralController extends Controller
                         ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
                         ->where('l.lugar_id','LIKE',$request->lugar)
                         ->where('l.id','LIKE',$request->local)
-                        ->where('pasaje.counter_id','LIKE',$request->counter)
+                        ->where('u.id','LIKE',$request->counter)
                         ->where('pasaje.aerolinea_id','LIKE',$request->aerolinea)
-                        ->where("pasaje.deuda_detalle",'=',"Es-Salud")
+                        ->whereNotNull('pasaje.deuda_detalle')
                         ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
                                     'pasaje.deuda_detalle','pasaje.deuda_monto','pasaje.deuda_soles','pasaje.deuda_dolares',
                                     'pasaje.deuda_visa','deuda_depo_soles','deuda_depo_dolares',
@@ -173,7 +175,7 @@ class ReporteCajaGeneralController extends Controller
             );
 
         array_push($pasa,$tempo);
-        Session::put('pasajes',$pasa);
+        //Session::put('pasajes',$pasa);
 
         return response()->json([
                 'pasajes' => $pasajes,
@@ -400,5 +402,10 @@ class ReporteCajaGeneralController extends Controller
         return response()->json([
             'mensaje' => 'Pasaje Modificado Satisfactoriamente'
         ]);
+    }
+
+    public function exportar(Request $request)
+    {
+        return Excel::download(new PasajesExport($request), 'Reporte_General.xlsx');
     }
 }
