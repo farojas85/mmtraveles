@@ -19,10 +19,10 @@ function colorAletorio(){
 
 function pagadosDia()
 {
-    fecha_dia = $('#fecha_dia').val()
-
+    fecha_dia_ini = $('#fecha_dia_ini').val()
+    fecha_dia_fin  = $('#fecha_dia_fin').val()
     $.ajax({
-        url: 'graficas/local-pagados?fecha='+fecha_dia,
+        url: 'graficas/local-pagados?fecha_ini='+fecha_dia_ini+'&fecha_fin='+fecha_dia_fin,
         type:"GET",
         success: function (response) {
 
@@ -33,12 +33,16 @@ function pagadosDia()
             }
             var set =[]
             var color=[]
-
+            var total = 0
             pagados.forEach(item => {
                 datos.labels.push(item.name)
                 set.push(item.cantidad)
                 color.push(colorAletorio())
+                total = parseInt(total) + parseInt(item.cantidad)
             })
+
+            $('#total_counter').val(total)
+
             datos.datasets = [
                 {
                     data :  set,
@@ -75,13 +79,11 @@ function pagadosHoy()
     var anio = f.getFullYear();
     var mes = (f.getMonth() +1) < 10 ? '0'+(f.getMonth() +1) : (f.getMonth() +1)
     var dia = f.getDate() < 10 ? '0'+f.getDate() : f.getDate()
-    var fecha = anio+'-'+ mes+'-'+ dia
-    fecha=''
-    var canvas = document.getElementById('pieChart')
-    $('#pieChart').get(0).getContext('2d').clearRect(0,0,canvas.width,canvas.height)
+    var fecha_ini = anio+'-'+ mes+'-'+ dia
+    var fecha_fin = anio+'-'+ mes+'-'+ dia
 
     $.ajax({
-        url: 'graficas/local-pagados?fecha='+fecha,
+        url: 'graficas/local-pagados?fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin,
         type:"GET",
         success: function (response) {
 
@@ -92,12 +94,16 @@ function pagadosHoy()
             }
             var set =[]
             var color=[]
-
+            var total = 0
             pagados.forEach(item => {
                 datos.labels.push(item.name)
                 set.push(item.cantidad)
+                total = parseInt(total) + parseInt(item.cantidad)
                 color.push(colorAletorio())
             })
+
+            $('#total_counter').val(total)
+
             datos.datasets = [
                 {
                     data :  set,
@@ -132,11 +138,11 @@ function aeroHoy() {
     var anio = f.getFullYear();
     var mes = (f.getMonth() +1) < 10 ? '0'+(f.getMonth() +1) : (f.getMonth() +1)
     var dia = f.getDate() < 10 ? '0'+f.getDate() : f.getDate()
-    var fecha = anio+'-'+ mes+'-'+ dia
-    var total = 0
+    var fecha_ini = anio+'-'+ mes+'-'+ dia
+    var fecha_fin = anio+'-'+ mes+'-'+ dia
     fecha=''
     $.ajax({
-        url: 'graficas/total-aerolinea?fecha='+fecha,
+        url: 'graficas/total-aerolinea?fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin,
         type:"GET",
         success: function (response) {
            var aeros =  response
@@ -146,13 +152,15 @@ function aeroHoy() {
             }
             var set =[]
             var color=[]
-            total = 0
+            var total = 0
             aeros.forEach(item => {
                 datos.labels.push(item.name)
                 set.push(item.cantidad)
                 total = parseInt(total) + parseInt(item.cantidad)
                 color.push(colorAletorio())
             })
+
+            $('#total_aero').val(total)
             datos.datasets = [
                 {
                     data :  set,
@@ -184,9 +192,10 @@ function aeroHoy() {
 }
 
 function aeroDia() {
-    fecha= $('#fecha_dia_aero').val()
+    fecha_ini= $('#fecha_dia_aero_ini').val()
+    fecha_fin= $('#fecha_dia_aero_fin').val()
     $.ajax({
-        url: 'graficas/total-aerolinea?fecha='+fecha,
+        url: 'graficas/total-aerolinea?fecha_ini='+fecha_ini+'&fecha_fin='+fecha_fin,
         type:"GET",
         success: function (response) {
            var aero =  response
@@ -196,12 +205,16 @@ function aeroDia() {
             }
             var set =[]
             var color=[]
-
+            var total = 0
             aero.forEach(item => {
                 datos.labels.push(item.name)
                 set.push(item.cantidad)
                 color.push(colorAletorio())
+                total = parseInt(total)+ parseInt(item.cantidad)
             })
+
+            $('#total_aero').val(total)
+
             datos.datasets = [
                 {
                     data :  set,

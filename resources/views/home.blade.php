@@ -68,7 +68,13 @@
                             <div class="row">
                                 <label for="" class="col-md-3 col-form-label text-right">Fecha Inicio</label>
                                 <div class="col-md-8">
-                                    <input type="date" class="form-control" id="fecha_dia" onchange="pagadosDia()">
+                                    <input type="date" class="form-control" id="fecha_dia_ini" onchange="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="" class="col-md-3 col-form-label text-right">Fecha Final</label>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" id="fecha_dia_fin" onchange="pagadosDia()">
                                 </div>
                             </div>
                             <div class="chartjs-size-monitor">
@@ -95,7 +101,18 @@
                             </h3>
                         </div>
                         <div class="card-body">
-                            <input type="date" class="form-control" id="fecha_dia_aero" onchange="aeroDia()">
+                            <div class="row">
+                                <label for="" class="col-md-3 col-form-label text-right">Fecha Inicio</label>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" id="fecha_dia_aero_ini" onchange="">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="" class="col-md-3 col-form-label text-right">Fecha Final</label>
+                                <div class="col-md-8">
+                                    <input type="date" class="form-control" id="fecha_dia_aero_fin" onchange="aeroDia()">
+                                </div>
+                            </div>
                             <div class="chartjs-size-monitor">
                                 <div class="chartjs-size-monitor-expand">
                                     <div class=""></div>
@@ -105,6 +122,10 @@
                                 </div>
                             </div>
                             <canvas id="pieChartAero" style="height: 300px; min-height: 230px; display: block; width: 488px;" width="488" height="300" class="chartjs-render-monitor"></canvas>
+                            <div class="row">
+                                <label for="" class="col-md-6">TOTAL</label>
+                                <input type="text" class="form-control col-md-6" id="total_aero">
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -602,10 +602,14 @@ class PasajeController extends Controller
         {
             $request->fecha =  Carbon::now()->format('Y-m-d');
         }
+
         return  Pasaje::join('user as u','u.id','=','pasaje.counter_id')
                        ->select('u.id','u.name',
                             DB::Raw("COUNT(pasaje.id) as cantidad"))
-                        ->where('pasaje.created_at_venta',$request->fecha)
+                        ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                        ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                        ->whereNull('pasaje.deleted_at')
+                        ->whereNull('pasaje.deuda_detalle')
                         ->groupBy('u.id','u.name')
                         ->get();
 
@@ -621,7 +625,10 @@ class PasajeController extends Controller
         return  Pasaje::join('product as ae','ae.id','=','pasaje.aerolinea_id')
                             ->select('ae.id','ae.name',
                                 DB::Raw("COUNT(pasaje.id) as cantidad"))
-                            ->where('pasaje.created_at_venta',$request->fecha)
+                            ->where('pasaje.created_at_venta','>=',$request->fecha_ini)
+                            ->where('pasaje.created_at_venta','<=',$request->fecha_fin)
+                            ->whereNull('pasaje.deleted_at')
+                            ->whereNull('pasaje.deuda_detalle')
                             ->groupBy('ae.id','ae.name')
                             ->get();
     }
