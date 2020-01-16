@@ -62,7 +62,9 @@ Route::group(['prefix' => 'pasajes', 'middleware' => 'auth'], function(){
 });
 
 Route::group(['prefix' => 'busqueda-pasajeros', 'middleware' => 'auth'], function(){
-    Route::get('inicio','PasajerController@pasajerosInicio')->name('pasajes.pasajeros');
+    Route::get('inicio','PasajeController@pasajerosInicio')->name('pasajes.pasajeros');
+    Route::get('buscar-pasajero','PasajeController@buscarPasajero')->name('pasajes.buscar-pasajero');
+    Route::get('listar-pasajes','PasajeController@listarPasajes')->name('pasajes.listar-pasajes');
 });
 
 

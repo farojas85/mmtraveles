@@ -68,7 +68,7 @@ class PasajeController extends Controller
         $this->validate($request,$rules,$mensaje);
 
         $pasaje = new Pasaje();
-        $pasaje->tipo_pasaje == $request->tipo_pasaje;
+        $pasaje->tipo_pasaje = $request->tipo_pasaje;
         $pasaje->counter_id = Auth::user()->id;
         $pasaje->pasajero = $request->pasajero;
         $pasaje->tipo_documento_id = $request->tipo_documento_id;
@@ -687,5 +687,46 @@ class PasajeController extends Controller
     public function pasajeroInicio()
     {
         return View('pasaje.busquedaPasajero');
+    }
+
+    public function buscarPasajero(Request $request)
+    {
+        $rules = [
+            'texto' => 'required'
+        ];
+        $mensaje = [
+            'required' => 'Campo Obligatorio'
+        ];
+
+        $this->validate($request, $rules, $mensaje);
+
+        return Pasaje::select('pasajero','numero_documento')
+                        ->where('numero_documento','LIKE','%'.$request->texto.'%')
+                        ->orWhere('pasajero','LIKE','%'.$request->texto.'%')
+                        ->groupBy('pasajero','numero_documento')
+                        ->orderBy('pasajero')
+                        ->get();
+    }
+
+    public function listarPasajes(Request $request)
+    {
+        $pasajes = Pasaje::join('user as u','pasaje.counter_id','=','u.id')
+                            ->leftJoin('locals as l','pasaje.local_id','=','l.id')
+                            ->join('product as ae','pasaje.aerolinea_id','=','ae.id')
+                            ->leftJoin('etapa_persona as ep','pasaje.etapa_persona_id','=','ep.id')
+                            ->where('pasaje.numero_documento','LIKE','%'.$request->numero_documento.'%')
+                            ->whereNull('pasaje.deuda_detalle')
+                            ->select('pasaje.id','u.name as counter','viajecode','ae.name as aero',
+                                        'pasaje.pasajero','pasaje.tax','pasaje.service_fee','pasaje.ticket_number',
+                                        'pasaje.total','pasaje.deposito_soles','pasaje.deposito_dolares',
+                                        'ruta','pasaje.tarifa','pago_soles','pago_dolares',
+                                        'pago_visa','deposito_soles','deposito_dolares','pasaje.created_at_venta',
+                                        'pasaje.deleted_at','ep.nombre as etapa_persona','ep.abreviatura as etapa_mini')
+                            ->orderBy('pasaje.created_at_venta','DESC')
+                            ->get();
+
+        return response()->json([
+            'pagados' => $pasajes
+        ]);
     }
 }

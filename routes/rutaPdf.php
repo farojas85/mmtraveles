@@ -404,14 +404,14 @@ Route::get('imprimirPasaje/{pasaje_id}', function ($pasaje_id) {
 
     $pasaje_id = $pasaje_id;
 
-    $user = App\User::with(['roles','local'])->where('id',Auth::user()->id)->first();
-    $role_name ='';
+    // $user = App\User::with(['roles','local'])->where('id',Auth::user()->id)->first();
+    // $role_name ='';
     $pasaje = null;
 
-    foreach($user->roles as $role)
-    {
-        $role_name = $role->name;
-    }
+    // foreach($user->roles as $role)
+    // {
+    //     $role_name = $role->name;
+    // }
 
     $pasaje = App\Pasaje::with(['user','aerolinea'])->where('id',$pasaje_id)->first();
 
