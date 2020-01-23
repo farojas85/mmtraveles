@@ -67,15 +67,15 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                        <div class="col-12">
-                            <select class="form-control" v-model="user.role_id">
-                                <option value="">-ROL-</option>
-                                <option v-for="role in roles" :key="role.id"
-                                        :value="role.id">@{{role.name}}</option>
-                            </select>
-                            <small class="text-danger" v-for="error in errores.role_id">@{{ error }}</small>
-                        </div>
+                    <div class="col-12">
+                        <select class="form-control" v-model="user.role_id">
+                            <option value="">-ROL-</option>
+                            <option v-for="role in roles" :key="role.id"
+                                    :value="role.id">@{{role.name}}</option>
+                        </select>
+                        <small class="text-danger" v-for="error in errores.role_id">@{{ error }}</small>
                     </div>
+                </div>
             </div>
             <div class="modal-footer" id="user-create-footer">
                 <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">

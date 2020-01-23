@@ -48,6 +48,7 @@ Route::get('pasajeVentas','PasajeController@mostrar')->name('pasajes.ventas');
 Route::get('opcionalesVentas','OpcionalController@index')->name('opcional.index');
 Route::get('opcionalesListado','OpcionalController@mostrar')->name('opcional.mostrar');
 Route::get('busquedaPasajeros','PasajeController@pasajeroInicio')->name('pasajes.pasajeros');
+Route::get('egresos','ExtraController@egresos')->name('extras.egresos');
 
 //Route::get('pasajeEditar/{id}','PasajeController@editar')->name('pasaje.editar');
 
@@ -173,3 +174,12 @@ Route::group(['prefix' => 'reporte-plantilla', 'middleware' => 'auth'], function
     Route::get('/tabla','ReportePlantillaController@tabla')->name('reporteplantilla.tabla');
 
 });
+
+Route::group(['prefix' => 'extras', 'middleware' => 'auth'], function(){
+    Route::get('/', 'EgresoController@index')->name('egresos.index');
+});
+Route::group(['prefix' => 'pagos', 'middleware' => 'auth'], function(){
+    Route::post('guardar', 'PagoController@store')->name('pagos.guardar');
+    Route::get('listar-rubros','PagoController@listarRubroLocal')->name('pagos.listar-rubros');
+});
+
